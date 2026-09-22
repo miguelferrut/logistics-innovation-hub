@@ -19,44 +19,44 @@
   "taxonomies": {
     "sites": [
       {
-        "id": "apo",
+        "id": "B",
         "label": {
-          "en": "Apodaca, MX",
-          "zh": "墨西哥 Apodaca"
+          "en": "Plant B",
+          "zh": "B厂"
         },
         "region": "mx"
       },
       {
-        "id": "mty",
+        "id": "D",
         "label": {
-          "en": "Monterrey, MX",
-          "zh": "墨西哥 Monterrey"
+          "en": "Plant D",
+          "zh": "D厂"
         },
         "region": "mx"
       },
       {
-        "id": "hz",
+        "id": "G",
         "label": {
-          "en": "Hangzhou, CN",
-          "zh": "中国杭州"
+          "en": "Plant G",
+          "zh": "G厂"
         },
-        "region": "cn"
+        "region": "mx"
       },
       {
-        "id": "wh",
+        "id": "MP",
         "label": {
-          "en": "Wuhu, CN",
-          "zh": "中国芜湖"
+          "en": "MicroPark",
+          "zh": "MP仓库"
         },
-        "region": "cn"
+        "region": "mx"
       },
       {
-        "id": "xc",
+        "id": "H",
         "label": {
-          "en": "Xinchang, CN",
-          "zh": "中国新昌"
+          "en": "Plant H",
+          "zh": "H厂"
         },
-        "region": "cn"
+        "region": "mx"
       }
     ],
     "areas": [
