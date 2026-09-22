@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/industry-fa1160d7-a9b5-43fd-984a-0edd3304048d/styles.css">
+<script src="_ds/industry-fa1160d7-a9b5-43fd-984a-0edd3304048d/_ds_bundle.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; }
+  a { color: var(--color-accent-700); }
+  a:hover { color: var(--color-accent-900); }
+  @keyframes lihIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; display: flex; flex-direction: column; background: #f2f2f3; color: #1d1f20; font-family: Barlow, system-ui, sans-serif;">
+
+  <sc-if value="{{ pinned }}">
+    <a href="#" onClick="{{ goNews }}" style="display: flex; align-items: center; gap: 14px; padding: 9px 28px; background: #5980a6; color: #f2f2f3; text-decoration: none; font-size: 13px;">
+      <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; white-space: nowrap; border: 1px solid rgba(242,242,243,0.5); padding: 2px 8px;">{{ T.announcement }}</span>
+      <span style="flex: 1; line-height: 1.4;">{{ pinned.title }}</span>
+      <span style="font-family: ui-monospace, monospace; font-size: 11px; opacity: 0.8; white-space: nowrap;">{{ pinned.date }} →</span>
+    </a>
+  </sc-if>
+
+  <div style="display: flex; align-items: center; gap: 14px; padding: 6px 28px; background: #1d2d3d; color: #f2f2f3; font-size: 12px; font-family: 'Barlow Condensed', system-ui, sans-serif;">
+    <span style="opacity: 0.75; letter-spacing: 0.06em; text-transform: uppercase;">{{ T.org }}</span>
+    <span style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+      <input class="input" type="search" value="{{ query }}" onInput="{{ onQuery }}" placeholder="{{ T.searchPh }}" style="width: 230px; min-height: 28px; padding: 3px 9px; font-size: 12px; font-family: Barlow, system-ui, sans-serif; background: rgba(242,242,243,0.08); border: 1px solid rgba(242,242,243,0.28); color: #f2f2f3; border-radius: 0;" />
+      <span style="display: flex; border: 1px solid rgba(242,242,243,0.28);">
+        <button onClick="{{ setEn }}" aria-pressed="{{ cur.en }}" style="cursor: pointer; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 12px; letter-spacing: 0.08em; padding: 4px 10px; border: 0; background: transparent; color: #f2f2f3; white-space: nowrap;" style-hover="background: rgba(242,242,243,0.14);">EN</button>
+        <button onClick="{{ setZh }}" aria-pressed="{{ cur.zh }}" style="cursor: pointer; font-family: Barlow, system-ui, sans-serif; font-size: 12px; padding: 4px 10px; border: 0; border-left: 1px solid rgba(242,242,243,0.28); background: transparent; color: #f2f2f3; white-space: nowrap;" style-hover="background: rgba(242,242,243,0.14);">中文</button>
+      </span>
+      <sc-if value="{{ isVisitor }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ openSignIn }}" style="cursor: pointer; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 12px; letter-spacing: 0.06em; padding: 4px 11px; background: transparent; color: rgba(242,242,243,0.8); border: 1px solid rgba(242,242,243,0.28); white-space: nowrap;" style-hover="background: rgba(242,242,243,0.14);">{{ T.staffSignIn }}</button>
+      </sc-if>
+    </span>
+  </div>
+
+  <sc-if value="{{ isAdmin }}">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 9px 28px; background: #1d2d3d; border-top: 1px solid rgba(242,242,243,0.18); color: #f2f2f3;">
+      <span style="display: flex; align-items: center; gap: 9px;">
+        <span style="width: 8px; height: 8px; background: #94bce3; display: block;"></span>
+        <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;">{{ T.adminMode }}</span>
+      </span>
+      <span style="font-size: 12.5px; color: rgba(242,242,243,0.7);">{{ adminIdentity }}</span>
+      <span style="margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px;">
+        <button onClick="{{ toggleDrafts }}" aria-pressed="{{ cur.drafts }}" class="tag {{ draftsCls }}" style="cursor: pointer; font-family: inherit; font-size: 11.5px; padding: 4px 11px; white-space: nowrap;">{{ T.showDrafts }}</button>
+        <button onClick="{{ goAdmin }}" class="btn blueprint" style="padding: 6px 15px; font-size: 13px; background: #f2f2f3; color: #1d2d3d; border-color: #f2f2f3; white-space: nowrap;">
+          {{ T.adminDashboard }}
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </button>
+        <button onClick="{{ signOut }}" style="cursor: pointer; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 12px; padding: 5px 12px; background: transparent; color: rgba(242,242,243,0.8); border: 1px solid rgba(242,242,243,0.3); white-space: nowrap;" style-hover="background: rgba(242,242,243,0.14);">{{ T.signOut }}</button>
+      </span>
+    </div>
+  </sc-if>
+
+  <header style="position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; align-items: center; gap: 18px; padding: 13px 28px; background: rgba(242,242,243,0.94); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(29,31,32,0.16);">
+    <a href="#" onClick="{{ goHome }}" style="display: flex; align-items: center; gap: 11px; text-decoration: none; color: inherit; margin-right: auto;">
+      <span style="position: relative; width: 26px; height: 26px; border: 1px solid #5980a6; display: grid; place-items: center;">
+        <span style="width: 10px; height: 10px; background: #5980a6; display: block;"></span>
+      </span>
+      <span style="display: flex; flex-direction: column; line-height: 1.05;">
+        <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 19px; letter-spacing: -0.01em;">{{ T.brand }}</span>
+        <span style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.5);">{{ T.brandAlt }}</span>
+      </span>
+    </a>
+    <nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px;">
+      <a href="#" onClick="{{ goHome }}" aria-current="{{ cur.home }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navHome }}</a>
+      <a href="#" onClick="{{ goCatalog }}" aria-current="{{ cur.catalog }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navCatalog }}</a>
+      <a href="#" onClick="{{ goPortfolio }}" aria-current="{{ cur.portfolio }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navPortfolio }}</a>
+      <a href="#" onClick="{{ goPipeline }}" aria-current="{{ cur.pipeline }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navPipeline }}</a>
+      <a href="#" onClick="{{ goPeople }}" aria-current="{{ cur.people }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navPeople }}</a>
+      <a href="#" onClick="{{ goAbout }}" aria-current="{{ cur.about }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navAbout }}</a>
+      <a href="#" onClick="{{ goSubmit }}" class="btn btn-primary blueprint" style="text-decoration: none; padding: 7px 16px; white-space: nowrap;">
+        {{ T.navSubmit }}
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      </a>
+    </nav>
+  </header>
+
+  <main style="flex: 1; animation: lihIn 0.28s ease both;">
+
+    <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}">
+      <div style="max-width: 1360px; margin: 0 auto; padding: 72px 28px;">
+        <div style="font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(29,31,32,0.45); margin-bottom: 22px;">{{ T.loading }}</div>
+        <div class="blueprint" style="height: 210px; background: repeating-linear-gradient(135deg, transparent 0 9px, rgba(29,31,32,0.06) 9px 10px); margin-bottom: 22px;">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px;">
+          <div class="blueprint" style="height: 130px; background: repeating-linear-gradient(135deg, transparent 0 9px, rgba(29,31,32,0.06) 9px 10px);"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></div>
+          <div class="blueprint" style="height: 130px; background: repeating-linear-gradient(135deg, transparent 0 9px, rgba(29,31,32,0.06) 9px 10px);"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></div>
+          <div class="blueprint" style="height: 130px; background: repeating-linear-gradient(135deg, transparent 0 9px, rgba(29,31,32,0.06) 9px 10px);"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ loadError }}">
+      <div style="max-width: 860px; margin: 0 auto; padding: 72px 28px;">
+        <div class="blueprint" style="padding: 32px; background: #e9e9ea;">
+          <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin-bottom: 10px;">{{ T.loadErrorTitle }}</div>
+          <p style="font-size: 14.5px; line-height: 1.6; color: rgba(29,31,32,0.75); margin: 0;">{{ T.loadErrorBody }}</p>
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isHome }}">
+    <div>
+      <section style="display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 48px; align-items: center; padding: 60px 28px 52px; max-width: 1360px; margin: 0 auto;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+            <span style="width: 34px; height: 1px; background: #5980a6; display: block;"></span>
+            <span style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #416180; font-family: 'Barlow Condensed', system-ui, sans-serif;">{{ T.heroKicker }}</span>
+          </div>
+          <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 60px; line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 18ch; text-wrap: pretty;">{{ T.heroTitle }}</h1>
+          <p style="font-size: 16px; line-height: 1.6; max-width: 54ch; color: rgba(29,31,32,0.78); margin: 0 0 28px; text-wrap: pretty;">{{ T.heroBody }}</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+            <a href="#" onClick="{{ goCatalog }}" class="btn btn-primary blueprint" style="text-decoration: none; padding: 11px 22px; font-size: 15px; white-space: nowrap;">
+              {{ T.ctaExplore }}
+              <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            </a>
+            <a href="#" onClick="{{ goSubmit }}" class="btn btn-secondary" style="text-decoration: none; padding: 11px 22px; font-size: 15px; white-space: nowrap;">{{ T.ctaSubmit }}</a>
+          </div>
+        </div>
+        <figure class="blueprint duotone" style="position: relative; aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center;">
+          <figcaption style="font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: 0.06em; color: rgba(29,31,32,0.58); text-align: center; padding: 0 20px; margin: 0;">{{ T.heroImgCap }}</figcaption>
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </figure>
+      </section>
+
+      <section style="max-width: 1360px; margin: 0 auto; padding: 0 28px 56px;">
+        <div class="blueprint" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: #e9e9ea;">
+          <sc-for list="{{ stats }}" as="st" hint-placeholder-count="4">
+            <div style="padding: 24px 22px; border-right: 1px solid rgba(29,31,32,0.16);">
+              <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 44px; line-height: 1; color: #1d2d3d;">{{ st.v }}</div>
+              <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(29,31,32,0.6); margin-top: 8px; font-family: 'Barlow Condensed', system-ui, sans-serif;">{{ st.k }}</div>
+            </div>
+          </sc-for>
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </div>
+        <div style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.45); margin-top: 12px; letter-spacing: 0.04em;">{{ T.asOf }}</div>
+      </section>
+
+      <section style="max-width: 1360px; margin: 0 auto; padding: 0 28px 56px;">
+        <div style="display: flex; align-items: flex-end; gap: 16px; margin-bottom: 20px; border-bottom: 1px solid rgba(29,31,32,0.16); padding-bottom: 14px;">
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0;">{{ T.quickAccess }}</h2>
+          <span style="font-size: 13px; color: rgba(29,31,32,0.6);">{{ T.quickAccessSub }}</span>
+          <sc-if value="{{ isAdmin }}">
+            <a href="#" onClick="{{ manage.quickLinks }}" style="margin-left: auto; white-space: nowrap; font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none;">{{ T.manage }}</a>
+          </sc-if>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px;">
+          <sc-for list="{{ quickLinks }}" as="q" hint-placeholder-count="6">
+            <a href="{{ q.url }}" class="blueprint" style="display: flex; flex-direction: column; gap: 6px; padding: 15px 16px; text-decoration: none; color: inherit;" style-hover="background: rgba(89,128,166,0.06);">
+              <span style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 7px; height: 7px; background: #5980a6; display: block; flex: none;"></span>
+                <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 17px; line-height: 1.15;">{{ q.label }}</span>
+                <sc-if value="{{ q.isDraft }}"><span class="tag tag-outline" style="font-size: 9.5px; margin-left: auto; white-space: nowrap;">{{ T.draft }}</span></sc-if>
+              </span>
+              <span style="font-size: 12.5px; color: rgba(29,31,32,0.68); line-height: 1.45;">{{ q.note }}</span>
+              <span style="font-family: ui-monospace, monospace; font-size: 10px; color: rgba(29,31,32,0.45); margin-top: 2px;">{{ q.audience }}</span>
+              <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="background: #1d2d3d; color: #f2f2f3; padding: 52px 28px;">
+        <div style="max-width: 1360px; margin: 0 auto;">
+          <div style="display: flex; align-items: flex-end; gap: 16px; margin-bottom: 26px; border-bottom: 1px solid rgba(242,242,243,0.2); padding-bottom: 14px;">
+            <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0;">{{ T.highlights }}</h2>
+            <span style="font-size: 13px; color: rgba(242,242,243,0.6);">{{ T.highlightsSub }}</span>
+            <sc-if value="{{ isAdmin }}">
+              <a href="#" onClick="{{ manage.highlights }}" style="margin-left: auto; white-space: nowrap; font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(148,188,227,0.7); color: #94bce3; padding: 4px 9px; text-decoration: none;">{{ T.manage }}</a>
+            </sc-if>
+          </div>
+          <div style="display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 36px; align-items: start;">
+            <sc-if value="{{ feature }}">
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: center;">
+                <figure class="blueprint duotone" style="position: relative; aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(242,242,243,0.1) 8px 9px), rgba(242,242,243,0.06); border-color: rgba(242,242,243,0.3); display: grid; place-items: center;">
+                  <figcaption style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(242,242,243,0.6); text-align: center; padding: 0 16px; margin: 0;">{{ feature.imageCaption }}</figcaption>
+                </figure>
+                <div>
+                  <div style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #94bce3; margin-bottom: 12px; font-family: 'Barlow Condensed', system-ui, sans-serif;">{{ feature.kicker }}</div>
+                  <h3 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 34px; line-height: 1.05; margin: 0 0 12px;">{{ feature.title }}</h3>
+                  <p style="font-size: 15px; line-height: 1.55; color: rgba(242,242,243,0.82); margin: 0 0 20px; max-width: 40ch;">{{ feature.blurb }}</p>
+                  <a href="#" onClick="{{ feature.open }}" class="btn blueprint" style="text-decoration: none; padding: 9px 18px; background: #f2f2f3; color: #1d2d3d; border-color: #f2f2f3; white-space: nowrap;">
+                    {{ T.readMore }}
+                    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+                  </a>
+                </div>
+              </div>
+            </sc-if>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <sc-for list="{{ highlights }}" as="h" hint-placeholder-count="3">
+                <a href="#" onClick="{{ h.open }}" class="blueprint" style="padding: 16px; text-decoration: none; color: inherit; border-color: rgba(242,242,243,0.3); display: block;" style-hover="background: rgba(242,242,243,0.07);">
+                  <span style="display: flex; align-items: center; gap: 9px;">
+                    <span style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #94bce3;">{{ h.kicker }}</span>
+                    <sc-if value="{{ h.isDraft }}"><span class="tag tag-outline" style="font-size: 9.5px; color: #94bce3; border-color: #94bce3; white-space: nowrap;">{{ T.draft }}</span></sc-if>
+                  </span>
+                  <span style="display: block; font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 20px; margin-top: 6px; line-height: 1.15;">{{ h.title }}</span>
+                  <span style="display: block; font-size: 13px; line-height: 1.5; color: rgba(242,242,243,0.72); margin-top: 5px;">{{ h.blurb }}</span>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <sc-if value="{{ devArea }}">
+      <section style="max-width: 1360px; margin: 0 auto; padding: 56px 28px;">
+        <div style="display: flex; align-items: flex-end; gap: 16px; margin-bottom: 24px; border-bottom: 1px solid rgba(29,31,32,0.16); padding-bottom: 14px;">
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #416180; font-family: 'Barlow Condensed', system-ui, sans-serif; margin-bottom: 8px;">{{ T.devAreaKicker }}</div>
+            <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 32px; margin: 0;">{{ devArea.heading }}</h2>
+          </div>
+          <span class="tag tag-accent" style="margin-left: auto; font-size: 11.5px; white-space: nowrap;">{{ devArea.quarter }}</span>
+          <sc-if value="{{ isAdmin }}">
+            <a href="#" onClick="{{ manage.devArea }}" style="white-space: nowrap; font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none;">{{ T.manage }}</a>
+          </sc-if>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 44px; align-items: start;">
+          <div>
+            <p style="font-size: 16px; line-height: 1.65; color: rgba(29,31,32,0.82); margin: 0 0 18px;">{{ devArea.statement }}</p>
+            <div style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.5);">{{ devArea.stamp }}</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px;">
+            <div>
+              <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 12px;">{{ T.devFocus }}</div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <sc-for list="{{ devArea.focusItems }}" as="f" hint-placeholder-count="4">
+                  <div style="display: flex; gap: 10px; font-size: 13.5px; line-height: 1.5; color: rgba(29,31,32,0.82);">
+                    <span style="width: 7px; height: 7px; background: #5980a6; flex: none; margin-top: 7px; display: block;"></span>
+                    <span>{{ f }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 12px;">{{ T.devNot }}</div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <sc-for list="{{ devArea.notDoing }}" as="f" hint-placeholder-count="2">
+                  <div style="display: flex; gap: 10px; font-size: 13.5px; line-height: 1.5; color: rgba(29,31,32,0.6);">
+                    <span style="width: 7px; height: 1px; background: rgba(29,31,32,0.4); flex: none; margin-top: 10px; display: block;"></span>
+                    <span>{{ f }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      </sc-if>
+
+      <section style="max-width: 1360px; margin: 0 auto; padding: 0 28px 56px;">
+        <div style="display: flex; align-items: flex-end; gap: 20px; margin-bottom: 26px; border-bottom: 1px solid rgba(29,31,32,0.16); padding-bottom: 14px;">
+          <div>
+            <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 32px; margin: 0 0 6px;">{{ T.navCatalog }}</h2>
+            <p style="font-size: 14px; color: rgba(29,31,32,0.68); max-width: 62ch; margin: 0;">{{ T.catalogSub }}</p>
+          </div>
+          <span style="margin-left: auto; display: flex; align-items: center; gap: 12px;">
+            <sc-if value="{{ isAdmin }}">
+              <a href="#" onClick="{{ manage.solutions }}" style="white-space: nowrap; font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none;">{{ T.manage }}</a>
+            </sc-if>
+            <a href="#" onClick="{{ goCatalog }}" style="white-space: nowrap; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 14px; letter-spacing: 0.04em;">{{ T.viewAll }} →</a>
+          </span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px;">
+          <sc-for list="{{ solutions }}" as="s" hint-placeholder-count="6">
+            <a href="#" onClick="{{ s.open }}" class="card blueprint" style="text-decoration: none; color: inherit; gap: 12px; padding: 20px;" style-hover="background: rgba(89,128,166,0.05);">
+              <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <div style="flex: 1;">
+                  <div class="card-kicker">{{ s.processArea }}</div>
+                  <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 22px; line-height: 1.1; margin-top: 4px;">{{ s.name }}</div>
+                  <div style="font-size: 11.5px; color: rgba(29,31,32,0.5);">{{ s.nameZh }}</div>
+                </div>
+                <span class="tag {{ s.pill }}" style="white-space: nowrap;">{{ s.statusLabel }}</span>
+              </div>
+              <p class="card-body" style="font-size: 13.5px; line-height: 1.5; opacity: 0.85;">{{ s.tagline }}</p>
+              <div class="card-meta" style="border-top: 1px solid rgba(29,31,32,0.1); padding-top: 11px; margin-top: 2px; justify-content: space-between;">
+                <span>{{ s.siteLine }}</span>
+                <span>{{ s.ownerName }}</span>
+              </div>
+              <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="max-width: 1360px; margin: 0 auto; padding: 0 28px 56px;">
+        <div style="display: flex; align-items: flex-end; gap: 20px; margin-bottom: 26px; border-bottom: 1px solid rgba(29,31,32,0.16); padding-bottom: 14px;">
+          <div>
+            <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 32px; margin: 0 0 6px;">{{ T.sectionPipeline }}</h2>
+            <p style="font-size: 14px; color: rgba(29,31,32,0.68); max-width: 62ch; margin: 0;">{{ T.sectionPipelineSub }}</p>
+          </div>
+          <span style="margin-left: auto; display: flex; align-items: center; gap: 12px;">
+            <sc-if value="{{ isAdmin }}">
+              <a href="#" onClick="{{ manage.pipeline }}" style="white-space: nowrap; font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none;">{{ T.manage }}</a>
+            </sc-if>
+            <a href="#" onClick="{{ goPipeline }}" style="white-space: nowrap; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 14px; letter-spacing: 0.04em;">{{ T.viewPipeline }} →</a>
+          </span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px;">
+          <sc-for list="{{ stages }}" as="stg" hint-placeholder-count="4">
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 2px solid #5980a6;">
+                <span style="font-family: ui-monospace, monospace; font-size: 10px; color: rgba(29,31,32,0.45);">{{ stg.no }}</span>
+                <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.02em; text-transform: uppercase;">{{ stg.label }}</span>
+                <span style="margin-left: auto; font-size: 11px; color: rgba(29,31,32,0.5);">{{ stg.count }}</span>
+              </div>
+              <sc-for list="{{ stg.items }}" as="it" hint-placeholder-count="2">
+                <div class="blueprint" style="padding: 13px 14px; background: #e9e9ea;">
+                  <div style="display: flex; align-items: flex-start; gap: 8px;">
+                    <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 16px; line-height: 1.15; flex: 1;">{{ it.name }}</div>
+                    <sc-if value="{{ it.isDraft }}"><span class="tag tag-outline" style="font-size: 9.5px; white-space: nowrap;">{{ T.draft }}</span></sc-if>
+                  </div>
+                  <div style="font-size: 11px; color: rgba(29,31,32,0.55); margin-top: 3px;">{{ it.processArea }}</div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; font-size: 11px; color: rgba(29,31,32,0.6);">
+                    <span>{{ it.owner }}</span>
+                    <span style="font-family: ui-monospace, monospace;">{{ it.target }}</span>
+                  </div>
+                  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="background: #e9e9ea; border-top: 1px solid rgba(29,31,32,0.16); border-bottom: 1px solid rgba(29,31,32,0.16); padding: 52px 28px;">
+        <div style="max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 52px; align-items: center;">
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #416180; margin-bottom: 14px; font-family: 'Barlow Condensed', system-ui, sans-serif;">{{ T.intakeKicker }}</div>
+            <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 36px; line-height: 1.05; margin: 0 0 14px; max-width: 20ch;">{{ T.intakeTitle }}</h2>
+            <p style="font-size: 15px; line-height: 1.6; color: rgba(29,31,32,0.75); max-width: 48ch; margin: 0 0 24px;">{{ T.intakeBody }}</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+              <a href="#" onClick="{{ goSubmit }}" class="btn btn-primary blueprint" style="text-decoration: none; padding: 11px 22px; font-size: 15px; white-space: nowrap;">
+                {{ T.ctaSubmit }}
+                <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              </a>
+              <a href="#" onClick="{{ goBoard }}" class="btn btn-secondary" style="text-decoration: none; padding: 11px 22px; font-size: 15px; white-space: nowrap;">{{ T.ctaBoard }}</a>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+            <sc-for list="{{ intakeSteps }}" as="p" hint-placeholder-count="4">
+              <div class="blueprint" style="padding: 18px 16px; background: #f2f2f3;">
+                <div style="font-family: ui-monospace, monospace; font-size: 10px; color: #5980a6; letter-spacing: 0.1em;">{{ p.no }}</div>
+                <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 18px; margin-top: 8px; line-height: 1.15;">{{ p.t }}</div>
+                <div style="font-size: 12.5px; line-height: 1.5; color: rgba(29,31,32,0.68); margin-top: 6px;">{{ p.d }}</div>
+                <div style="font-family: ui-monospace, monospace; font-size: 10.5px; color: #416180; margin-top: 10px;">{{ p.sla }}</div>
+                <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section style="max-width: 1360px; margin: 0 auto; padding: 56px 28px;">
+        <div style="display: flex; align-items: flex-end; gap: 20px; margin-bottom: 26px; border-bottom: 1px solid rgba(29,31,32,0.16); padding-bottom: 14px;">
+          <div>
+            <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 32px; margin: 0 0 6px;">{{ T.sectionOwners }}</h2>
+            <p style="font-size: 14px; color: rgba(29,31,32,0.68); max-width: 62ch; margin: 0;">{{ T.sectionOwnersSub }}</p>
+          </div>
+          <span style="margin-left: auto; display: flex; align-items: center; gap: 12px;">
+            <sc-if value="{{ isAdmin }}">
+              <a href="#" onClick="{{ manage.owners }}" style="white-space: nowrap; font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none;">{{ T.manage }}</a>
+            </sc-if>
+            <a href="#" onClick="{{ goPeople }}" style="white-space: nowrap; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 14px; letter-spacing: 0.04em;">{{ T.viewPeople }} →</a>
+          </span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 20px;">
+          <sc-for list="{{ owners }}" as="o" hint-placeholder-count="6">
+            <a href="#" onClick="{{ o.open }}" class="blueprint" style="display: flex; flex-direction: column; gap: 10px; padding: 16px; text-decoration: none; color: inherit;" style-hover="background: rgba(89,128,166,0.05);">
+              <div class="duotone" style="aspect-ratio: 1 / 1; background: repeating-linear-gradient(135deg, transparent 0 7px, rgba(29,31,32,0.09) 7px 8px), #e9e9ea; display: grid; place-items: center; overflow: hidden;">
+                {{ o.photoImg }}
+                <sc-if value="{{ o.noPhoto }}">
+                  <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 30px; color: rgba(29,31,32,0.45); letter-spacing: 0.04em;">{{ o.initials }}</span>
+                </sc-if>
+              </div>
+              <div>
+                <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 18px; line-height: 1.15;">{{ o.name }}</div>
+                <div style="font-size: 12px; color: rgba(29,31,32,0.68); margin-top: 3px;">{{ o.position }}</div>
+                <div style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.48); margin-top: 7px;">{{ o.site }}</div>
+              </div>
+              <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isCatalog }}">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 44px 28px 72px;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px;">
+        <span style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45);">{{ T.crumbCatalog }}</span>
+        <sc-if value="{{ isAdmin }}">
+          <a href="#" onClick="{{ manage.solutions }}" style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none; white-space: nowrap;">{{ T.manageColl }}</a>
+        </sc-if>
+      </div>
+      <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 46px; margin: 0 0 10px;">{{ T.navCatalog }}</h1>
+      <p style="font-size: 15px; color: rgba(29,31,32,0.72); max-width: 66ch; margin: 0 0 32px;">{{ T.catalogSub }}</p>
+
+      <div class="blueprint" style="display: flex; flex-wrap: wrap; gap: 28px; padding: 18px 20px; background: #e9e9ea; margin-bottom: 30px;">
+        <div>
+          <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 9px;">{{ T.filterStatus }}</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+            <sc-for list="{{ statusFilters }}" as="f" hint-placeholder-count="5">
+              <button onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" class="tag {{ f.cls }}" style="cursor: pointer; border: 1px solid rgba(29,31,32,0.2); font-family: inherit; font-size: 11.5px; padding: 4px 11px; white-space: nowrap;">{{ f.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 9px;">{{ T.filterProcess }}</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+            <sc-for list="{{ processFilters }}" as="f" hint-placeholder-count="5">
+              <button onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" class="tag {{ f.cls }}" style="cursor: pointer; border: 1px solid rgba(29,31,32,0.2); font-family: inherit; font-size: 11.5px; padding: 4px 11px; white-space: nowrap;">{{ f.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 9px;">{{ T.filterSite }}</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+            <sc-for list="{{ siteFilters }}" as="f" hint-placeholder-count="4">
+              <button onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" class="tag {{ f.cls }}" style="cursor: pointer; border: 1px solid rgba(29,31,32,0.2); font-family: inherit; font-size: 11.5px; padding: 4px 11px; white-space: nowrap;">{{ f.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="margin-left: auto; align-self: flex-end; font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.6);">{{ resultCount }}</div>
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px;">
+        <sc-for list="{{ filteredSolutions }}" as="s" hint-placeholder-count="6">
+          <a href="#" onClick="{{ s.open }}" class="card blueprint" style="text-decoration: none; color: inherit; gap: 12px; padding: 20px;" style-hover="background: rgba(89,128,166,0.05);">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="flex: 1;">
+                <div class="card-kicker">{{ s.processArea }}</div>
+                <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 22px; line-height: 1.1; margin-top: 4px;">{{ s.name }}</div>
+                <div style="font-size: 11.5px; color: rgba(29,31,32,0.5);">{{ s.nameZh }}</div>
+              </div>
+              <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                <span class="tag {{ s.pill }}" style="white-space: nowrap;">{{ s.statusLabel }}</span>
+                <sc-if value="{{ s.isDraft }}"><span class="tag tag-outline" style="font-size: 9.5px; white-space: nowrap;">{{ T.draft }}</span></sc-if>
+              </span>
+            </div>
+            <p class="card-body" style="font-size: 13.5px; line-height: 1.5; opacity: 0.85;">{{ s.tagline }}</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <sc-for list="{{ s.siteTags }}" as="tg" hint-placeholder-count="2">
+                <span class="tag tag-neutral" style="font-size: 10.5px; white-space: nowrap;">{{ tg }}</span>
+              </sc-for>
+            </div>
+            <div class="card-meta" style="border-top: 1px solid rgba(29,31,32,0.1); padding-top: 11px; margin-top: 2px; justify-content: space-between;">
+              <span>{{ s.ownerName }}</span>
+              <span style="color: #416180;">{{ T.detailLink }} →</span>
+            </div>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </a>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ noResults }}">
+        <div class="blueprint" style="padding: 40px; text-align: center; background: #e9e9ea; margin-top: 8px;">
+          <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 22px; margin-bottom: 8px;">{{ T.emptyTitle }}</div>
+          <p style="font-size: 14px; color: rgba(29,31,32,0.7); max-width: 46ch; margin: 0 auto 18px;">{{ T.emptyBody }}</p>
+          <a href="#" onClick="{{ goSubmit }}" class="btn btn-primary" style="text-decoration: none; padding: 10px 20px; white-space: nowrap;">{{ T.ctaSubmit }}</a>
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </div>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isPortfolio }}">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 44px 28px 72px;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px;">
+        <span style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45);">{{ T.crumbPortfolio }}</span>
+        <sc-if value="{{ isAdmin }}">
+          <a href="#" onClick="{{ manage.portfolio }}" style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none; white-space: nowrap;">{{ T.manageColl }}</a>
+        </sc-if>
+      </div>
+      <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 46px; margin: 0 0 10px;">{{ T.navPortfolio }}</h1>
+      <p style="font-size: 15px; color: rgba(29,31,32,0.72); max-width: 70ch; margin: 0 0 32px;">{{ T.portfolioIntro }}</p>
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <sc-for list="{{ portfolio }}" as="p" hint-placeholder-count="4">
+          <div class="blueprint" style="display: grid; grid-template-columns: 150px minmax(0, 1.4fr) minmax(0, 1fr); gap: 28px; padding: 22px 24px;">
+            <div>
+              <div style="font-family: ui-monospace, monospace; font-size: 11px; color: #5980a6; letter-spacing: 0.06em;">{{ p.year }}</div>
+              <div style="font-size: 11.5px; color: rgba(29,31,32,0.55); margin-top: 8px; line-height: 1.5;">{{ p.sponsor }}</div>
+              <sc-if value="{{ p.isDraft }}"><span class="tag tag-outline" style="font-size: 9.5px; margin-top: 10px; white-space: nowrap;">{{ T.draft }}</span></sc-if>
+            </div>
+            <div>
+              <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 24px; line-height: 1.1;">{{ p.name }}</div>
+              <div style="font-size: 12px; color: rgba(29,31,32,0.5); margin-bottom: 10px;">{{ p.nameZh }}</div>
+              <p style="font-size: 14px; line-height: 1.6; color: rgba(29,31,32,0.8); margin: 0 0 12px;">{{ p.scope }}</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <sc-for list="{{ p.siteTags }}" as="tg" hint-placeholder-count="2">
+                  <span class="tag tag-neutral" style="font-size: 10.5px; white-space: nowrap;">{{ tg }}</span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="border-left: 1px solid rgba(29,31,32,0.14); padding-left: 24px;">
+              <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 8px;">{{ T.outcome }}</div>
+              <p style="font-size: 13.5px; line-height: 1.6; color: rgba(29,31,32,0.78); margin: 0 0 14px;">{{ p.outcome }}</p>
+              <sc-if value="{{ p.hasSolution }}">
+                <a href="#" onClick="{{ p.open }}" style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 14.5px;">{{ p.solutionName }} →</a>
+              </sc-if>
+            </div>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isDetail }}">
+    <div>
+      <div style="background: #1d2d3d; color: #f2f2f3; padding: 38px 28px 42px;">
+        <div style="max-width: 1360px; margin: 0 auto;">
+          <div style="display: flex; align-items: center; gap: 10px; font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(242,242,243,0.55); margin-bottom: 20px;">
+            <a href="#" onClick="{{ goCatalog }}" style="color: rgba(242,242,243,0.75);">{{ T.navCatalog }}</a>
+            <span>/</span>
+            <span>{{ detail.name }}</span>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 320px;">
+              <div style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #94bce3; margin-bottom: 12px;">{{ detail.processArea }}</div>
+              <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 52px; line-height: 1.02; margin: 0 0 4px;">{{ detail.name }}</h1>
+              <div style="font-size: 15px; color: rgba(242,242,243,0.55); margin-bottom: 18px;">{{ detail.nameZh }}</div>
+              <p style="font-size: 18px; line-height: 1.5; max-width: 50ch; color: rgba(242,242,243,0.9); margin: 0;">{{ detail.tagline }}</p>
+            </div>
+            <span class="tag" style="background: #f2f2f3; color: #1d2d3d; font-size: 12px; padding: 6px 14px; letter-spacing: 0.06em; text-transform: uppercase; font-family: 'Barlow Condensed', system-ui, sans-serif; white-space: nowrap;">{{ detail.statusLabel }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="max-width: 1360px; margin: 0 auto; padding: 42px 28px 72px; display: grid; grid-template-columns: minmax(0, 2.15fr) minmax(0, 1fr); gap: 44px; align-items: start;">
+        <div>
+          <div class="blueprint" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: #e9e9ea; margin-bottom: 40px;">
+            <sc-for list="{{ detail.measure }}" as="m" hint-placeholder-count="3">
+              <div style="padding: 18px; border-right: 1px solid rgba(29,31,32,0.16);">
+                <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 8px;">{{ m.k }}</div>
+                <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 24px; line-height: 1.1; color: #1d2d3d;">{{ m.v }}</div>
+                <div style="font-size: 11.5px; color: rgba(29,31,32,0.6); margin-top: 5px;">{{ m.note }}</div>
+              </div>
+            </sc-for>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hProblem }}</h2>
+          <p style="font-size: 16px; line-height: 1.65; color: rgba(29,31,32,0.82); max-width: 68ch; margin: 0 0 36px;">{{ detail.problem }}</p>
+
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hSolution }}</h2>
+          <p style="font-size: 16px; line-height: 1.65; color: rgba(29,31,32,0.82); max-width: 68ch; margin: 0 0 36px;">{{ detail.solution }}</p>
+
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 18px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hHow }}</h2>
+          <div style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 40px;">
+            <sc-for list="{{ detail.how }}" as="h" hint-placeholder-count="5">
+              <div style="display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(29,31,32,0.1);">
+                <div style="font-family: ui-monospace, monospace; font-size: 11px; color: #5980a6; padding-top: 3px;">{{ h.no }}</div>
+                <div style="font-size: 15px; line-height: 1.55; color: rgba(29,31,32,0.85);">{{ h.t }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 18px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hWhere }}</h2>
+          <table class="table" style="margin-bottom: 40px;">
+            <thead>
+              <tr>
+                <th>{{ T.thSite }}</th>
+                <th>{{ T.thRegion }}</th>
+                <th>{{ T.thState }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ detail.rollout }}" as="r" hint-placeholder-count="3">
+                <tr>
+                  <td>{{ r.site }}</td>
+                  <td style="color: rgba(29,31,32,0.6);">{{ r.region }}</td>
+                  <td><span class="tag {{ r.pill }}" style="white-space: nowrap;">{{ r.state }}</span></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 18px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hScreens }}</h2>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-bottom: 40px;">
+            <sc-for list="{{ detail.shots }}" as="sh" hint-placeholder-count="2">
+              <figure style="margin: 0;">
+                <div class="blueprint duotone" style="position: relative; aspect-ratio: 16 / 10; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center; overflow: hidden;">
+                  {{ sh.img }}
+                  <sc-if value="{{ sh.noImage }}">
+                    <span style="font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.58); text-align: center; padding: 0 18px;">{{ sh.caption }}</span>
+                  </sc-if>
+                  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+                </div>
+                <sc-if value="{{ sh.hasImage }}">
+                  <figcaption style="font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.58); margin: 8px 0 0;">{{ sh.caption }}</figcaption>
+                </sc-if>
+              </figure>
+            </sc-for>
+          </div>
+
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hFaq }}</h2>
+          <div style="display: flex; flex-direction: column;">
+            <sc-for list="{{ detail.faq }}" as="f" hint-placeholder-count="2">
+              <div style="padding: 18px 0; border-bottom: 1px solid rgba(29,31,32,0.1);">
+                <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 18px; margin-bottom: 6px;">{{ f.q }}</div>
+                <div style="font-size: 14.5px; line-height: 1.6; color: rgba(29,31,32,0.75); max-width: 66ch;">{{ f.a }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top: 40px;">
+            <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 18px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hRelated }}</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px;">
+              <sc-for list="{{ detail.related }}" as="r" hint-placeholder-count="2">
+                <a href="#" onClick="{{ r.open }}" class="blueprint" style="padding: 16px; text-decoration: none; color: inherit; display: block;" style-hover="background: rgba(89,128,166,0.05);">
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 18px;">{{ r.name }}</span>
+                    <span class="tag {{ r.pill }}" style="font-size: 10.5px; white-space: nowrap;">{{ r.statusLabel }}</span>
+                  </div>
+                  <div style="font-size: 12.5px; color: rgba(29,31,32,0.65); margin-top: 6px; line-height: 1.5;">{{ r.tagline }}</div>
+                  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <aside style="position: sticky; top: 92px; display: flex; flex-direction: column; gap: 20px;">
+          <div class="blueprint" style="padding: 22px 20px; background: #e9e9ea;">
+            <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 12px;">{{ T.nextStep }}</div>
+            <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 22px; line-height: 1.15; margin-bottom: 8px;">{{ detail.ctaTitle }}</div>
+            <p style="font-size: 13px; line-height: 1.55; color: rgba(29,31,32,0.7); margin: 0 0 16px;">{{ detail.ctaBody }}</p>
+            <button onClick="{{ requestAccess }}" class="btn btn-primary btn-block blueprint" style="padding: 10px 18px; font-size: 14px; margin-top: 0; white-space: nowrap;">
+              {{ detail.cta }}
+              <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            </button>
+            <sc-if value="{{ accessSent }}">
+              <div style="font-family: ui-monospace, monospace; font-size: 11px; color: #416180; margin-top: 12px; line-height: 1.5;">{{ T.accessSent }}</div>
+            </sc-if>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+
+          <div class="blueprint" style="padding: 20px;">
+            <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 14px;">{{ T.processOwner }}</div>
+            <div style="display: flex; gap: 14px; align-items: center;">
+              <div class="duotone" style="width: 58px; height: 58px; flex: none; background: repeating-linear-gradient(135deg, transparent 0 7px, rgba(29,31,32,0.09) 7px 8px), #e9e9ea; display: grid; place-items: center; border: 1px solid rgba(29,31,32,0.16); overflow: hidden;">
+                {{ detail.owner.photoImg }}
+                <sc-if value="{{ detail.owner.noPhoto }}">
+                  <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 20px; color: rgba(29,31,32,0.45);">{{ detail.owner.initials }}</span>
+                </sc-if>
+              </div>
+              <div>
+                <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 19px; line-height: 1.15;">{{ detail.owner.name }}</div>
+                <div style="font-size: 12px; color: rgba(29,31,32,0.68); margin-top: 2px;">{{ detail.owner.role }}</div>
+                <div style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.5); margin-top: 5px;">{{ detail.owner.site }}</div>
+              </div>
+            </div>
+            <a href="#" onClick="{{ detail.owner.open }}" style="display: inline-block; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 14px; margin-top: 14px;">{{ T.contactOwner }} →</a>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+
+          <div class="blueprint" style="padding: 20px;">
+            <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 14px;">{{ T.atAGlance }}</div>
+            <div style="display: flex; flex-direction: column; gap: 0;">
+              <sc-for list="{{ detail.facts }}" as="f" hint-placeholder-count="5">
+                <div style="display: flex; gap: 12px; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(29,31,32,0.1); font-size: 13px;">
+                  <span style="color: rgba(29,31,32,0.6);">{{ f.k }}</span>
+                  <span style="text-align: right; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px;">{{ f.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+
+          <div style="padding: 14px 16px; border: 1px dashed rgba(89,128,166,0.6); background: rgba(89,128,166,0.06);">
+            <div style="font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #416180; margin-bottom: 6px;">{{ T.ownerTools }}</div>
+            <div style="font-size: 12px; line-height: 1.5; color: rgba(29,31,32,0.72);">{{ T.ownerToolsBody }}</div>
+            <div style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.5); margin-top: 8px;">{{ detail.stamp }}</div>
+            <sc-if value="{{ isAdmin }}">
+              <a href="#" onClick="{{ detail.edit }}" class="btn btn-secondary" style="text-decoration: none; font-size: 12.5px; padding: 6px 12px; margin-top: 12px; white-space: nowrap;">{{ T.editRecord }}</a>
+            </sc-if>
+          </div>
+        </aside>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isPipeline }}">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 44px 28px 72px;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px;">
+        <span style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45);">{{ T.crumbPipeline }}</span>
+        <sc-if value="{{ isAdmin }}">
+          <a href="#" onClick="{{ manage.pipeline }}" style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none; white-space: nowrap;">{{ T.manageColl }}</a>
+        </sc-if>
+      </div>
+      <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 46px; margin: 0 0 10px;">{{ T.navPipeline }}</h1>
+      <p style="font-size: 15px; color: rgba(29,31,32,0.72); max-width: 70ch; margin: 0 0 14px;">{{ T.pipelineIntro }}</p>
+      <div style="display: flex; align-items: center; gap: 10px; font-family: ui-monospace, monospace; font-size: 11px; color: #416180; margin-bottom: 32px;">
+        <span style="width: 8px; height: 8px; background: #5980a6; display: block;"></span>
+        <span>{{ T.pipelineHonesty }}</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin-bottom: 48px;">
+        <sc-for list="{{ stages }}" as="stg" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="padding-bottom: 12px; border-bottom: 2px solid #5980a6;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-family: ui-monospace, monospace; font-size: 10px; color: rgba(29,31,32,0.45);">{{ stg.no }}</span>
+                <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 17px; text-transform: uppercase; letter-spacing: 0.02em;">{{ stg.label }}</span>
+                <span style="margin-left: auto; font-size: 11px; color: rgba(29,31,32,0.5);">{{ stg.count }}</span>
+              </div>
+              <div style="font-size: 11.5px; color: rgba(29,31,32,0.6); margin-top: 6px; line-height: 1.45;">{{ stg.desc }}</div>
+            </div>
+            <sc-for list="{{ stg.items }}" as="it" hint-placeholder-count="2">
+              <div class="blueprint" style="padding: 15px; background: #e9e9ea;">
+                <div style="display: flex; align-items: flex-start; gap: 8px;">
+                  <div style="flex: 1;">
+                    <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 17px; line-height: 1.15;">{{ it.name }}</div>
+                    <div style="font-size: 11.5px; color: rgba(29,31,32,0.5);">{{ it.nameAlt }}</div>
+                  </div>
+                  <sc-if value="{{ it.isDraft }}"><span class="tag tag-outline" style="font-size: 9.5px; white-space: nowrap;">{{ T.draft }}</span></sc-if>
+                </div>
+                <div style="font-size: 12px; color: rgba(29,31,32,0.7); margin-top: 8px; line-height: 1.45;">{{ it.note }}</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px;">
+                  <span class="tag tag-neutral" style="font-size: 10px; white-space: nowrap;">{{ it.processArea }}</span>
+                  <span class="tag tag-outline" style="font-size: 10px; white-space: nowrap;">{{ it.target }}</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(29,31,32,0.12); font-size: 11.5px; color: rgba(29,31,32,0.6);">
+                  <span>{{ it.owner }}</span>
+                  <sc-if value="{{ it.hasPage }}">
+                    <a href="#" onClick="{{ it.open }}" style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 13px; white-space: nowrap;">{{ T.detailLink }} →</a>
+                  </sc-if>
+                </div>
+                <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+
+      <div class="blueprint" style="padding: 28px; background: #1d2d3d; color: #f2f2f3; display: flex; flex-wrap: wrap; align-items: center; gap: 24px;">
+        <div style="flex: 1; min-width: 300px;">
+          <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin-bottom: 6px;">{{ T.pipelineCtaTitle }}</div>
+          <div style="font-size: 14px; color: rgba(242,242,243,0.78); max-width: 60ch;">{{ T.pipelineCtaBody }}</div>
+        </div>
+        <a href="#" onClick="{{ goSubmit }}" class="btn blueprint" style="text-decoration: none; padding: 11px 22px; background: #f2f2f3; color: #1d2d3d; border-color: #f2f2f3; white-space: nowrap;">
+          {{ T.ctaSubmit }}
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </a>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isNews }}">
+    <div style="max-width: 980px; margin: 0 auto; padding: 44px 28px 72px;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px;">
+        <span style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45);">{{ T.crumbNews }}</span>
+        <sc-if value="{{ isAdmin }}">
+          <a href="#" onClick="{{ manage.announcements }}" style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none; white-space: nowrap;">{{ T.manageColl }}</a>
+        </sc-if>
+      </div>
+      <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 46px; margin: 0 0 10px;">{{ T.announcements }}</h1>
+      <p style="font-size: 15px; color: rgba(29,31,32,0.72); max-width: 66ch; margin: 0 0 32px;">{{ T.newsIntro }}</p>
+      <div style="display: flex; flex-direction: column; gap: 18px;">
+        <sc-for list="{{ announcements }}" as="a" hint-placeholder-count="3">
+          <div class="blueprint" style="display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 24px; padding: 20px 22px;">
+            <div>
+              <div style="font-family: ui-monospace, monospace; font-size: 11px; color: #5980a6;">{{ a.date }}</div>
+              <sc-if value="{{ a.pinned }}"><span class="tag tag-accent" style="font-size: 9.5px; margin-top: 9px; white-space: nowrap;">{{ T.pinned }}</span></sc-if>
+              <sc-if value="{{ a.isDraft }}"><span class="tag tag-outline" style="font-size: 9.5px; margin-top: 9px; white-space: nowrap;">{{ T.draft }}</span></sc-if>
+            </div>
+            <div>
+              <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 23px; line-height: 1.15; margin-bottom: 8px;">{{ a.title }}</div>
+              <p style="font-size: 14.5px; line-height: 1.6; color: rgba(29,31,32,0.78); margin: 0; max-width: 70ch;">{{ a.body }}</p>
+            </div>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isSubmit }}">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 44px 28px 72px;">
+      <div style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45); margin-bottom: 18px;">{{ T.crumbSubmit }}</div>
+      <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 46px; margin: 0 0 10px;">{{ T.submitTitle }}</h1>
+      <p style="font-size: 15px; color: rgba(29,31,32,0.72); max-width: 68ch; margin: 0 0 36px;">{{ T.submitIntro }}</p>
+
+      <div style="display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 40px; align-items: start;">
+        <div class="blueprint" style="padding: 28px; background: #e9e9ea;">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 26px;">
+            <div style="flex: 1; height: 4px; background: rgba(29,31,32,0.14);">
+              <div style="height: 4px; background: #5980a6; width: {{ progressPct }};"></div>
+            </div>
+            <div style="font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.6); white-space: nowrap;">{{ progressLabel }}</div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 30px;">
+            <div>
+              <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">
+                <span style="font-family: ui-monospace, monospace; font-size: 10px; color: #5980a6;">01</span>
+                <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 20px;">{{ T.fsWho }}</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+                <div class="field">
+                  <label>{{ T.fName }}</label>
+                  <input class="input" value="{{ form.name }}" onInput="{{ onField.name }}" placeholder="{{ T.phName }}" />
+                </div>
+                <div class="field">
+                  <label>{{ T.fSite }}</label>
+                  <select class="input" value="{{ form.site }}" onChange="{{ onField.site }}">
+                    <sc-for list="{{ siteOptions }}" as="o" hint-placeholder-count="5">
+                      <option value="{{ o.v }}">{{ o.l }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>{{ T.fFunction }}</label>
+                  <select class="input" value="{{ form.fn }}" onChange="{{ onField.fn }}">
+                    <sc-for list="{{ functionOptions }}" as="o" hint-placeholder-count="5">
+                      <option value="{{ o.v }}">{{ o.l }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">
+                <span style="font-family: ui-monospace, monospace; font-size: 10px; color: #5980a6;">02</span>
+                <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 20px;">{{ T.fsProblem }}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div class="field">
+                  <label>{{ T.fTitle }}</label>
+                  <input class="input" value="{{ form.title }}" onInput="{{ onField.title }}" placeholder="{{ T.phTitle }}" />
+                </div>
+                <div class="field">
+                  <label>{{ T.fDesc }}</label>
+                  <textarea class="input" value="{{ form.desc }}" onInput="{{ onField.desc }}" placeholder="{{ T.phDesc }}" style="min-height: 110px;"></textarea>
+                </div>
+                <div class="field">
+                  <label>{{ T.fToday }}</label>
+                  <input class="input" value="{{ form.today }}" onInput="{{ onField.today }}" placeholder="{{ T.phToday }}" />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">
+                <span style="font-family: ui-monospace, monospace; font-size: 10px; color: #5980a6;">03</span>
+                <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 20px;">{{ T.fsImpact }}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="field">
+                  <label>{{ T.fFrequency }}</label>
+                  <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <sc-for list="{{ frequencyOptions }}" as="o" hint-placeholder-count="4">
+                      <button onClick="{{ o.pick }}" aria-pressed="{{ o.on }}" class="tag {{ o.cls }}" style="cursor: pointer; border: 1px solid rgba(29,31,32,0.2); font-family: inherit; font-size: 12px; padding: 5px 13px; white-space: nowrap;">{{ o.l }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+                  <div class="field">
+                    <label>{{ T.fPeople }}</label>
+                    <input class="input" value="{{ form.people }}" onInput="{{ onField.people }}" placeholder="{{ T.phPeople }}" />
+                  </div>
+                  <div class="field">
+                    <label>{{ T.fHours }}</label>
+                    <input class="input" value="{{ form.hours }}" onInput="{{ onField.hours }}" placeholder="{{ T.phHours }}" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label>{{ T.fSystems }}</label>
+                  <input class="input" value="{{ form.systems }}" onInput="{{ onField.systems }}" placeholder="{{ T.phSystems }}" />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">
+                <span style="font-family: ui-monospace, monospace; font-size: 10px; color: #5980a6;">04</span>
+                <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 20px;">{{ T.fsFinish }}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div style="border: 1px dashed rgba(29,31,32,0.28); padding: 18px; text-align: center; font-family: ui-monospace, monospace; font-size: 11.5px; color: rgba(29,31,32,0.55); line-height: 1.5;">{{ T.fAttach }}</div>
+                <label class="radio" style="align-items: flex-start; gap: 10px;">
+                  <input type="checkbox" checked="{{ form.share }}" onChange="{{ onField.share }}" />
+                  <span class="dot" style="border-radius: 0; margin-top: 2px;"></span>
+                  <span style="font-size: 13px; line-height: 1.5; color: rgba(29,31,32,0.78);">{{ T.fShare }}</span>
+                </label>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding-top: 6px;">
+              <button onClick="{{ submitIdea }}" disabled="{{ submitDisabled }}" class="btn btn-primary blueprint" style="padding: 12px 26px; font-size: 15px; white-space: nowrap;">
+                {{ T.btnSubmit }}
+                <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              </button>
+              <span style="font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.55);">{{ submitHint }}</span>
+            </div>
+          </div>
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </div>
+
+        <aside style="position: sticky; top: 92px; display: flex; flex-direction: column; gap: 20px;">
+          <div class="blueprint" style="padding: 22px 20px;">
+            <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 16px;">{{ T.whatNext }}</div>
+            <div style="display: flex; flex-direction: column; gap: 0;">
+              <sc-for list="{{ intakeSteps }}" as="p" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(29,31,32,0.1);">
+                  <div style="font-family: ui-monospace, monospace; font-size: 10px; color: #5980a6; padding-top: 4px;">{{ p.no }}</div>
+                  <div>
+                    <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 16px;">{{ p.t }}</div>
+                    <div style="font-size: 12.5px; line-height: 1.5; color: rgba(29,31,32,0.68); margin-top: 3px;">{{ p.d }}</div>
+                    <div style="font-family: ui-monospace, monospace; font-size: 10.5px; color: #416180; margin-top: 6px;">{{ p.sla }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+          <div class="blueprint" style="padding: 22px 20px; background: #e9e9ea;">
+            <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 12px;">{{ T.criteria }}</div>
+            <div style="display: flex; flex-direction: column; gap: 9px;">
+              <sc-for list="{{ criteria }}" as="c" hint-placeholder-count="4">
+                <div style="display: flex; gap: 10px; font-size: 13px; line-height: 1.5; color: rgba(29,31,32,0.78);">
+                  <span style="width: 7px; height: 7px; background: #5980a6; flex: none; margin-top: 7px; display: block;"></span>
+                  <span>{{ c }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <a href="#" onClick="{{ goBoard }}" style="display: inline-block; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 14px; margin-top: 16px;">{{ T.ctaBoard }} →</a>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+          <div style="padding: 14px 16px; border: 1px dashed rgba(89,128,166,0.6); background: rgba(89,128,166,0.06);">
+            <div style="font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #416180; margin-bottom: 6px;">{{ T.flowNote }}</div>
+            <div style="font-size: 12px; line-height: 1.55; color: rgba(29,31,32,0.72);">{{ T.flowNoteBody }}</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isThanks }}">
+    <div style="max-width: 860px; margin: 0 auto; padding: 68px 28px 96px;">
+      <div class="blueprint" style="padding: 44px; background: #e9e9ea;">
+        <div style="font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #416180; margin-bottom: 18px;">{{ T.received }}</div>
+        <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 42px; line-height: 1.05; margin: 0 0 14px;">{{ T.thanksTitle }}</h1>
+        <p style="font-size: 16px; line-height: 1.6; color: rgba(29,31,32,0.78); max-width: 58ch; margin: 0 0 30px;">{{ T.thanksBody }}</p>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid rgba(29,31,32,0.16); border-bottom: 1px solid rgba(29,31,32,0.16);">
+          <sc-for list="{{ ticket }}" as="t" hint-placeholder-count="3">
+            <div style="padding: 18px 18px 18px 0;">
+              <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 7px;">{{ t.k }}</div>
+              <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 21px;">{{ t.v }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px;">
+          <a href="#" onClick="{{ goBoard }}" class="btn btn-primary blueprint" style="text-decoration: none; padding: 11px 22px; white-space: nowrap;">
+            {{ T.ctaBoard }}
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </a>
+          <a href="#" onClick="{{ goHome }}" class="btn btn-secondary" style="text-decoration: none; padding: 11px 22px; white-space: nowrap;">{{ T.backHome }}</a>
+        </div>
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isBoard }}">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 44px 28px 72px;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px;">
+        <span style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45);">{{ T.crumbBoard }}</span>
+        <sc-if value="{{ isAdmin }}">
+          <a href="#" onClick="{{ manage.ideas }}" style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none; white-space: nowrap;">{{ T.manageColl }}</a>
+        </sc-if>
+      </div>
+      <div style="display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 30px;">
+        <div>
+          <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 46px; margin: 0 0 10px;">{{ T.boardTitle }}</h1>
+          <p style="font-size: 15px; color: rgba(29,31,32,0.72); max-width: 70ch; margin: 0;">{{ T.boardIntro }}</p>
+        </div>
+        <a href="#" onClick="{{ goSubmit }}" class="btn btn-primary blueprint" style="margin-left: auto; text-decoration: none; padding: 11px 22px; white-space: nowrap;">
+          {{ T.ctaSubmit }}
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </a>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 22px;">
+        <sc-for list="{{ ideaFilters }}" as="f" hint-placeholder-count="5">
+          <button onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" class="tag {{ f.cls }}" style="cursor: pointer; border: 1px solid rgba(29,31,32,0.2); font-family: inherit; font-size: 11.5px; padding: 4px 11px; white-space: nowrap;">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 110px;">{{ T.thRef }}</th>
+            <th>{{ T.thIdea }}</th>
+            <th style="width: 150px;">{{ T.thFrom }}</th>
+            <th style="width: 110px;">{{ T.thDate }}</th>
+            <th style="width: 130px;">{{ T.thState }}</th>
+            <th style="width: 160px;">{{ T.thOutcome }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{ ideas }}" as="x" hint-placeholder-count="8">
+            <tr>
+              <td style="font-family: ui-monospace, monospace; font-size: 11.5px; color: rgba(29,31,32,0.6);">{{ x.ref }}</td>
+              <td>
+                <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 17px; line-height: 1.2;">{{ x.title }}</div>
+                <div style="font-size: 12px; color: rgba(29,31,32,0.6); margin-top: 2px;">{{ x.area }}</div>
+              </td>
+              <td style="font-size: 13px; color: rgba(29,31,32,0.7);">{{ x.from }}</td>
+              <td style="font-family: ui-monospace, monospace; font-size: 11.5px; color: rgba(29,31,32,0.6);">{{ x.date }}</td>
+              <td><span class="tag {{ x.pill }}" style="white-space: nowrap;">{{ x.state }}</span></td>
+              <td style="font-size: 12.5px; color: rgba(29,31,32,0.7);">{{ x.outcome }}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isPeople }}">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 44px 28px 72px;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px;">
+        <span style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45);">{{ T.crumbPeople }}</span>
+        <sc-if value="{{ isAdmin }}">
+          <a href="#" onClick="{{ manage.owners }}" style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px dashed rgba(89,128,166,0.7); padding: 4px 9px; text-decoration: none; white-space: nowrap;">{{ T.manageColl }}</a>
+        </sc-if>
+      </div>
+      <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 46px; margin: 0 0 10px;">{{ T.navPeople }}</h1>
+      <p style="font-size: 15px; color: rgba(29,31,32,0.72); max-width: 68ch; margin: 0 0 30px;">{{ T.peopleIntro }}</p>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 34px;">
+        <span style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.5); margin-right: 6px;">{{ T.filterRegion }}</span>
+        <sc-for list="{{ regionFilters }}" as="f" hint-placeholder-count="3">
+          <button onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" class="tag {{ f.cls }}" style="cursor: pointer; border: 1px solid rgba(29,31,32,0.2); font-family: inherit; font-size: 11.5px; padding: 4px 11px; white-space: nowrap;">{{ f.label }}</button>
+        </sc-for>
+        <span style="margin-left: auto; font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.55);">{{ teamCount }}</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 48px;">
+        <sc-for list="{{ teamGroups }}" as="g" hint-placeholder-count="5">
+          <div>
+            <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #5980a6;">
+              <span style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.45);">{{ g.no }}</span>
+              <div style="flex: 1; min-width: 240px;">
+                <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; line-height: 1.1;">{{ g.label }}</div>
+                <div style="font-size: 13px; color: rgba(29,31,32,0.65); margin-top: 4px;">{{ g.desc }}</div>
+              </div>
+              <span class="tag tag-neutral" style="font-size: 10.5px; white-space: nowrap;">{{ g.count }}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 20px;">
+              <sc-for list="{{ g.members }}" as="o" hint-placeholder-count="2">
+                <div class="blueprint" style="display: flex; flex-direction: column; gap: 14px; padding: 20px;">
+                  <div style="display: flex; gap: 16px;">
+                    <div class="duotone" style="width: 72px; height: 72px; flex: none; background: repeating-linear-gradient(135deg, transparent 0 7px, rgba(29,31,32,0.09) 7px 8px), #e9e9ea; display: grid; place-items: center; border: 1px solid rgba(29,31,32,0.16); overflow: hidden;">
+                      {{ o.photoImg }}
+                      <sc-if value="{{ o.noPhoto }}">
+                        <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 25px; color: rgba(29,31,32,0.45);">{{ o.initials }}</span>
+                      </sc-if>
+                    </div>
+                    <div style="flex: 1;">
+                      <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 21px; line-height: 1.12;">{{ o.name }}</div>
+                      <div style="font-size: 11.5px; color: rgba(29,31,32,0.5);">{{ o.nameAlt }}</div>
+                      <div style="font-size: 13.5px; color: rgba(29,31,32,0.78); margin-top: 6px; line-height: 1.4;">{{ o.position }}</div>
+                      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 8px;">
+                        <span class="tag tag-accent" style="font-size: 10.5px; white-space: nowrap;">{{ o.area }}</span>
+                        <span style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.5);">{{ o.site }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.5); margin-bottom: 8px;">{{ T.responsibilities }}</div>
+                    <div style="display: flex; flex-direction: column; gap: 7px;">
+                      <sc-for list="{{ o.responsibilities }}" as="r" hint-placeholder-count="3">
+                        <div style="display: flex; gap: 9px; font-size: 13px; line-height: 1.45; color: rgba(29,31,32,0.78);">
+                          <span style="width: 6px; height: 6px; background: #5980a6; flex: none; margin-top: 6px; display: block;"></span>
+                          <span>{{ r }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 7px; border-top: 1px solid rgba(29,31,32,0.12); padding-top: 14px; margin-top: auto;">
+                    <a href="{{ o.mailto }}" style="font-family: ui-monospace, monospace; font-size: 12px; text-decoration: none; word-break: break-all;">{{ o.email }}</a>
+                    <div style="display: flex; flex-wrap: wrap; gap: 14px; font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.6);">
+                      <sc-if value="{{ o.hasPhone }}"><span>{{ o.phone }}</span></sc-if>
+                      <sc-if value="{{ o.hasTeams }}"><span>{{ T.teamsLabel }} {{ o.teams }}</span></sc-if>
+                    </div>
+                  </div>
+                  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+        <sc-if value="{{ teamEmpty }}">
+          <div class="blueprint" style="padding: 40px; text-align: center; background: #e9e9ea;">
+            <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 22px; margin-bottom: 8px;">{{ T.teamEmptyTitle }}</div>
+            <p style="font-size: 14px; color: rgba(29,31,32,0.7); max-width: 48ch; margin: 0 auto;">{{ T.teamEmptyBody }}</p>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isAbout }}">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 44px 28px 72px;">
+      <div style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45); margin-bottom: 18px;">{{ T.crumbAbout }}</div>
+      <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 46px; margin: 0 0 10px;">{{ T.aboutTitle }}</h1>
+      <p style="font-size: 16px; line-height: 1.65; color: rgba(29,31,32,0.78); max-width: 70ch; margin: 0 0 40px;">{{ T.aboutBody }}</p>
+
+      <div style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 44px; align-items: start;">
+        <div>
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 18px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hPlatform }}</h2>
+          <table class="table" style="margin-bottom: 44px;">
+            <thead>
+              <tr>
+                <th>{{ T.thSection }}</th>
+                <th>{{ T.thSource }}</th>
+                <th>{{ T.thEditor }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ sourceMap }}" as="m" hint-placeholder-count="8">
+                <tr>
+                  <td style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 16px;">{{ m.label }}</td>
+                  <td style="font-family: ui-monospace, monospace; font-size: 11.5px; color: rgba(29,31,32,0.7);">{{ m.list }}</td>
+                  <td style="font-size: 12.5px; color: rgba(29,31,32,0.7);">{{ m.editor }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 18px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hGovernance }}</h2>
+          <table class="table" style="margin-bottom: 44px;">
+            <thead>
+              <tr>
+                <th>{{ T.thDecision }}</th>
+                <th>{{ T.thWho }}</th>
+                <th>{{ T.thWhen }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ governance }}" as="g" hint-placeholder-count="5">
+                <tr>
+                  <td style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 16px;">{{ g.d }}</td>
+                  <td style="font-size: 13px; color: rgba(29,31,32,0.72);">{{ g.w }}</td>
+                  <td style="font-size: 12.5px; color: rgba(29,31,32,0.65);">{{ g.c }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 18px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hGlossary }}</h2>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 44px;">
+            <sc-for list="{{ glossary }}" as="g" hint-placeholder-count="6">
+              <div style="border-left: 1px solid rgba(29,31,32,0.16); padding-left: 14px;">
+                <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 17px;">{{ g.t }}</div>
+                <div style="font-size: 13px; line-height: 1.55; color: rgba(29,31,32,0.72); margin-top: 4px;">{{ g.d }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 18px; padding-bottom: 8px; border-bottom: 1px solid rgba(29,31,32,0.16);">{{ T.hRelease }}</h2>
+          <div style="display: flex; flex-direction: column;">
+            <sc-for list="{{ releases }}" as="r" hint-placeholder-count="4">
+              <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 18px; padding: 15px 0; border-bottom: 1px solid rgba(29,31,32,0.1);">
+                <div style="font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.55); padding-top: 3px;">{{ r.d }}</div>
+                <div>
+                  <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 17px;">{{ r.t }}</div>
+                  <div style="font-size: 13.5px; line-height: 1.55; color: rgba(29,31,32,0.72); margin-top: 3px;">{{ r.b }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <aside style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="blueprint" style="padding: 22px 20px; background: #e9e9ea;">
+            <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 14px;">{{ T.hArchitecture }}</div>
+            <div style="display: flex; flex-direction: column; gap: 0;">
+              <sc-for list="{{ architecture }}" as="a" hint-placeholder-count="5">
+                <div style="padding: 11px 0; border-bottom: 1px solid rgba(29,31,32,0.12);">
+                  <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 15px;">{{ a.t }}</div>
+                  <div style="font-size: 12.5px; line-height: 1.5; color: rgba(29,31,32,0.7); margin-top: 3px;">{{ a.d }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+          <div class="blueprint" style="padding: 22px 20px;">
+            <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 14px;">{{ T.hRoadmapSite }}</div>
+            <div style="display: flex; flex-direction: column; gap: 0;">
+              <sc-for list="{{ roadmap }}" as="r" hint-placeholder-count="6">
+                <div style="display: flex; gap: 12px; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(29,31,32,0.12); font-size: 13px;">
+                  <span style="color: rgba(29,31,32,0.8); line-height: 1.45;">{{ r.t }}</span>
+                  <span class="tag tag-outline" style="font-size: 10px; height: 20px; white-space: nowrap;">{{ r.p }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+          <div class="blueprint" style="padding: 22px 20px;">
+            <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.55); margin-bottom: 12px;">{{ T.hLanguages }}</div>
+            <p style="font-size: 13px; line-height: 1.6; color: rgba(29,31,32,0.75); margin: 0;">{{ T.languagesBody }}</p>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+        </aside>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isSearch }}">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 44px 28px 72px;">
+      <div style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45); margin-bottom: 18px;">{{ T.crumbSearch }}</div>
+      <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 40px; margin: 0 0 8px;">{{ searchHeading }}</h1>
+      <p style="font-family: ui-monospace, monospace; font-size: 11.5px; color: rgba(29,31,32,0.55); margin: 0 0 30px;">{{ searchCount }}</p>
+      <div style="display: flex; flex-direction: column;">
+        <sc-for list="{{ searchResults }}" as="r" hint-placeholder-count="4">
+          <a href="#" onClick="{{ r.open }}" style="display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; padding: 18px 0; border-bottom: 1px solid rgba(29,31,32,0.12); text-decoration: none; color: inherit;" style-hover="background: rgba(89,128,166,0.05);">
+            <span class="tag tag-neutral" style="height: 22px; justify-self: start; font-size: 10.5px; white-space: nowrap;">{{ r.kind }}</span>
+            <span>
+              <span style="display: block; font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 20px; line-height: 1.15;">{{ r.title }}</span>
+              <span style="display: block; font-size: 13.5px; line-height: 1.55; color: rgba(29,31,32,0.7); margin-top: 4px;">{{ r.snippet }}</span>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+      <sc-if value="{{ searchEmpty }}">
+        <div class="blueprint" style="padding: 40px; text-align: center; background: #e9e9ea;">
+          <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 24px; margin-bottom: 8px;">{{ T.searchEmptyTitle }}</div>
+          <p style="font-size: 14px; color: rgba(29,31,32,0.7); max-width: 48ch; margin: 0 auto 20px;">{{ T.searchEmptyBody }}</p>
+          <a href="#" onClick="{{ goSubmit }}" class="btn btn-primary" style="text-decoration: none; padding: 10px 20px; white-space: nowrap;">{{ T.ctaSubmit }}</a>
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </div>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isAdminHome }}">
+    <div style="max-width: 1440px; margin: 0 auto; padding: 36px 28px 72px;">
+      <div style="display: flex; align-items: flex-end; flex-wrap: wrap; gap: 20px; margin-bottom: 26px; border-bottom: 1px solid rgba(29,31,32,0.16); padding-bottom: 16px;">
+        <div>
+          <div style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45); margin-bottom: 10px;">{{ T.crumbAdmin }}</div>
+          <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 40px; margin: 0 0 6px;">{{ T.adminDashboard }}</h1>
+          <p style="font-size: 14px; color: rgba(29,31,32,0.7); max-width: 74ch; margin: 0;">{{ T.adminIntro }}</p>
+        </div>
+        <span style="margin-left: auto; display: flex; flex-wrap: wrap; gap: 10px;">
+          <a href="#" onClick="{{ goHome }}" class="btn btn-secondary" style="text-decoration: none; padding: 9px 16px; font-size: 13px; white-space: nowrap;">{{ T.viewAsVisitor }}</a>
+          <button onClick="{{ resetContent }}" class="btn btn-secondary" style="padding: 9px 16px; font-size: 13px; white-space: nowrap;">{{ T.resetContent }}</button>
+        </span>
+      </div>
+
+      <sc-if value="{{ flash }}">
+        <div style="border: 1px dashed rgba(89,128,166,0.7); background: rgba(89,128,166,0.08); padding: 12px 16px; font-family: ui-monospace, monospace; font-size: 11.5px; color: #416180; margin-bottom: 24px;">{{ flash }}</div>
+      </sc-if>
+
+      <div class="blueprint" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: #e9e9ea; margin-bottom: 30px;">
+        <sc-for list="{{ adminStats }}" as="s" hint-placeholder-count="4">
+          <div style="padding: 20px; border-right: 1px solid rgba(29,31,32,0.16);">
+            <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 36px; line-height: 1; color: #1d2d3d;">{{ s.v }}</div>
+            <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(29,31,32,0.6); margin-top: 7px;">{{ s.k }}</div>
+          </div>
+        </sc-for>
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 28px; align-items: start;">
+        <aside style="display: flex; flex-direction: column; gap: 22px; position: sticky; top: 92px;">
+          <sc-for list="{{ adminGroups }}" as="g" hint-placeholder-count="3">
+            <div>
+              <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,31,32,0.5); margin-bottom: 10px;">{{ g.label }}</div>
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <sc-for list="{{ g.items }}" as="c" hint-placeholder-count="4">
+                  <a href="#" onClick="{{ c.pick }}" aria-current="{{ c.on }}" style="display: flex; align-items: center; gap: 8px; padding: 9px 11px; text-decoration: none; color: inherit; border-left: 2px solid {{ c.bar }}; background: {{ c.bg }};" style-hover="background: rgba(89,128,166,0.07);">
+                    <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; flex: 1;">{{ c.label }}</span>
+                    <span style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.5);">{{ c.count }}</span>
+                  </a>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+          <div style="padding: 14px 15px; border: 1px dashed rgba(89,128,166,0.6); background: rgba(89,128,166,0.06);">
+            <div style="font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #416180; margin-bottom: 6px;">{{ T.noCode }}</div>
+            <div style="font-size: 12px; line-height: 1.55; color: rgba(29,31,32,0.72);">{{ T.noCodeBody }}</div>
+          </div>
+        </aside>
+
+        <div>
+          <div class="blueprint" style="padding: 20px 22px; background: #e9e9ea; margin-bottom: 22px;">
+            <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 18px;">
+              <div style="flex: 1; min-width: 260px;">
+                <h2 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 26px; margin: 0 0 6px;">{{ activeColl.label }}</h2>
+                <div style="font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.6); line-height: 1.6;">{{ activeColl.source }}</div>
+              </div>
+              <button onClick="{{ newRecord }}" class="btn btn-primary blueprint" style="padding: 9px 18px; font-size: 13.5px; white-space: nowrap;">
+                {{ T.newRecord }}
+                <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              </button>
+            </div>
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </div>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 58px;">{{ T.thOrder }}</th>
+                <th>{{ T.thRecord }}</th>
+                <th style="width: 118px;">{{ T.thState }}</th>
+                <th style="width: 160px;">{{ T.thModified }}</th>
+                <th style="width: 250px;">{{ T.thActions }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ adminRows }}" as="r" hint-placeholder-count="6">
+                <tr>
+                  <td style="font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.5);">
+                    <span style="display: flex; align-items: center; gap: 4px;">
+                      <span>{{ r.order }}</span>
+                      <button onClick="{{ r.up }}" title="{{ T.moveUp }}" style="cursor: pointer; border: 1px solid rgba(29,31,32,0.2); background: transparent; font-size: 10px; line-height: 1; padding: 2px 4px;" style-hover="background: rgba(89,128,166,0.12);">↑</button>
+                      <button onClick="{{ r.down }}" title="{{ T.moveDown }}" style="cursor: pointer; border: 1px solid rgba(29,31,32,0.2); background: transparent; font-size: 10px; line-height: 1; padding: 2px 4px;" style-hover="background: rgba(89,128,166,0.12);">↓</button>
+                    </span>
+                  </td>
+                  <td>
+                    <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 17px; line-height: 1.2;">{{ r.title }}</div>
+                    <div style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.5); margin-top: 3px;">{{ r.id }}</div>
+                  </td>
+                  <td><span class="tag {{ r.statePill }}" style="white-space: nowrap;">{{ r.stateLabel }}</span></td>
+                  <td style="font-size: 12px; color: rgba(29,31,32,0.65); line-height: 1.4;">{{ r.modified }}</td>
+                  <td>
+                    <span style="display: flex; flex-wrap: wrap; gap: 6px;">
+                      <button onClick="{{ r.edit }}" class="btn btn-secondary" style="font-size: 12px; padding: 5px 11px; white-space: nowrap;">{{ T.edit }}</button>
+                      <button onClick="{{ r.toggleState }}" class="btn btn-secondary" style="font-size: 12px; padding: 5px 11px; white-space: nowrap;">{{ r.toggleLabel }}</button>
+                      <button onClick="{{ r.duplicate }}" class="btn btn-secondary" style="font-size: 12px; padding: 5px 11px; white-space: nowrap;">{{ T.duplicate }}</button>
+                      <button onClick="{{ r.remove }}" class="btn btn-ghost" style="font-size: 12px; padding: 5px 8px; white-space: nowrap;">{{ T.remove }}</button>
+                    </span>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isAdminEdit }}">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 36px 28px 80px;">
+      <div style="font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(29,31,32,0.45); margin-bottom: 18px;">{{ editCrumb }}</div>
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid rgba(29,31,32,0.16); padding-bottom: 16px;">
+        <div>
+          <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 36px; margin: 0 0 6px;">{{ editTitle }}</h1>
+          <div style="font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.6);">{{ editMeta }}</div>
+        </div>
+        <span style="margin-left: auto; display: flex; gap: 10px;">
+          <button onClick="{{ cancelEdit }}" class="btn btn-secondary" style="padding: 10px 18px; font-size: 13.5px; white-space: nowrap;">{{ T.cancel }}</button>
+          <button onClick="{{ saveRecord }}" class="btn btn-primary blueprint" style="padding: 10px 20px; font-size: 13.5px; white-space: nowrap;">
+            {{ T.save }}
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </button>
+        </span>
+      </div>
+
+      <div class="blueprint" style="display: flex; flex-wrap: wrap; gap: 26px; padding: 18px 20px; background: #e9e9ea; margin-bottom: 28px;">
+        <div class="field" style="min-width: 200px;">
+          <label>{{ T.fState }}</label>
+          <select class="input" value="{{ editState }}" onChange="{{ onEditState }}">
+            <sc-for list="{{ stateOptions }}" as="o" hint-placeholder-count="3">
+              <option value="{{ o.v }}">{{ o.l }}</option>
+            </sc-for>
+          </select>
+        </div>
+        <div class="field" style="min-width: 110px;">
+          <label>{{ T.thOrder }}</label>
+          <input class="input" value="{{ editOrder }}" onInput="{{ onEditOrder }}" />
+        </div>
+        <div style="flex: 1; min-width: 240px; align-self: center; font-size: 12.5px; line-height: 1.55; color: rgba(29,31,32,0.7);">{{ T.stateHelp }}</div>
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 26px;">
+        <sc-for list="{{ editFields }}" as="f" hint-placeholder-count="6">
+          <div>
+            <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 9px;">
+              <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 17px;">{{ f.label }}</span>
+              <span style="font-family: ui-monospace, monospace; font-size: 10px; color: rgba(29,31,32,0.45);">{{ f.meta }}</span>
+            </div>
+            <sc-if value="{{ f.hint }}">
+              <div style="font-size: 12px; color: rgba(29,31,32,0.6); margin-bottom: 9px; line-height: 1.5;">{{ f.hint }}</div>
+            </sc-if>
+
+            <sc-if value="{{ f.isText }}">
+              <input class="input" value="{{ f.v }}" onInput="{{ f.set }}" />
+            </sc-if>
+            <sc-if value="{{ f.isBool }}">
+              <label class="radio" style="align-items: center; gap: 10px;">
+                <input type="checkbox" checked="{{ f.b }}" onChange="{{ f.setBool }}" />
+                <span class="dot" style="border-radius: 0;"></span>
+                <span style="font-size: 13px; color: rgba(29,31,32,0.78);">{{ f.boolLabel }}</span>
+              </label>
+            </sc-if>
+            <sc-if value="{{ f.isSelect }}">
+              <select class="input" value="{{ f.v }}" onChange="{{ f.set }}" style="max-width: 380px;">
+                <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4">
+                  <option value="{{ o.v }}">{{ o.l }}</option>
+                </sc-for>
+              </select>
+            </sc-if>
+            <sc-if value="{{ f.isMulti }}">
+              <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+                <sc-for list="{{ f.chips }}" as="c" hint-placeholder-count="5">
+                  <button onClick="{{ c.toggle }}" aria-pressed="{{ c.on }}" class="tag {{ c.cls }}" style="cursor: pointer; border: 1px solid rgba(29,31,32,0.2); font-family: inherit; font-size: 11.5px; padding: 4px 11px; white-space: nowrap;">{{ c.l }}</button>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ f.isBi }}">
+              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+                <div class="field">
+                  <label>English</label>
+                  <sc-if value="{{ f.isLong }}">
+                    <textarea class="input" value="{{ f.en }}" onInput="{{ f.setEn }}" style="min-height: 110px;"></textarea>
+                  </sc-if>
+                  <sc-if value="{{ f.isShort }}">
+                    <input class="input" value="{{ f.en }}" onInput="{{ f.setEn }}" />
+                  </sc-if>
+                </div>
+                <div class="field">
+                  <label>简体中文</label>
+                  <sc-if value="{{ f.isLong }}">
+                    <textarea class="input" value="{{ f.zh }}" onInput="{{ f.setZh }}" style="min-height: 110px;"></textarea>
+                  </sc-if>
+                  <sc-if value="{{ f.isShort }}">
+                    <input class="input" value="{{ f.zh }}" onInput="{{ f.setZh }}" />
+                  </sc-if>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ f.isLines }}">
+              <textarea class="input" value="{{ f.v }}" onInput="{{ f.set }}" style="min-height: 92px; font-family: ui-monospace, monospace; font-size: 12.5px;"></textarea>
+            </sc-if>
+            <sc-if value="{{ f.isImage }}">
+              <div style="display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: 18px; align-items: start;">
+                <div class="blueprint duotone" style="position: relative; aspect-ratio: 1 / 1; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center; overflow: hidden;">
+                  {{ f.preview }}
+                  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px;">
+                    <label class="btn btn-secondary" style="cursor: pointer; padding: 8px 16px; font-size: 13px; white-space: nowrap; margin: 0;">
+                      <sc-if value="{{ f.hasImage }}">{{ T.fReplace }}</sc-if>
+                      <sc-if value="{{ f.noImage }}">{{ T.fUpload }}</sc-if>
+                      <input type="file" accept="image/*" onChange="{{ f.upload }}" style="display: none;" />
+                    </label>
+                    <sc-if value="{{ f.hasImage }}">
+                      <button onClick="{{ f.clear }}" class="btn btn-ghost" style="padding: 8px 14px; font-size: 13px; white-space: nowrap;">{{ T.fRemove }}</button>
+                    </sc-if>
+                    <span style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.5);">{{ f.fileName }}</span>
+                  </div>
+                  <sc-if value="{{ f.noImage }}">
+                    <div style="font-size: 12px; color: rgba(29,31,32,0.6); line-height: 1.5;">{{ T.fNoImage }}</div>
+                  </sc-if>
+                  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+                    <div class="field">
+                      <label>{{ T.fAltEn }}</label>
+                      <input class="input" value="{{ f.altEn }}" onInput="{{ f.setAltEn }}" />
+                    </div>
+                    <div class="field">
+                      <label>{{ T.fAltZh }}</label>
+                      <input class="input" value="{{ f.altZh }}" onInput="{{ f.setAltZh }}" />
+                    </div>
+                  </div>
+                  <div style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.5); line-height: 1.5;">{{ T.fUploadNote }}</div>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ f.isImageList }}">
+              <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px;">
+                  <sc-for list="{{ f.imgs }}" as="im" hint-placeholder-count="2">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                      <div class="blueprint duotone" style="position: relative; aspect-ratio: 16 / 10; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center; overflow: hidden;">
+                        {{ im.preview }}
+                        <span style="position: absolute; top: 7px; left: 9px; font-family: ui-monospace, monospace; font-size: 10px; color: rgba(29,31,32,0.55);">{{ im.no }}</span>
+                        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+                      </div>
+                      <div class="field">
+                        <label>{{ T.fCaption }}</label>
+                        <input class="input" value="{{ im.caption }}" onInput="{{ im.setCaption }}" />
+                      </div>
+                      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+                        <label class="btn btn-secondary" style="cursor: pointer; padding: 6px 12px; font-size: 12px; white-space: nowrap; margin: 0;">
+                          {{ T.fReplace }}
+                          <input type="file" accept="image/*" onChange="{{ im.replace }}" style="display: none;" />
+                        </label>
+                        <button onClick="{{ im.remove }}" class="btn btn-ghost" style="padding: 6px 12px; font-size: 12px; white-space: nowrap;">{{ T.fRemove }}</button>
+                      </div>
+                      <span style="font-family: ui-monospace, monospace; font-size: 10px; color: rgba(29,31,32,0.5);">{{ im.fileName }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                  <label class="btn btn-secondary blueprint" style="cursor: pointer; padding: 8px 16px; font-size: 13px; white-space: nowrap; margin: 0;">
+                    {{ T.fAddImage }}
+                    <input type="file" accept="image/*" onChange="{{ f.add }}" style="display: none;" />
+                    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+                  </label>
+                  <span style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(29,31,32,0.5); line-height: 1.5;">{{ T.fUploadNote }}</span>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; padding-top: 22px; border-top: 1px solid rgba(29,31,32,0.16);">
+        <button onClick="{{ saveRecord }}" class="btn btn-primary blueprint" style="padding: 11px 22px; font-size: 14px; white-space: nowrap;">
+          {{ T.save }}
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        </button>
+        <button onClick="{{ cancelEdit }}" class="btn btn-secondary" style="padding: 11px 22px; font-size: 14px; white-space: nowrap;">{{ T.cancel }}</button>
+        <span style="margin-left: auto; align-self: center; font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.5); max-width: 44ch; line-height: 1.5;">{{ T.saveNote }}</span>
+      </div>
+    </div>
+    </sc-if>
+
+    <!--SECTIONS-->
+
+  </main>
+
+  <footer style="background: #1d2d3d; color: rgba(242,242,243,0.8); padding: 44px 28px 28px;">
+    <div style="max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); gap: 36px;">
+      <div>
+        <div style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 20px; color: #f2f2f3; margin-bottom: 8px;">{{ T.brand }}</div>
+        <div style="font-size: 13px; line-height: 1.6; max-width: 34ch; color: rgba(242,242,243,0.6);">{{ T.footerBlurb }}</div>
+      </div>
+      <div>
+        <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(242,242,243,0.45); margin-bottom: 12px;">{{ T.footerExplore }}</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13.5px;">
+          <a href="#" onClick="{{ goCatalog }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navCatalog }}</a>
+          <a href="#" onClick="{{ goPortfolio }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navPortfolio }}</a>
+          <a href="#" onClick="{{ goPipeline }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navPipeline }}</a>
+          <a href="#" onClick="{{ goPeople }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navPeople }}</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(242,242,243,0.45); margin-bottom: 12px;">{{ T.footerParticipate }}</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13.5px;">
+          <a href="#" onClick="{{ goSubmit }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navSubmit }}</a>
+          <a href="#" onClick="{{ goBoard }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.ctaBoard }}</a>
+          <a href="#" onClick="{{ goNews }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.announcements }}</a>
+          <a href="#" onClick="{{ goAbout }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navAbout }}</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(242,242,243,0.45); margin-bottom: 12px;">{{ T.footerLanguage }}</div>
+        <div style="display: flex; gap: 8px; margin-bottom: 18px;">
+          <button onClick="{{ setEn }}" style="cursor: pointer; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 13px; padding: 5px 12px; background: transparent; color: rgba(242,242,243,0.85); border: 1px solid rgba(242,242,243,0.3); white-space: nowrap;" style-hover="background: rgba(242,242,243,0.12);">English</button>
+          <button onClick="{{ setZh }}" style="cursor: pointer; font-family: Barlow, system-ui, sans-serif; font-size: 13px; padding: 5px 12px; background: transparent; color: rgba(242,242,243,0.85); border: 1px solid rgba(242,242,243,0.3); white-space: nowrap;" style-hover="background: rgba(242,242,243,0.12);">简体中文</button>
+        </div>
+        <sc-if value="{{ isVisitor }}">
+          <a href="#" onClick="{{ openSignIn }}" style="font-size: 12.5px; color: rgba(242,242,243,0.6); text-decoration: none;">{{ T.staffSignIn }} →</a>
+        </sc-if>
+      </div>
+    </div>
+    <div style="max-width: 1360px; margin: 32px auto 0; padding-top: 18px; border-top: 1px solid rgba(242,242,243,0.16); display: flex; flex-wrap: wrap; gap: 16px; font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(242,242,243,0.45); letter-spacing: 0.04em;">
+      <span>{{ T.footerLegal }}</span>
+      <span style="margin-left: auto;">{{ T.footerVersion }}</span>
+    </div>
+  </footer>
+
+  <sc-if value="{{ signInOpen }}">
+    <div class="dialog-backdrop" style="z-index: 60;">
+      <div class="dialog blueprint" style="width: min(460px, 100%); background: #f2f2f3;">
+        <div style="font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(29,31,32,0.5);">{{ T.entra }}</div>
+        <div class="dialog-title" style="font-size: 24px;">{{ T.signInTitle }}</div>
+        <div class="dialog-body" style="font-size: 13.5px; line-height: 1.6;">{{ T.signInBody }}</div>
+        <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 4px;">
+          <button onClick="{{ signInAdmin }}" class="btn btn-primary btn-block blueprint" style="padding: 10px 16px; font-size: 14px; white-space: nowrap;">
+            {{ T.signInAdmin }}
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </button>
+          <button onClick="{{ signInOwner }}" class="btn btn-secondary btn-block" style="padding: 10px 16px; font-size: 14px; white-space: nowrap;">{{ T.signInOwner }}</button>
+        </div>
+        <div class="dialog-actions">
+          <button onClick="{{ closeSignIn }}" class="btn btn-ghost" style="font-size: 13px; white-space: nowrap;">{{ T.cancel }}</button>
+        </div>
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ confirmRec }}">
+    <div class="dialog-backdrop" style="z-index: 60;">
+      <div class="dialog blueprint" style="width: min(440px, 100%); background: #f2f2f3;">
+        <div class="dialog-title" style="font-size: 22px;">{{ T.deleteTitle }}</div>
+        <div class="dialog-body" style="font-size: 13.5px; line-height: 1.6;">{{ T.deleteBody }}</div>
+        <div style="font-family: ui-monospace, monospace; font-size: 11.5px; color: #416180; border: 1px dashed rgba(89,128,166,0.6); padding: 10px 12px;">{{ confirmRec.label }}</div>
+        <div class="dialog-actions">
+          <button onClick="{{ cancelDelete }}" class="btn btn-secondary" style="font-size: 13px; white-space: nowrap;">{{ T.cancel }}</button>
+          <button onClick="{{ doDelete }}" class="btn btn-primary" style="font-size: 13px; white-space: nowrap;">{{ T.deleteConfirm }}</button>
+        </div>
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  state = {
+    lang: 'en', route: 'home', detailId: null, query: '',
+    db: null, loading: true, loadError: false,
+    role: 'visitor', user: null, showDrafts: true, signInOpen: false,
+    fStatus: 'all', fProcess: 'all', fSite: 'all', fIdea: 'all', fRegion: 'all',
+    accessSent: false, ticketRef: null,
+    form: { name: '', site: '', fn: '', title: '', desc: '', today: '', freq: '', people: '', hours: '', systems: '', share: true },
+    adminColl: 'solutions', editId: null, editRec: null, confirmId: null, flash: ''
+  };
+
+  S = {
+    org: ['Sanhua Logistics · Mexico & China', '三花物流 · 墨西哥与中国'],
+    brand: ['Logistics Innovation Hub', '物流创新中心'],
+    brandAlt: ['物流创新中心', 'Logistics Innovation Hub'],
+    searchPh: ['Search solutions, projects, people…', '搜索方案、项目、人员…'],
+    navHome: ['Home', '首页'],
+    navCatalog: ['Solutions Catalog', '方案目录'],
+    navPortfolio: ['Project Portfolio', '项目组合'],
+    navPipeline: ['Innovation Pipeline', '创新管道'],
+    navSubmit: ['Submit an Idea', '提交想法'],
+    navPeople: ['Team Directory', '团队名录'],
+    navAbout: ['About the Hub', '关于本平台'],
+    announcement: ['Announcement', '公告'],
+    announcements: ['Announcements', '公告'],
+    staffSignIn: ['Staff sign-in', '员工登录'],
+    signOut: ['Sign out', '退出'],
+    adminMode: ['Administrator mode', '管理员模式'],
+    adminDashboard: ['Admin dashboard', '管理后台'],
+    showDrafts: ['Show drafts on public pages', '在公开页显示草稿'],
+    manage: ['Manage', '管理'],
+    draft: ['Draft', '草稿'],
+    entra: ['Microsoft Entra ID', 'Microsoft Entra ID'],
+    signInTitle: ['Sign in to manage content', '登录以管理内容'],
+    signInBody: ['In production this is a Microsoft Entra ID sign-in, and your role comes from your security group — nothing is chosen here. In this prototype, pick a role to see what each one can do. Visitors need no sign-in at all.', '在正式环境中，此处为 Microsoft Entra ID 登录，角色来自你所属的安全组，无需在此选择。本原型中可选择角色以查看各自权限。访客无需登录即可浏览。'],
+    signInAdmin: ['Sign in as content administrator', '以内容管理员身份登录'],
+    signInOwner: ['Sign in as solution owner', '以方案负责人身份登录'],
+    cancel: ['Cancel', '取消'],
+    deleteTitle: ['Delete this record?', '删除该记录？'],
+    deleteBody: ['Archiving keeps the record out of the portal but preserves it. Deleting removes it from the list permanently — prefer archive unless the record was created in error.', '归档可使记录不在门户展示但仍保留。删除将从列表中永久移除——除误建记录外，建议使用归档。'],
+    deleteConfirm: ['Delete permanently', '永久删除'],
+    loading: ['Loading portal content…', '正在加载门户内容…'],
+    loadErrorTitle: ['Content source unavailable', '内容源不可用'],
+    loadErrorBody: ['The portal could not read its content source. In production this is the SharePoint List / Dataverse connection, and this screen carries the service-desk reference instead of an empty page.', '门户无法读取内容源。在正式环境中此处为 SharePoint 列表 / Dataverse 连接，此页面将显示服务台工单编号，而非空白页。'],
+    heroKicker: ['Digital logistics portfolio', '数字物流方案组合'],
+    heroTitle: ['Digital solutions built for Logistics, by Logistics', '由物流团队为物流团队打造的数字化方案'],
+    heroBody: ['Every digital solution running inside Sanhua Logistics — what it does, where it is live, who owns it, and what is being built next. If the tool you need does not exist yet, this is where you ask for it.', '三花物流所有数字化方案的统一入口：它解决什么问题、已在哪些基地上线、由谁负责、以及下一步在建什么。如果你需要的工具还不存在，就在这里提出。'],
+    ctaExplore: ['Explore solutions', '浏览方案'],
+    ctaSubmit: ['Submit an idea', '提交想法'],
+    ctaBoard: ['See the idea board', '查看想法看板'],
+    heroImgCap: ['hero image — outbound dock, Apodaca plant (duotone)', '主视觉图 — 出货月台，Apodaca 工厂（双色调）'],
+    asOf: ['All content on this page is read from the portal content source and maintained by administrators and solution owners — not fixed in the page.', '本页所有内容均从门户内容源读取，由管理员与方案负责人维护，不写死在页面中。'],
+    readMore: ['Read the full page', '查看完整介绍'],
+    quickAccess: ['Quick access', '快速入口'],
+    quickAccessSub: ['Straight into the tools you already use', '直接进入你正在使用的工具'],
+    highlights: ['Highlights', '首页推荐'],
+    highlightsSub: ['Curated by administrators each month', '由管理员每月编排'],
+    devAreaKicker: ['Current development area', '当前开发重点'],
+    devFocus: ['Being worked on now', '当前进行中'],
+    devNot: ['Explicitly not this quarter', '本季度明确不做'],
+    catalogSub: ['Every solution available or in build across Mexico and China. Filter by process, status or plant to find what applies to your site.', '墨西哥与中国所有可用或在建的方案。按流程、状态或基地筛选，找到适用于你所在工厂的方案。'],
+    viewAll: ['All solutions', '全部方案'],
+    sectionPipeline: ['What we are building next', '下一步在建什么'],
+    sectionPipelineSub: ['Every request that passed intake, and the stage it has reached. Target quarters, not promised dates.', '所有通过评审的需求及其当前阶段。标注目标季度，而非承诺日期。'],
+    viewPipeline: ['Full pipeline', '完整管道'],
+    intakeKicker: ['Innovation intake', '创新需求入口'],
+    intakeTitle: ['If the tool you need does not exist, ask for it', '如果你需要的工具还不存在，就提出来'],
+    intakeBody: ['There was no single way to request a digital solution before this portal. There is now: one form, a named reviewer, a published decision, and your request visible on the idea board until it is closed.', '在此平台之前，提出数字化需求没有统一渠道。现在有了：一张表单、一位指定评审人、一个公开的决策结果，并且你的需求会一直显示在想法看板上，直至关闭。'],
+    sectionOwners: ['Who to talk to', '找谁沟通'],
+    sectionOwnersSub: ['The logistics team by operational function and site — import, export, transportation, customs and leadership.', '按业务职能与基地列出的物流团队——进口、出口、运输、关务与管理层。'],
+    viewPeople: ['Full directory', '完整名录'],
+    footerBlurb: ['A content-managed platform: administrators and solution owners maintain every section through the admin dashboard, without a code change.', '一个内容管理平台：管理员与方案负责人通过管理后台维护所有板块，无需修改代码。'],
+    footerExplore: ['Explore', '浏览'],
+    footerParticipate: ['Participate', '参与'],
+    footerLanguage: ['Language', '语言'],
+    footerLegal: ['Internal use only · Sanhua Logistics · anonymous read access', '仅供内部使用 · 三花物流 · 匿名浏览'],
+    footerVersion: ['Portal v2.0 · content source: SharePoint Lists / Dataverse', '平台 v2.0 · 内容源：SharePoint 列表 / Dataverse'],
+    crumbCatalog: ['Portfolio / Solutions Catalog', '方案组合 / 方案目录'],
+    crumbPortfolio: ['Portfolio / Delivered projects', '方案组合 / 已交付项目'],
+    crumbPipeline: ['Portfolio / Innovation Pipeline', '方案组合 / 创新管道'],
+    crumbSubmit: ['Participate / Submit an idea', '参与 / 提交想法'],
+    crumbBoard: ['Participate / Idea board', '参与 / 想法看板'],
+    crumbNews: ['Participate / Announcements', '参与 / 公告'],
+    crumbPeople: ['Directory / Logistics team', '名录 / 物流团队'],
+    crumbAbout: ['About / Platform, charter and governance', '关于 / 平台、章程与治理'],
+    crumbSearch: ['Search results', '搜索结果'],
+    crumbAdmin: ['Administration / Content management', '管理 / 内容管理'],
+    manageColl: ['Manage this section', '管理此板块'],
+    filterStatus: ['Status', '状态'],
+    filterProcess: ['Process area', '流程领域'],
+    filterSite: ['Plant / site', '基地'],
+    all: ['All', '全部'],
+    detailLink: ['Detail', '详情'],
+    emptyTitle: ['Nothing matches that combination', '没有匹配的方案'],
+    emptyBody: ['No solution covers that process at that site yet. That is exactly what the intake form is for.', '该基地的这个流程还没有对应方案。这正是需求提交表单的用途。'],
+    portfolioIntro: ['The record of what has been delivered: which project, for whom, at which sites, and what changed as a result. Archived projects are kept in the content source for institutional memory but are not published here.', '已交付项目的记录：项目内容、面向谁、覆盖哪些基地、以及带来了什么改变。已归档项目仍保留在内容源中作为组织记忆，但不在此发布。'],
+    outcome: ['Outcome', '成效'],
+    nextStep: ['Your next step', '你的下一步'],
+    processOwner: ['Solution owner', '方案负责人'],
+    contactOwner: ['Contact details in the team directory', '在团队名录中查看联系方式'],
+    atAGlance: ['At a glance', '概览'],
+    ownerTools: ['Owner-maintained record', '负责人自维护记录'],
+    ownerToolsBody: ['This page is a record in the Solutions Catalog. Its owner edits it in the admin dashboard — status, rollout and FAQ are theirs to keep current.', '本页是方案目录中的一条记录。由其负责人在管理后台维护——状态、上线情况与常见问题均由其保持更新。'],
+    editRecord: ['Edit this record', '编辑此记录'],
+    accessSent: ['Request logged. The owner replies within 3 working days, and you will be copied on the access ticket.', '请求已记录。负责人将在 3 个工作日内回复，并会将你加入访问申请单。'],
+    hProblem: ['The problem', '要解决的问题'],
+    hSolution: ['What it does', '方案做什么'],
+    hHow: ['How it works', '运作方式'],
+    hWhere: ['Where it is live', '上线情况'],
+    hScreens: ['Screens', '界面'],
+    hFaq: ['Questions we get asked', '常见问题'],
+    hRelated: ['Related solutions', '相关方案'],
+    thSite: ['Site', '基地'],
+    thRegion: ['Region', '区域'],
+    thState: ['State', '状态'],
+    pipelineIntro: ['Four stages, from an accepted request to a solution people use. Each item is a record maintained by its owner — if a target moves, the owner changes it here rather than announcing it by email.', '从需求立项到方案落地，共四个阶段。每项都是由负责人维护的记录——若目标变更，由负责人在此更新，而非通过邮件通知。'],
+    pipelineHonesty: ['Target quarters are planning intentions, not commitments to a date.', '目标季度为规划意向，不构成交付日期承诺。'],
+    pipelineCtaTitle: ['Your problem is not on this board?', '看板上没有你的问题？'],
+    pipelineCtaBody: ['The pipeline only contains requests somebody made. If yours is missing, it is because it has not been submitted yet.', '管道中只包含已被提出的需求。如果没有你的问题，是因为它还没有被提交。'],
+    newsIntro: ['Everything administrators have published, newest first. Items carry an expiry date and archive themselves — the page never goes stale by neglect.', '管理员发布的全部内容，最新在前。每条均设失效日期并自动归档——页面不会因疏于维护而过期。'],
+    pinned: ['Pinned', '置顶'],
+    submitTitle: ['Submit an idea or request a project', '提交想法或申请项目'],
+    submitIntro: ['Eight required fields, about four minutes. You get a reference number immediately, a named reviewer within five working days, and a published decision within fifteen. Your submission appears on the idea board so you can see it move.', '八个必填项，约四分钟。你会立即获得受理编号，五个工作日内收到指定评审人，十五个工作日内获得公开决策结果。你的提交将显示在想法看板上，可随时查看进展。'],
+    fsWho: ['Who you are', '你是谁'],
+    fsProblem: ['The problem', '问题描述'],
+    fsImpact: ['Size of the problem', '问题规模'],
+    fsFinish: ['Evidence and visibility', '证据与可见性'],
+    fName: ['Your name', '姓名'],
+    fSite: ['Plant / site', '所在基地'],
+    fFunction: ['Function', '职能'],
+    fTitle: ['Give it a one-line title', '用一句话概括'],
+    fDesc: ['What happens today, and why it hurts', '目前的做法，以及为什么有问题'],
+    fToday: ['How is it handled today?', '目前如何处理？'],
+    fFrequency: ['How often does it happen?', '发生频率'],
+    fPeople: ['People affected', '受影响人数'],
+    fHours: ['Hours lost per week (estimate)', '每周损失工时（估算）'],
+    fSystems: ['Systems involved', '涉及系统'],
+    fAttach: ['drag a screenshot, spreadsheet or photo here — optional but it doubles the chance of a fast decision', '可拖入截图、表格或照片——非必填，但能显著加快评审'],
+    fShare: ['Show this idea publicly on the idea board so other sites can see it and add their support.', '在想法看板上公开此想法，以便其他基地了解并表示支持。'],
+    btnSubmit: ['Submit request', '提交需求'],
+    phName: ['e.g. Miguel Torres', '例如：张伟'],
+    phTitle: ['e.g. Suppliers should book their own unloading slot', '例如：供应商应能自助预约卸货时段'],
+    phDesc: ['Describe the situation in plain words — no need for a business case.', '用平实的语言描述情况——无需撰写商业论证。'],
+    phToday: ['e.g. Excel sheet emailed twice a day', '例如：每天两次通过邮件发送 Excel 表'],
+    phPeople: ['e.g. 12', '例如：12'],
+    phHours: ['e.g. 20', '例如：20'],
+    phSystems: ['e.g. ERP, carrier portal, email', '例如：ERP、承运商门户、邮件'],
+    whatNext: ['What happens next', '后续流程'],
+    criteria: ['How requests are prioritised', '需求优先级评判标准'],
+    flowNote: ['Where this form goes', '表单流向'],
+    flowNoteBody: ['On submit, a Power Automate flow writes the request to the intake list, assigns the reviewer for that process area, and emails you the reference. Nothing is handled by an inbox.', '提交后，Power Automate 流程将需求写入受理列表、按流程领域指派评审人，并将受理编号邮件发送给你。全程不经由邮箱人工处理。'],
+    received: ['Request received', '需求已受理'],
+    thanksTitle: ['Logged. Here is your reference.', '已受理。这是你的受理编号。'],
+    thanksBody: ['Nothing else is required from you right now. Your reviewer will contact you if the problem needs clarifying, and the decision is published on the idea board whether it is a yes or a no.', '目前无需你再做任何事。如需澄清问题，评审人会与你联系；无论是否立项，决策结果都会在想法看板上公布。'],
+    backHome: ['Back to home', '返回首页'],
+    tkRef: ['Reference', '受理编号'],
+    tkReviewer: ['Your reviewer', '评审人'],
+    tkDecision: ['Decision published by', '决策公布期限'],
+    boardTitle: ['Idea board', '想法看板'],
+    boardIntro: ['Every request submitted through this portal and what became of it. Rejections stay on the board with a reason — a request that disappears is a request nobody trusts.', '通过本平台提交的所有需求及其结果。未立项的需求会保留并说明原因——消失的需求只会让人不再提交。'],
+    thRef: ['Ref', '编号'],
+    thIdea: ['Request', '需求'],
+    thFrom: ['From', '提交人'],
+    thDate: ['Submitted', '提交日期'],
+    thOutcome: ['Outcome', '结果'],
+    peopleIntro: ['The logistics organisation by operational function: who does what, where they sit, and how to reach them. A maintained directory, not a screenshot of the org chart.', '按业务职能呈现物流组织：各自负责什么、在哪个基地、如何联系。这是持续维护的名录，而非组织架构图的截图。'],
+    responsibilities: ['Main responsibilities', '主要职责'],
+    teamEmptyTitle: ['Nobody listed for this region', '该区域暂无人员'],
+    teamEmptyBody: ['No published team member matches the selected region. Choose another region, or add members in the Team Directory collection.', '所选区域下没有已发布的团队成员。请切换区域，或在团队名录集合中添加成员。'],
+    teamUngrouped: ['Unassigned function', '未归类职能'],
+    teamsLabel: ['Teams', 'Teams'],
+    filterRegion: ['Region', '区域'],
+    aboutTitle: ['What this portal is, and how it is run', '本平台的定位与运作方式'],
+    aboutBody: ['The Logistics Innovation Hub is a content-managed platform, not a static website. Every section is a container that reads its records from an external content source, so administrators and solution owners add, edit, archive and remove content without a code change. All published content is readable by any employee without signing in; management functions require an Entra ID role.', '物流创新中心是一个内容管理平台，而非静态网站。每个板块都是从外部内容源读取记录的容器，管理员与方案负责人可在不修改代码的情况下新增、编辑、归档与删除内容。所有已发布内容无需登录即可浏览；管理功能需具备 Entra ID 角色。'],
+    hPlatform: ['Sections and their content source', '板块与其内容源'],
+    thSection: ['Section', '板块'],
+    thSource: ['List / table', '列表 / 表'],
+    thEditor: ['Who may edit', '可编辑者'],
+    hGovernance: ['Decision rights', '决策权责'],
+    thDecision: ['Decision', '决策事项'],
+    thWho: ['Who decides', '决策方'],
+    thWhen: ['Cadence', '频率'],
+    hGlossary: ['Glossary', '术语表'],
+    hRelease: ['Release notes', '更新日志'],
+    hArchitecture: ['Platform architecture', '平台架构'],
+    hRoadmapSite: ['Portal roadmap', '平台路线图'],
+    hLanguages: ['Languages', '语言'],
+    languagesBody: ['English and Simplified Chinese are maintained in parallel: every editable field is a language pair in the content source, so a record cannot be published in one language and forgotten in the other. Chinese content is reviewed by the Hangzhou team, not machine-translated. Adding Spanish for the Mexico sites means adding a locale, not restructuring.', '英文与简体中文并行维护：内容源中每个可编辑字段均为双语对，避免一种语言已发布而另一种被遗漏。中文内容由杭州团队人工审核，非机器翻译。为墨西哥基地增加西班牙语只需新增语言项，无需重构。'],
+    searchEmptyTitle: ['No results', '未找到结果'],
+    searchEmptyBody: ['Nothing in the catalog, the pipeline, the directory or the idea board matches that. Zero-result searches are logged and reviewed monthly — and you can submit the need directly.', '方案目录、创新管道、人员名录与想法看板中均无匹配内容。无结果的搜索会被记录并每月评审——你也可以直接提交需求。'],
+    adminIntro: ['Every portal section is a collection of records. Add, edit, reorder, archive or delete them here — nothing on the public pages is fixed in code. Visitors never see this dashboard or any editing control.', '门户每个板块都是一组记录。可在此新增、编辑、排序、归档或删除——公开页面上没有任何内容写死在代码中。访客永远看不到本后台及任何编辑控件。'],
+    viewAsVisitor: ['View portal as visitor', '以访客视角查看'],
+    resetContent: ['Discard local changes', '放弃本地更改'],
+    newRecord: ['New record', '新建记录'],
+    thOrder: ['Ord', '序'],
+    thRecord: ['Record', '记录'],
+    thModified: ['Last modified', '最近修改'],
+    thActions: ['Actions', '操作'],
+    edit: ['Edit', '编辑'],
+    duplicate: ['Duplicate', '复制'],
+    remove: ['Delete', '删除'],
+    archive: ['Archive', '归档'],
+    restore: ['Publish', '发布'],
+    moveUp: ['Move up', '上移'],
+    moveDown: ['Move down', '下移'],
+    save: ['Save record', '保存记录'],
+    saveNote: ['In production, Save calls the upsert flow and the portal re-reads the list. Here it writes to this browser only.', '在正式环境中，保存将调用写入流程并由门户重新读取列表。此处仅写入当前浏览器。'],
+    fState: ['Publication state', '发布状态'],
+    stateHelp: ['Published records appear on the public pages. Drafts are visible only to administrators. Archived records leave the portal but stay in the list.', '已发布记录显示在公开页面。草稿仅管理员可见。已归档记录不在门户展示，但仍保留在列表中。'],
+    noCode: ['No code changes', '无需改动代码'],
+    noCodeBody: ['Adding a plant, a process area or a whole new solution is a record — never an edit to the page. New fields added to a list appear in this editor automatically.', '新增基地、流程领域或整个方案都是新增记录，而非修改页面。列表中新增的字段会自动出现在此编辑器中。'],
+    stPublished: ['Published', '已发布'],
+    stDraft: ['Draft', '草稿'],
+    stArchived: ['Archived', '已归档'],
+    grpCore: ['Portal sections', '门户板块'],
+    grpIntake: ['Intake', '需求受理'],
+    grpReference: ['Reference content', '参考内容'],
+    flashSaved: ['Record saved. The portal re-read the content source.', '记录已保存，门户已重新读取内容源。'],
+    flashArchived: ['Record archived — removed from the public pages, kept in the list.', '记录已归档——不再在公开页显示，仍保留在列表中。'],
+    flashPublished: ['Record published to the public pages.', '记录已发布至公开页面。'],
+    flashDeleted: ['Record deleted from the list.', '记录已从列表中删除。'],
+    flashDuplicated: ['Record duplicated as a draft.', '记录已复制为草稿。'],
+    flashImgType: ['That file is not an image — upload a PNG or JPG.', '该文件不是图片——请上传 PNG 或 JPG。'],
+    flashImgSize: ['Image too large for the prototype store (2 MB limit). In production the file goes to the SharePoint media library and only its URL is stored.', '图片超出原型存储上限（2 MB）。正式环境中文件将存入 SharePoint 媒体库，记录中仅保存其地址。'],
+    fUpload: ['Choose image', '选择图片'],
+    fReplace: ['Replace', '更换'],
+    fRemove: ['Remove', '移除'],
+    fAddImage: ['Add image', '添加图片'],
+    fAltEn: ['Alt text (EN)', '替代文字（英文）'],
+    fAltZh: ['Alt text (ZH)', '替代文字（中文）'],
+    fNoImage: ['No image uploaded — the blueprint placeholder is shown on the public page.', '尚未上传图片——公开页面显示线框占位图。'],
+    fCaption: ['Caption', '图片说明'],
+    fUploadNote: ['Prototype: the file is held in this browser. In production it uploads to the LIH_Media library and the record stores the URL.', '原型：文件暂存于本浏览器。正式环境将上传至 LIH_Media 库，记录中保存其地址。'],
+    flashSchema: ['The content schema changed — local draft edits were discarded and the published content source reloaded.', '内容结构已更新——本地草稿更改已放弃，并重新加载已发布内容源。'],
+    flashReset: ['Local changes discarded — reloaded from the content source.', '本地更改已放弃——已从内容源重新加载。'],
+    newRecordTitle: ['New record', '新建记录'],
+    untitled: ['(untitled)', '（未命名）']
+  };
+
+  componentDidMount() {
+    try {
+      const l = localStorage.getItem('lih.lang');
+      if (l === 'en' || l === 'zh') this.setState({ lang: l });
+      const r = localStorage.getItem('lih.role');
+      if (r === 'admin' || r === 'owner') this.setState({ role: r, user: localStorage.getItem('lih.user') || 'Elena Márquez' });
+    } catch (e) {}
+    fetch('content.json')
+      .then(r => r.json())
+      .then(db => {
+        let local = null;
+        try { local = JSON.parse(localStorage.getItem('lih.db') || 'null'); } catch (e) {}
+        const cached = !!(local && local.meta);
+        const compatible = cached && local.meta.version === db.meta.version;
+        if (cached && !compatible) {
+          try { localStorage.removeItem('lih.db'); } catch (e) {}
+        }
+        const use = compatible
+          ? Object.assign({}, local, { taxonomies: Object.assign({}, db.taxonomies, local.taxonomies || {}) })
+          : db;
+        this.setState({
+          db: use, loading: false,
+          flash: (cached && !compatible) ? this.S.flashSchema[this.L()] : null
+        });
+      })
+      .catch(() => this.setState({ loading: false, loadError: true }));
+  }
+
+  L() { return this.state.lang === 'zh' ? 1 : 0; }
+  p(v) {
+    const i = this.L();
+    if (v === null || v === undefined) return '';
+    if (Array.isArray(v)) return v[i];
+    if (typeof v === 'object') return v[i ? 'zh' : 'en'] !== undefined ? (v[i ? 'zh' : 'en'] || v.en || '') : '';
+    return v;
+  }
+  pl(v) {
+    const r = (v && typeof v === 'object' && !Array.isArray(v)) ? v[this.L() ? 'zh' : 'en'] : v;
+    return Array.isArray(r) ? r : [];
+  }
+
+  coll(k) { const db = this.state.db; return db && db.collections[k] ? db.collections[k] : null; }
+  all(k) { const c = this.coll(k); return c ? c.items.slice().sort((a, b) => (a.order || 0) - (b.order || 0)) : []; }
+  pub(k) {
+    const drafts = this.state.role !== 'visitor' && this.state.showDrafts;
+    return this.all(k).filter(x => x.state === 'published' || (drafts && x.state === 'draft'));
+  }
+  tax(k) { const db = this.state.db; return db && db.taxonomies[k] ? db.taxonomies[k] : []; }
+  taxOne(k, id) { return this.tax(k).find(x => x.id === id) || null; }
+  rec(k, id) { return this.all(k).find(x => x.id === id) || null; }
+
+  nav(route, extra) { this.setState(Object.assign({ route: route, accessSent: false, flash: '' }, extra || {})); window.scrollTo(0, 0); }
+  setLang(l) { try { localStorage.setItem('lih.lang', l); } catch (e) {} this.setState({ lang: l }); }
+  persist(db) { try { localStorage.setItem('lih.db', JSON.stringify(db)); } catch (e) {} }
+
+  mutate(collKey, fn) {
+    const db = JSON.parse(JSON.stringify(this.state.db));
+    fn(db.collections[collKey]);
+    this.persist(db);
+    this.setState({ db: db });
+  }
+
+  today() { return '2026-09-21'; }
+
+  solView(s) {
+    const i = this.L();
+    const status = this.taxOne('statuses', s.status) || { label: {}, pill: 'tag-neutral' };
+    const owner = this.rec('owners', s.ownerId);
+    const roll = (s.rollout || []).map(r => String(r).split(':'));
+    return {
+      id: s.id, name: s.name, nameZh: s.nameZh, tagline: this.p(s.tagline),
+      processArea: this.p((this.taxOne('areas', s.area) || {}).label),
+      statusLabel: this.p(status.label), pill: status.pill, status: s.status,
+      ownerName: owner ? (i ? (owner.nameZh || owner.name) : owner.name) : '—',
+      isDraft: s.state === 'draft',
+      siteLine: roll.filter(r => r[1] === 'live' || r[1] === 'pilot').length + (i ? ' 个基地' : ' sites'),
+      siteTags: roll.map(r => this.p((this.taxOne('sites', r[0]) || {}).label)),
+      open: (e) => { if (e) e.preventDefault(); this.nav('detail', { detailId: s.id }); }
+    };
+  }
+
+  ownerView(o) {
+    const i = this.L();
+    const fn = this.taxOne('functions', o.functionId) || {};
+    return {
+      id: o.id, initials: o.initials, name: i ? (o.nameZh || o.name) : o.name,
+      nameAlt: i ? o.name : (o.nameZh || ''),
+      position: this.p(o.position), role: this.p(o.position),
+      functionId: o.functionId, area: this.p(fn.label),
+      site: this.p((this.taxOne('sites', o.siteId) || {}).label),
+      responsibilities: this.pl(o.responsibilities),
+      photo: (o.photo && o.photo.url) || '', hasPhoto: !!(o.photo && o.photo.url), noPhoto: !(o.photo && o.photo.url),
+      photoImg: this.imgEl((o.photo && o.photo.url) || '', (o.photo && this.p(o.photo.alt)) || (i ? (o.nameZh || o.name) : o.name)),
+      photoAlt: (o.photo && this.p(o.photo.alt)) || (i ? (o.nameZh || o.name) : o.name),
+      email: o.email || '', mailto: 'mailto:' + (o.email || ''),
+      phone: o.phone || '', hasPhone: !!o.phone,
+      teams: o.teams || '', hasTeams: !!o.teams,
+      isDraft: o.state === 'draft',
+      open: (e) => { if (e) e.preventDefault(); this.nav('people'); }
+    };
+  }
+
+  renderVals() {
+    const st = this.state, i = this.L();
+    const T = {};
+    Object.keys(this.S).forEach(k => { T[k] = this.S[k][i]; });
+    const ready = !!st.db && !st.loading;
+    const isAdmin = st.role === 'admin' || st.role === 'owner';
+
+    const base = {
+      T: T, lang: st.lang, query: st.query,
+      loading: st.loading, loadError: st.loadError,
+      isAdmin: isAdmin, isVisitor: !isAdmin, signInOpen: st.signInOpen,
+      adminIdentity: (st.user || '') + ' · ' + (st.role === 'admin' ? (i ? '内容管理员 (LIH.ContentAdmin)' : 'Content administrator (LIH.ContentAdmin)') : (i ? '方案负责人 (LIH.SolutionOwner)' : 'Solution owner (LIH.SolutionOwner)')),
+      draftsCls: st.showDrafts ? 'tag-accent' : 'tag-outline',
+      cur: {
+        home: st.route === 'home' ? 'page' : 'false',
+        catalog: (st.route === 'catalog' || st.route === 'detail') ? 'page' : 'false',
+        portfolio: st.route === 'portfolio' ? 'page' : 'false',
+        pipeline: st.route === 'pipeline' ? 'page' : 'false',
+        people: st.route === 'people' ? 'page' : 'false',
+        about: st.route === 'about' ? 'page' : 'false',
+        en: st.lang === 'en' ? 'true' : 'false',
+        zh: st.lang === 'zh' ? 'true' : 'false',
+        drafts: st.showDrafts ? 'true' : 'false'
+      },
+      goHome: (e) => { if (e) e.preventDefault(); this.nav('home'); },
+      goCatalog: (e) => { if (e) e.preventDefault(); this.nav('catalog'); },
+      goPortfolio: (e) => { if (e) e.preventDefault(); this.nav('portfolio'); },
+      goPipeline: (e) => { if (e) e.preventDefault(); this.nav('pipeline'); },
+      goSubmit: (e) => { if (e) e.preventDefault(); this.nav('submit'); },
+      goBoard: (e) => { if (e) e.preventDefault(); this.nav('board'); },
+      goPeople: (e) => { if (e) e.preventDefault(); this.nav('people'); },
+      goAbout: (e) => { if (e) e.preventDefault(); this.nav('about'); },
+      goNews: (e) => { if (e) e.preventDefault(); this.nav('news'); },
+      goAdmin: (e) => { if (e) e.preventDefault(); this.nav('admin'); },
+      setEn: (e) => { if (e) e.preventDefault(); this.setLang('en'); },
+      setZh: (e) => { if (e) e.preventDefault(); this.setLang('zh'); },
+      openSignIn: (e) => { if (e) e.preventDefault(); this.setState({ signInOpen: true }); },
+      closeSignIn: (e) => { if (e) e.preventDefault(); this.setState({ signInOpen: false }); },
+      signInAdmin: (e) => { if (e) e.preventDefault(); this.signIn('admin', 'Elena Márquez'); },
+      signInOwner: (e) => { if (e) e.preventDefault(); this.signIn('owner', 'Zhang Wei'); },
+      signOut: (e) => { if (e) e.preventDefault(); this.signOut(); },
+      toggleDrafts: (e) => { if (e) e.preventDefault(); this.setState(s => ({ showDrafts: !s.showDrafts })); },
+      onQuery: (e) => {
+        const v = e.target.value;
+        this.setState(s => ({ query: v, route: v.trim() ? 'search' : (s.route === 'search' ? 'home' : s.route) }));
+      },
+      isHome: false, isCatalog: false, isPortfolio: false, isDetail: false, isPipeline: false,
+      isSubmit: false, isThanks: false, isBoard: false, isPeople: false, isAbout: false,
+      isNews: false, isSearch: false, isAdminHome: false, isAdminEdit: false
+    };
+
+    if (!ready) return base;
+
+    const pubSol = this.pub('solutions');
+    const solutions = pubSol.map(s => this.solView(s));
+    const owners = this.pub('owners').map(o => this.ownerView(o));
+
+    const anns = this.pub('announcements').map(a => ({
+      id: a.id, title: this.p(a.title), body: this.p(a.body), date: a.date,
+      isDraft: a.state === 'draft', pinned: !!a.pinned
+    }));
+    const pinned = anns.filter(a => a.pinned)[0] || null;
+
+    const hlAll = this.pub('highlights').map(h => ({
+      id: h.id, kicker: this.p(h.kicker), title: this.p(h.title), blurb: this.p(h.blurb),
+      imageCaption: this.p(h.imageCaption), feature: !!h.feature, isDraft: h.state === 'draft',
+      open: (e) => {
+        if (e) e.preventDefault();
+        if (h.targetType === 'solution') this.nav('detail', { detailId: h.targetId });
+        else if (h.targetType === 'route') this.nav(h.targetId);
+        else if (h.targetType === 'pipeline') this.nav('pipeline');
+        else if (h.targetType === 'portfolio') this.nav('portfolio');
+        else this.nav('news');
+      }
+    }));
+    const feature = hlAll.filter(h => h.feature)[0] || null;
+    const highlights = hlAll.filter(h => !h.feature);
+
+    const dvRec = this.pub('devArea')[0] || null;
+    const devArea = dvRec ? {
+      heading: this.p(dvRec.heading), quarter: dvRec.quarter, statement: this.p(dvRec.statement),
+      focusItems: this.pl(dvRec.focusItems), notDoing: this.pl(dvRec.notDoing),
+      stamp: (i ? '更新于 ' : 'Updated ') + dvRec.modifiedAt + ' · ' + dvRec.modifiedBy
+    } : null;
+
+    const quickLinks = this.pub('quickLinks').map(q => ({
+      label: this.p(q.label), note: this.p(q.note), audience: this.p(q.audience),
+      url: q.url || '#', isDraft: q.state === 'draft'
+    }));
+
+    const pipeAll = this.pub('pipeline');
+    const stages = this.tax('stages').map((sd, n) => {
+      const items = pipeAll.filter(x => x.stage === sd.id);
+      return {
+        id: sd.id, no: '0' + (n + 1), label: this.p(sd.label), desc: this.p(sd.desc), count: items.length,
+        items: items.map(x => {
+          const ow = this.rec('owners', x.ownerId);
+          return {
+            name: i ? (x.nameZh || x.name) : x.name, nameAlt: i ? x.name : (x.nameZh || ''),
+            note: this.p(x.note), target: x.target, isDraft: x.state === 'draft',
+            processArea: this.p((this.taxOne('areas', x.area) || {}).label),
+            owner: ow ? (i ? (ow.nameZh || ow.name) : ow.name) : '—',
+            hasPage: !!x.solutionId,
+            open: (e) => { if (e) e.preventDefault(); if (x.solutionId) this.nav('detail', { detailId: x.solutionId }); }
+          };
+        })
+      };
+    });
+
+    const intakeSteps = [
+      { no: '01', t: i ? '你提交需求' : 'You describe the problem', d: i ? '一张表单，八个必填项，约四分钟。' : 'One form, eight required fields, about four minutes.', sla: i ? '立即获得受理编号' : 'Reference number issued instantly' },
+      { no: '02', t: i ? '指派评审人' : 'A reviewer is named', d: i ? '由对应流程负责人接手，而非匿名邮箱。' : 'The process owner for that area picks it up — not a shared mailbox.', sla: i ? '5 个工作日内' : 'Within 5 working days' },
+      { no: '03', t: i ? '公开决策结果' : 'A decision is published', d: i ? '立项、合并、或说明原因不予立项。' : 'Accepted, merged with an existing request, or declined with a reason.', sla: i ? '15 个工作日内' : 'Within 15 working days' },
+      { no: '04', t: i ? '进入创新管道' : 'It appears in the pipeline', d: i ? '已立项需求进入管道，附负责人与目标季度。' : 'Accepted requests enter the pipeline with an owner and a target quarter.', sla: i ? '全程可在看板查看' : 'Visible on the board throughout' }
+    ];
+
+    const manage = {};
+    ['solutions', 'portfolio', 'pipeline', 'owners', 'quickLinks', 'announcements', 'highlights', 'devArea', 'ideas'].forEach(k => {
+      manage[k] = (e) => { if (e) e.preventDefault(); this.nav('admin', { adminColl: k }); };
+    });
+
+    const mkFilter = (key, val, label) => ({
+      label: label, on: st[key] === val ? 'true' : 'false',
+      cls: st[key] === val ? 'tag-accent' : 'tag-outline',
+      pick: (e) => { if (e) e.preventDefault(); const o = {}; o[key] = val; this.setState(o); }
+    });
+    const statusFilters = [mkFilter('fStatus', 'all', T.all)].concat(
+      this.tax('statuses').map(x => mkFilter('fStatus', x.id, this.p(x.label))));
+    const processFilters = [mkFilter('fProcess', 'all', T.all)].concat(
+      this.tax('areas').map(x => mkFilter('fProcess', x.id, this.p(x.label))));
+    const siteFilters = [mkFilter('fSite', 'all', T.all)].concat(
+      this.tax('sites').map(x => mkFilter('fSite', x.id, this.p(x.label))));
+    const regionFilters = [mkFilter('fRegion', 'all', T.all),
+      mkFilter('fRegion', 'mx', i ? '墨西哥' : 'Mexico'), mkFilter('fRegion', 'cn', i ? '中国' : 'China')];
+
+    const rawFiltered = pubSol.filter(s =>
+      (st.fStatus === 'all' || s.status === st.fStatus) &&
+      (st.fProcess === 'all' || s.area === st.fProcess) &&
+      (st.fSite === 'all' || (s.rollout || []).some(r => String(r).split(':')[0] === st.fSite)));
+    const filteredSolutions = rawFiltered.map(s => this.solView(s));
+
+    const filteredOwners = this.pub('owners')
+      .filter(o => { const site = this.taxOne('sites', o.siteId); return st.fRegion === 'all' || (site && site.region === st.fRegion); })
+      .map(o => this.ownerView(o));
+
+    const allOwnerCount = this.pub('owners').length;
+    const teamGroups = this.tax('functions').map((fn, n) => {
+      const members = filteredOwners.filter(o => o.functionId === fn.id);
+      return {
+        no: 'F' + ('0' + (n + 1)).slice(-2),
+        label: this.p(fn.label), desc: this.p(fn.desc),
+        count: members.length + (i ? ' 人' : (members.length === 1 ? ' person' : ' people')),
+        members: members
+      };
+    }).filter(g => g.members.length > 0);
+    const ungrouped = filteredOwners.filter(o => !o.functionId || !this.taxOne('functions', o.functionId));
+    if (ungrouped.length) {
+      teamGroups.push({
+        no: 'F00', label: T.teamUngrouped, desc: '',
+        count: ungrouped.length + (i ? ' 人' : (ungrouped.length === 1 ? ' person' : ' people')),
+        members: ungrouped
+      });
+    }
+    const teamCount = filteredOwners.length + (i ? ' / ' + allOwnerCount + ' 人' : ' of ' + allOwnerCount + ' people');
+
+    const portfolio = this.pub('portfolio').map(x => {
+      const sol = x.solutionId ? this.rec('solutions', x.solutionId) : null;
+      return {
+        name: x.name, nameZh: x.nameZh, year: x.year, sponsor: this.p(x.sponsor),
+        scope: this.p(x.scope), outcome: this.p(x.outcome), isDraft: x.state === 'draft',
+        siteTags: (x.sites || []).map(s => this.p((this.taxOne('sites', s) || {}).label)),
+        hasSolution: !!sol, solutionName: sol ? sol.name : '',
+        open: (e) => { if (e) e.preventDefault(); if (sol) this.nav('detail', { detailId: sol.id }); }
+      };
+    });
+
+    const d = st.detailId ? this.rec('solutions', st.detailId) : null;
+    let detail = null;
+    if (d) {
+      const bv = this.solView(d);
+      const ctas = {
+        live: [[ 'Request access', '申请访问权限'], ['Available at your site', '你所在基地已上线'], ['Access is granted by the solution owner, usually within three working days.', '访问权限由方案负责人开通，通常三个工作日内完成。']],
+        pilot: [['Join the pilot', '申请加入试点'], ['Pilot is open', '试点开放申请'], ['The owner will confirm whether your lanes and carriers can be added to the current pilot.', '负责人将确认你的线路与承运商能否加入当前试点。']],
+        dev: [['Follow for updates', '关注进展'], ['Not available yet', '尚未开放'], ['You will be notified when the pilot opens, and you can influence the scope until then.', '试点开放时将通知你；在此之前你仍可参与范围界定。']],
+        discovery: [['Join the discovery', '参与需求调研'], ['Scope is still open', '范围仍在界定'], ['Describe your constraints and they go into the scope before it is fixed.', '说明你的约束条件，将在范围锁定前纳入考量。']]
+      }[d.status] || [['Contact the owner', '联系负责人'], ['', ''], ['', '']];
+      const roll = (d.rollout || []).map(r => String(r).split(':'));
+      const liveCount = roll.filter(r => r[1] === 'live').length;
+      const faqLines = this.pl(d.faq);
+      detail = Object.assign({}, bv, {
+        problem: this.p(d.problem), solution: this.p(d.solution),
+        how: this.pl(d.how).map((h, n) => ({ no: '0' + (n + 1), t: h })),
+        rollout: roll.map(r => {
+          const site = this.taxOne('sites', r[0]) || {}, stt = this.taxOne('statuses', r[1]) || {};
+          return {
+            site: this.p(site.label),
+            region: site.region === 'mx' ? (i ? '墨西哥' : 'Mexico') : (i ? '中国' : 'China'),
+            state: this.p(stt.label), pill: stt.pill || 'tag-neutral'
+          };
+        }),
+        shots: (function (self) {
+          const caps = self.pl(d.shots);
+          const imgs = Array.isArray(d.shotImages) ? d.shotImages : [];
+          const n = Math.max(caps.length, imgs.length);
+          const out = [];
+          for (let k = 0; k < n; k++) {
+            const im = imgs[k] || {};
+            out.push({
+              caption: im.caption || caps[k] || '',
+              url: im.url || '', hasImage: !!im.url, noImage: !im.url,
+              img: self.imgEl(im.url || '', im.caption || caps[k] || '')
+            });
+          }
+          return out;
+        })(this),
+        faq: faqLines.map(l => { const parts = String(l).split('||'); return { q: (parts[0] || '').trim(), a: (parts[1] || '').trim() }; }),
+        related: (d.related || []).map(id => this.rec('solutions', id)).filter(x => !!x).map(x => this.solView(x)),
+        owner: this.ownerView(this.rec('owners', d.ownerId) || { id: '', initials: '—', name: '—', role: {}, siteId: '', areas: [] }),
+        stamp: (i ? '更新于 ' : 'Updated ') + d.modifiedAt + ' · ' + d.modifiedBy,
+        cta: ctas[0][i], ctaTitle: ctas[1][i], ctaBody: ctas[2][i],
+        facts: [
+          { k: i ? '状态' : 'Status', v: bv.statusLabel },
+          { k: i ? '流程领域' : 'Process area', v: bv.processArea },
+          { k: i ? '上线时间' : 'Launched', v: this.p(d.launched) },
+          { k: i ? '涉及系统' : 'Systems', v: this.p(d.systems) },
+          { k: i ? '语言' : 'Languages', v: 'EN / 简体中文' }
+        ],
+        measure: [
+          { k: i ? '已上线基地' : 'Sites live', v: String(liveCount) + (i ? ' / ' + this.tax('sites').length : ' of ' + this.tax('sites').length), note: i ? '由负责人维护' : 'Maintained by the owner' },
+          { k: i ? '业务成效' : 'Business impact', v: i ? '基线测量中' : 'Baseline in progress', note: i ? '首批指标将于 2026 年第四季度发布' : 'First figures published Q4 2026' },
+          { k: i ? '将要衡量的指标' : 'What will be measured', v: i ? '3 项指标' : '3 metrics', note: i ? '工时、差错率、周期时间' : 'Hours, error rate, cycle time' }
+        ],
+        edit: (e) => { if (e) e.preventDefault(); this.startEdit('solutions', d.id); }
+      });
+    }
+
+    const criteria = i ? [
+      '有多少人、多久遇到一次这个问题', '是否有多个基地存在同样问题（可复用性）',
+      '规则是否明确到足以自动化', '现有方案能否扩展以覆盖它', '是否存在合规、安全或海关风险'
+    ] : [
+      'How many people hit this problem, and how often', 'Whether more than one site has the same problem (reuse)',
+      'Whether the rules are clear enough to automate', 'Whether an existing solution could be extended instead',
+      'Compliance, safety or customs risk'
+    ];
+    const siteOptions = [{ v: '', l: i ? '请选择…' : 'Select…' }].concat(
+      this.tax('sites').map(x => ({ v: x.id, l: this.p(x.label) })));
+    const functionOptions = [{ v: '', l: i ? '请选择…' : 'Select…' }].concat(
+      (i ? ['物流计划', '仓储与月台', '进出口 / 关务', '运输与承运商', '工厂管理', '其他职能']
+         : ['Logistics planning', 'Warehouse & dock', 'Import / Export', 'Transport & carriers', 'Plant management', 'Other function']).map(l => ({ v: l, l: l })));
+    const freqs = i ? ['每天', '每周', '每月', '不定期但影响大'] : ['Daily', 'Weekly', 'Monthly', 'Irregular but painful'];
+    const frequencyOptions = freqs.map(l => ({
+      l: l, on: st.form.freq === l ? 'true' : 'false',
+      cls: st.form.freq === l ? 'tag-accent' : 'tag-outline',
+      pick: (e) => { if (e) e.preventDefault(); this.setField('freq', l); }
+    }));
+    const req = ['name', 'site', 'fn', 'title', 'desc', 'today', 'freq', 'people'];
+    const done = req.filter(k => String(st.form[k] || '').trim().length > 0).length;
+    const onField = {};
+    ['name', 'site', 'fn', 'title', 'desc', 'today', 'people', 'hours', 'systems'].forEach(k => {
+      onField[k] = (e) => this.setField(k, e.target.value);
+    });
+    onField.share = (e) => this.setField('share', e.target.checked);
+
+    const ideaTax = this.tax('ideaStates');
+    const ideaFilters = [mkFilter('fIdea', 'all', T.all)].concat(
+      ideaTax.filter(x => ['new', 'review', 'accepted', 'build', 'declined'].indexOf(x.id) >= 0)
+        .map(x => mkFilter('fIdea', x.id, this.p(x.label))));
+    const ideas = this.pub('ideas').slice().reverse()
+      .filter(x => st.fIdea === 'all' || x.ideaState === st.fIdea)
+      .map(x => {
+        const s = this.taxOne('ideaStates', x.ideaState) || {};
+        return {
+          ref: x.ref, title: this.p(x.title), from: this.p(x.from), date: x.date,
+          area: this.p((this.taxOne('areas', x.area) || {}).label),
+          state: this.p(s.label), pill: s.pill || 'tag-neutral', outcome: this.p(x.outcome)
+        };
+      });
+
+    const q = st.query.trim().toLowerCase();
+    let searchResults = [];
+    if (q) {
+      const hit = (t) => String(t || '').toLowerCase().indexOf(q) >= 0;
+      pubSol.forEach(s => {
+        if (hit(s.name) || hit(s.nameZh) || hit(this.p(s.tagline)) || hit(s.tagline && s.tagline.en) || hit(this.p(s.problem))) {
+          searchResults.push({ kind: i ? '方案' : 'Solution', title: s.name, snippet: this.p(s.tagline), open: (e) => { if (e) e.preventDefault(); this.nav('detail', { detailId: s.id }); } });
+        }
+      });
+      this.pub('pipeline').forEach(x => {
+        if (hit(x.name) || hit(x.nameZh) || hit(this.p(x.note))) {
+          searchResults.push({ kind: i ? '管道' : 'Pipeline', title: x.name, snippet: this.p(x.note) + ' · ' + x.target, open: (e) => { if (e) e.preventDefault(); this.nav('pipeline'); } });
+        }
+      });
+      this.pub('portfolio').forEach(x => {
+        if (hit(x.name) || hit(x.nameZh) || hit(this.p(x.scope))) {
+          searchResults.push({ kind: i ? '项目' : 'Project', title: x.name, snippet: x.year + ' · ' + this.p(x.scope), open: (e) => { if (e) e.preventDefault(); this.nav('portfolio'); } });
+        }
+      });
+      this.pub('owners').forEach(o => {
+        if (hit(o.name) || hit(o.nameZh) || hit(this.p(o.position)) || this.pl(o.responsibilities).some(r => hit(r))) {
+          searchResults.push({ kind: i ? '人员' : 'Person', title: o.name, snippet: this.p(o.position) + ' · ' + this.p((this.taxOne('sites', o.siteId) || {}).label), open: (e) => { if (e) e.preventDefault(); this.nav('people'); } });
+        }
+      });
+      this.pub('ideas').forEach(x => {
+        if (hit(this.p(x.title)) || hit(x.title && x.title.en) || hit(x.ref)) {
+          searchResults.push({ kind: i ? '想法' : 'Idea', title: this.p(x.title), snippet: x.ref + ' · ' + this.p(x.outcome), open: (e) => { if (e) e.preventDefault(); this.nav('board'); } });
+        }
+      });
+      this.pub('quickLinks').forEach(x => {
+        if (hit(this.p(x.label))) {
+          searchResults.push({ kind: i ? '快速入口' : 'Quick link', title: this.p(x.label), snippet: this.p(x.note), open: (e) => { if (e) e.preventDefault(); this.nav('home'); } });
+        }
+      });
+    }
+
+    const governance = this.pub('governance').map(g => ({ d: this.p(g.decision), w: this.p(g.who), c: this.p(g.cadence) }));
+    const glossary = this.pub('glossary').map(g => ({ t: this.p(g.term), d: this.p(g.definition) }));
+    const releases = this.pub('releases').map(r => ({ d: r.date, t: this.p(r.title), b: this.p(r.body) }));
+    const roadmap = this.pub('roadmap').map(r => ({ t: this.p(r.title), p: this.p(r.phase) }));
+    const meta = st.db.meta || {};
+    const architecture = i ? [
+      { t: '身份与角色', d: 'Microsoft Entra ID。匿名浏览已发布内容；管理功能需 ' + (meta.auth ? meta.auth.adminRole : '') + ' 角色。' },
+      { t: '内容存储', d: '第一阶段 SharePoint 列表，第二阶段迁移至 Dataverse。字段名保持一致，迁移无需改动前端。' },
+      { t: '写入路径', d: '门户 → Power Automate（写入流程）→ 列表 / 表 → 缓存刷新。前端不直接写库。' },
+      { t: '需求受理', d: '公开表单 → Power Automate → 受理列表 + 自动指派评审人 + 确认邮件。' },
+      { t: '双语', d: '每个可编辑字段均为 en / zh 语言对，新增语言即新增语言项。' },
+      { t: '内容生命周期', d: '已发布 / 草稿 / 已归档三态；公告设失效日期后自动归档。' }
+    ] : [
+      { t: 'Identity and roles', d: 'Microsoft Entra ID. Anonymous read for published content; management requires the ' + (meta.auth ? meta.auth.adminRole : '') + ' role.' },
+      { t: 'Content store', d: 'SharePoint Lists in phase 1, Dataverse in phase 2. Field names are identical, so the migration needs no front-end change.' },
+      { t: 'Write path', d: 'Portal → Power Automate upsert flow → list / table → cache invalidation. The front end never writes directly.' },
+      { t: 'Intake', d: 'Public form → Power Automate → intake list + reviewer assignment + confirmation email.' },
+      { t: 'Bilingual', d: 'Every editable field is an en / zh pair; a new language is a new locale entry, not a rebuild.' },
+      { t: 'Content lifecycle', d: 'Published / draft / archived. Announcements carry an expiry date and archive themselves.' }
+    ];
+    const sourceMap = Object.keys(st.db.collections).map(k => {
+      const c = st.db.collections[k];
+      return {
+        label: this.p(c.label), list: c.list,
+        editor: c.ownerEditable ? (i ? '管理员 + 方案负责人' : 'Administrators + solution owners') : (i ? '管理员' : 'Administrators')
+      };
+    });
+
+    // ── admin dashboard ────────────────────────────────────────────────
+    const collKeys = Object.keys(st.db.collections);
+    let published = 0, drafts = 0, archived = 0;
+    collKeys.forEach(k => st.db.collections[k].items.forEach(x => {
+      if (x.state === 'published') published++; else if (x.state === 'draft') drafts++; else archived++;
+    }));
+    const groupDefs = [['core', T.grpCore], ['intake', T.grpIntake], ['reference', T.grpReference]];
+    const adminGroups = groupDefs.map(g => ({
+      label: g[1],
+      items: collKeys.filter(k => (st.db.collections[k].group || 'reference') === g[0]).map(k => ({
+        label: this.p(st.db.collections[k].label), count: st.db.collections[k].items.length,
+        on: st.adminColl === k ? 'page' : 'false',
+        bar: st.adminColl === k ? '#5980a6' : 'transparent',
+        bg: st.adminColl === k ? 'rgba(89,128,166,0.1)' : 'transparent',
+        pick: (e) => { if (e) e.preventDefault(); this.setState({ adminColl: k }); }
+      }))
+    }));
+    const ac = st.db.collections[st.adminColl] || st.db.collections.solutions;
+    const stateLabel = { published: T.stPublished, draft: T.stDraft, archived: T.stArchived };
+    const statePill = { published: 'tag-accent', draft: 'tag-outline', archived: 'tag-neutral' };
+    const sorted = ac.items.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+    const adminRows = sorted.map((x, n) => ({
+      id: x.id, order: String(x.order || n + 1), title: this.recTitle(x) || T.untitled,
+      stateLabel: stateLabel[x.state] || x.state, statePill: statePill[x.state] || 'tag-neutral',
+      modified: (x.modifiedAt || '—') + ' · ' + (x.modifiedBy || '—'),
+      toggleLabel: x.state === 'published' ? T.archive : T.restore,
+      edit: (e) => { if (e) e.preventDefault(); this.startEdit(st.adminColl, x.id); },
+      toggleState: (e) => { if (e) e.preventDefault(); this.setRecordState(st.adminColl, x.id, x.state === 'published' ? 'archived' : 'published'); },
+      duplicate: (e) => { if (e) e.preventDefault(); this.duplicateRecord(st.adminColl, x.id); },
+      remove: (e) => { if (e) e.preventDefault(); this.setState({ confirmId: x.id }); },
+      up: (e) => { if (e) e.preventDefault(); this.move(st.adminColl, x.id, -1); },
+      down: (e) => { if (e) e.preventDefault(); this.move(st.adminColl, x.id, 1); }
+    }));
+    const confirmTarget = st.confirmId ? this.rec(st.adminColl, st.confirmId) : null;
+
+    // ── record editor ──────────────────────────────────────────────────
+    let editFields = [], editTitle = '', editMeta = '', editCrumb = '';
+    if (st.editRec) {
+      const r = st.editRec;
+      editTitle = this.recTitle(r) || T.newRecordTitle;
+      editMeta = ac.list + ' · ' + r.id + ' · ' + (i ? '最近修改 ' : 'last modified ') + (r.modifiedAt || '—') + ' · ' + (r.modifiedBy || '—');
+      editCrumb = T.crumbAdmin + ' / ' + this.p(ac.label);
+      editFields = (ac.fields || []).map(f => {
+        const ed = f.editor, val = r[f.name];
+        const o = {
+          label: this.p(f.label),
+          meta: f.name + ' · ' + ed + (f.required ? (i ? ' · 必填' : ' · required') : ''),
+          hint: f.hint ? this.p(f.hint) : '',
+          isText: false, isBool: false, isSelect: false, isMulti: false, isBi: false, isLines: false,
+          isImage: false, isImageList: false, hasImage: false, noImage: false, imgs: [], fileName: '', altEn: '', altZh: '',
+          isShort: false, isLong: false, options: [], chips: [], v: '', en: '', zh: '', b: false
+        };
+        if (ed === 'text') { o.isText = true; o.v = val || ''; o.set = (e) => this.setRecField(f.name, e.target.value); }
+        else if (ed === 'bool') { o.isBool = true; o.b = !!val; o.boolLabel = this.p(f.label); o.setBool = (e) => this.setRecField(f.name, e.target.checked); }
+        else if (ed === 'select' || ed === 'enum' || ed === 'ref') {
+          o.isSelect = true; o.v = val || '';
+          if (ed === 'select') o.options = [{ v: '', l: '—' }].concat(this.tax(f.taxonomy).map(x => ({ v: x.id, l: this.p(x.label) })));
+          else if (ed === 'enum') o.options = [{ v: '', l: '—' }].concat((f.options || []).map(x => ({ v: x, l: x })));
+          else o.options = [{ v: '', l: '—' }].concat(this.all(f.collection).map(x => ({ v: x.id, l: this.recTitle(x) })));
+          o.set = (e) => this.setRecField(f.name, e.target.value);
+        }
+        else if (ed === 'multi' || ed === 'multi-ref') {
+          o.isMulti = true;
+          const cur = Array.isArray(val) ? val : [];
+          const src = ed === 'multi' ? this.tax(f.taxonomy).map(x => ({ id: x.id, l: this.p(x.label) }))
+                                     : this.all(f.collection).map(x => ({ id: x.id, l: this.recTitle(x) }));
+          o.chips = src.map(x => ({
+            l: x.l, on: cur.indexOf(x.id) >= 0 ? 'true' : 'false',
+            cls: cur.indexOf(x.id) >= 0 ? 'tag-accent' : 'tag-outline',
+            toggle: (e) => {
+              if (e) e.preventDefault();
+              const next = cur.indexOf(x.id) >= 0 ? cur.filter(y => y !== x.id) : cur.concat([x.id]);
+              this.setRecField(f.name, next);
+            }
+          }));
+        }
+        else if (ed === 'image') {
+          o.isImage = true;
+          const cur = (val && typeof val === 'object') ? val : { url: val || '', alt: { en: '', zh: '' } };
+          o.v = cur.url || ''; o.hasImage = !!cur.url; o.noImage = !cur.url;
+          o.preview = this.imgEl(cur.url || '', '');
+          o.fileName = cur.name || '';
+          o.altEn = (cur.alt && cur.alt.en) || ''; o.altZh = (cur.alt && cur.alt.zh) || '';
+          o.upload = (e) => {
+            const file = e.target.files && e.target.files[0];
+            this.readImageFile(file, (img) => this.setRecField(f.name, Object.assign({}, cur, { url: img.url, name: img.name + ' · ' + img.size })));
+            e.target.value = '';
+          };
+          o.clear = (e) => { if (e) e.preventDefault(); this.setRecField(f.name, Object.assign({}, cur, { url: '', name: '' })); };
+          o.setAltEn = (e) => this.setRecField(f.name, Object.assign({}, cur, { alt: Object.assign({}, cur.alt, { en: e.target.value }) }));
+          o.setAltZh = (e) => this.setRecField(f.name, Object.assign({}, cur, { alt: Object.assign({}, cur.alt, { zh: e.target.value }) }));
+        }
+        else if (ed === 'image-list') {
+          o.isImageList = true;
+          const cur = Array.isArray(val) ? val : [];
+          const write = (next) => this.setRecField(f.name, next);
+          o.imgs = cur.map((im, n) => {
+            const rec = (im && typeof im === 'object') ? im : { url: im || '', name: '' };
+            return {
+              no: '0' + (n + 1), url: rec.url || '', hasImage: !!rec.url, fileName: rec.name || '',
+              preview: this.imgEl(rec.url || '', rec.caption || ''),
+              caption: rec.caption || '',
+              setCaption: (e) => write(cur.map((x, k) => k === n ? Object.assign({}, rec, { caption: e.target.value }) : x)),
+              replace: (e) => {
+                const file = e.target.files && e.target.files[0];
+                this.readImageFile(file, (img) => write(cur.map((x, k) => k === n ? Object.assign({}, rec, { url: img.url, name: img.name + ' · ' + img.size }) : x)));
+                e.target.value = '';
+              },
+              remove: (e) => { if (e) e.preventDefault(); write(cur.filter((x, k) => k !== n)); }
+            };
+          });
+          o.add = (e) => {
+            const file = e.target.files && e.target.files[0];
+            this.readImageFile(file, (img) => write(cur.concat([{ url: img.url, name: img.name + ' · ' + img.size, caption: '' }])));
+            e.target.value = '';
+          };
+        }
+        else if (ed === 'kv-list') {
+          o.isLines = true; o.v = (Array.isArray(val) ? val : []).join('\n');
+          o.set = (e) => this.setRecField(f.name, e.target.value.split('\n').map(s => s.trim()).filter(s => s));
+        }
+        else {
+          o.isBi = true;
+          const isList = (ed === 'bi-list' || ed === 'qa-list');
+          o.isLong = (ed === 'bi-textarea' || isList);
+          o.isShort = !o.isLong;
+          const obj = (val && typeof val === 'object') ? val : { en: val || '', zh: '' };
+          o.en = Array.isArray(obj.en) ? obj.en.join('\n') : (obj.en || '');
+          o.zh = Array.isArray(obj.zh) ? obj.zh.join('\n') : (obj.zh || '');
+          const wrap = (s) => isList ? s.split('\n').map(x => x.trim()).filter(x => x) : s;
+          o.setEn = (e) => this.setRecField(f.name, Object.assign({}, obj, { en: wrap(e.target.value) }));
+          o.setZh = (e) => this.setRecField(f.name, Object.assign({}, obj, { zh: wrap(e.target.value) }));
+        }
+        return o;
+      });
+    }
+
+    return Object.assign(base, {
+      isHome: st.route === 'home', isCatalog: st.route === 'catalog', isPortfolio: st.route === 'portfolio',
+      isDetail: st.route === 'detail' && !!detail, isPipeline: st.route === 'pipeline',
+      isSubmit: st.route === 'submit', isThanks: st.route === 'thanks', isBoard: st.route === 'board',
+      isPeople: st.route === 'people', isAbout: st.route === 'about', isNews: st.route === 'news',
+      isSearch: st.route === 'search',
+      isAdminHome: st.route === 'admin' && isAdmin, isAdminEdit: st.route === 'adminEdit' && isAdmin && !!st.editRec,
+      stats: [
+        { v: String(pubSol.filter(s => s.status === 'live').length), k: i ? '已上线方案' : 'Solutions live' },
+        { v: String(pubSol.filter(s => s.status !== 'live').length), k: i ? '在建方案' : 'In development' },
+        { v: String(this.tax('sites').length), k: i ? '覆盖基地' : 'Plants covered' },
+        { v: String(this.pub('ideas').length), k: i ? '已提交想法' : 'Ideas submitted' }
+      ],
+      solutions: solutions, owners: owners, stages: stages, intakeSteps: intakeSteps,
+      quickLinks: quickLinks, highlights: highlights, feature: feature,
+      announcements: anns, pinned: pinned, devArea: devArea, manage: manage,
+      statusFilters: statusFilters, processFilters: processFilters, siteFilters: siteFilters,
+      regionFilters: regionFilters, filteredSolutions: filteredSolutions, filteredOwners: filteredOwners,
+      teamGroups: teamGroups, teamCount: teamCount, teamEmpty: teamGroups.length === 0,
+      resultCount: filteredSolutions.length + (i ? ' / ' + pubSol.length + ' 个方案' : ' of ' + pubSol.length + ' solutions'),
+      noResults: filteredSolutions.length === 0,
+      portfolio: portfolio, detail: detail, accessSent: st.accessSent,
+      requestAccess: () => this.setState({ accessSent: true }),
+      criteria: criteria, form: st.form, onField: onField,
+      siteOptions: siteOptions, functionOptions: functionOptions, frequencyOptions: frequencyOptions,
+      progressPct: Math.round(done / req.length * 100) + '%',
+      progressLabel: done + ' / ' + req.length + (i ? ' 必填项' : ' required'),
+      submitDisabled: done < req.length,
+      submitHint: done < req.length
+        ? (i ? '还需填写 ' + (req.length - done) + ' 项' : (req.length - done) + ' fields still needed')
+        : (i ? '提交后立即获得受理编号' : 'You get a reference number immediately'),
+      submitIdea: () => this.doSubmit(),
+      ticket: [
+        { k: T.tkRef, v: st.ticketRef || '—' },
+        { k: T.tkReviewer, v: i ? '张伟 · 出货流程负责人' : 'Zhang Wei · Outbound Process Owner' },
+        { k: T.tkDecision, v: i ? '2026 年 10 月 10 日' : '10 Oct 2026' }
+      ],
+      ideas: ideas, ideaFilters: ideaFilters,
+      governance: governance, glossary: glossary, releases: releases, roadmap: roadmap,
+      architecture: architecture, sourceMap: sourceMap,
+      searchResults: searchResults, searchEmpty: !!q && searchResults.length === 0,
+      searchHeading: (i ? '搜索：' : 'Results for ') + '\u201c' + st.query + '\u201d',
+      searchCount: searchResults.length + (i ? ' 条结果 · 方案、项目、管道、人员与想法' : ' results across catalog, projects, pipeline, people and ideas'),
+      flash: st.flash,
+      adminStats: [
+        { v: String(collKeys.length), k: i ? '内容集合' : 'Collections' },
+        { v: String(published), k: i ? '已发布记录' : 'Published records' },
+        { v: String(drafts), k: i ? '草稿' : 'Drafts' },
+        { v: String(archived), k: i ? '已归档' : 'Archived' }
+      ],
+      adminGroups: adminGroups,
+      activeColl: { label: this.p(ac.label), source: ac.list + '  ·  ' + (ac.writePath || meta.writePath || '') },
+      adminRows: adminRows,
+      newRecord: (e) => { if (e) e.preventDefault(); this.startEdit(st.adminColl, null); },
+      resetContent: (e) => { if (e) e.preventDefault(); this.resetContent(); },
+      confirmRec: confirmTarget ? { label: (this.recTitle(confirmTarget) || confirmTarget.id) + '  ·  ' + confirmTarget.id } : null,
+      cancelDelete: (e) => { if (e) e.preventDefault(); this.setState({ confirmId: null }); },
+      doDelete: (e) => { if (e) e.preventDefault(); this.deleteRecord(); },
+      editFields: editFields, editTitle: editTitle, editMeta: editMeta, editCrumb: editCrumb,
+      editState: st.editRec ? st.editRec.state : 'draft',
+      editOrder: st.editRec ? String(st.editRec.order || '') : '',
+      stateOptions: [{ v: 'published', l: T.stPublished }, { v: 'draft', l: T.stDraft }, { v: 'archived', l: T.stArchived }],
+      onEditState: (e) => this.setRecField('state', e.target.value),
+      onEditOrder: (e) => this.setRecField('order', parseInt(e.target.value, 10) || 0),
+      saveRecord: (e) => { if (e) e.preventDefault(); this.saveRecord(); },
+      cancelEdit: (e) => { if (e) e.preventDefault(); this.setState({ editRec: null, editId: null, route: 'admin' }); }
+    });
+  }
+
+  recTitle(r) {
+    if (!r) return '';
+    const cands = ['name', 'title', 'label', 'heading', 'term', 'decision'];
+    for (let n = 0; n < cands.length; n++) {
+      const v = r[cands[n]];
+      if (v) { const s = this.p(v); if (s) return s; }
+    }
+    return r.id || '';
+  }
+
+  setField(k, v) { this.setState(s => ({ form: Object.assign({}, s.form, { [k]: v }) })); }
+  imgEl(url, alt) {
+    if (!url) return null;
+    return React.createElement('img', {
+      src: url, alt: alt || '',
+      style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
+    });
+  }
+
+  readImageFile(file, cb) {
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { this.setState({ flash: this.S.flashImgType[this.L()] }); return; }
+    if (file.size > 2200000) { this.setState({ flash: this.S.flashImgSize[this.L()] }); return; }
+    const fr = new FileReader();
+    fr.onload = () => cb({ url: String(fr.result), name: file.name, size: Math.round(file.size / 1024) + ' KB' });
+    fr.readAsDataURL(file);
+  }
+
+  setRecField(k, v) { this.setState(s => ({ editRec: Object.assign({}, s.editRec, { [k]: v }) })); }
+
+  startEdit(collKey, id) {
+    const c = this.state.db.collections[collKey];
+    let recd;
+    if (id) {
+      recd = JSON.parse(JSON.stringify(c.items.find(x => x.id === id)));
+    } else {
+      recd = { id: collKey.slice(0, 3) + '-' + Date.now().toString().slice(-5), state: 'draft', order: c.items.length + 1 };
+      (c.fields || []).forEach(f => {
+        if (f.editor === 'bool') recd[f.name] = false;
+        else if (f.editor === 'image') recd[f.name] = { url: '', name: '', alt: { en: '', zh: '' } };
+        else if (f.editor === 'image-list') recd[f.name] = [];
+        else if (f.editor === 'multi' || f.editor === 'multi-ref' || f.editor === 'kv-list') recd[f.name] = [];
+        else if (f.editor === 'text' || f.editor === 'select' || f.editor === 'ref' || f.editor === 'enum') recd[f.name] = '';
+        else if (f.editor === 'bi-list' || f.editor === 'qa-list') recd[f.name] = { en: [], zh: [] };
+        else recd[f.name] = { en: '', zh: '' };
+      });
+    }
+    this.setState({ adminColl: collKey, editId: id, editRec: recd, route: 'adminEdit', flash: '' });
+    window.scrollTo(0, 0);
+  }
+
+  saveRecord() {
+    const collKey = this.state.adminColl, r = this.state.editRec, user = this.state.user || 'Administrator';
+    const out = Object.assign({}, r, { modifiedBy: user, modifiedAt: this.today() });
+    this.mutate(collKey, c => {
+      const n = c.items.findIndex(x => x.id === out.id);
+      if (n >= 0) c.items[n] = out; else c.items.push(out);
+    });
+    this.setState({ editRec: null, editId: null, route: 'admin', flash: this.S.flashSaved[this.L()] });
+    window.scrollTo(0, 0);
+  }
+
+  setRecordState(collKey, id, state) {
+    const user = this.state.user || 'Administrator';
+    this.mutate(collKey, c => {
+      const x = c.items.find(y => y.id === id);
+      if (x) { x.state = state; x.modifiedBy = user; x.modifiedAt = this.today(); }
+    });
+    this.setState({ flash: (state === 'archived' ? this.S.flashArchived : this.S.flashPublished)[this.L()] });
+  }
+
+  duplicateRecord(collKey, id) {
+    const user = this.state.user || 'Administrator';
+    this.mutate(collKey, c => {
+      const x = c.items.find(y => y.id === id);
+      if (!x) return;
+      const copy = JSON.parse(JSON.stringify(x));
+      copy.id = x.id + '-copy-' + Date.now().toString().slice(-4);
+      copy.state = 'draft';
+      copy.order = c.items.length + 1;
+      copy.modifiedBy = user; copy.modifiedAt = this.today();
+      c.items.push(copy);
+    });
+    this.setState({ flash: this.S.flashDuplicated[this.L()] });
+  }
+
+  deleteRecord() {
+    const collKey = this.state.adminColl, id = this.state.confirmId;
+    this.mutate(collKey, c => { c.items = c.items.filter(x => x.id !== id); });
+    this.setState({ confirmId: null, flash: this.S.flashDeleted[this.L()] });
+  }
+
+  move(collKey, id, dir) {
+    this.mutate(collKey, c => {
+      const list = c.items.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+      const n = list.findIndex(x => x.id === id);
+      const m = n + dir;
+      if (n < 0 || m < 0 || m >= list.length) return;
+      const a = list[n].order || n + 1, b = list[m].order || m + 1;
+      list[n].order = b; list[m].order = a;
+    });
+  }
+
+  resetContent() {
+    try { localStorage.removeItem('lih.db'); } catch (e) {}
+    fetch('content.json').then(r => r.json()).then(db => {
+      this.setState({ db: db, editRec: null, flash: this.S.flashReset[this.L()] });
+    });
+  }
+
+  doSubmit() {
+    const st = this.state, f = st.form;
+    const n = this.state.db.collections.ideas.items.length + 82;
+    const ref = 'LIH-2026-0' + n;
+    const site = this.taxOne('sites', f.site);
+    const idea = {
+      id: 'id-' + n, state: 'published', order: n, ref: ref,
+      title: { en: f.title, zh: f.title },
+      area: /Import|关务|Export/.test(f.fn) ? 'customs' : 'automation',
+      from: {
+        en: (f.name || '—') + ' · ' + (site ? site.label.en : ''),
+        zh: (f.name || '—') + ' · ' + (site ? site.label.zh : '')
+      },
+      date: this.today(), ideaState: 'new',
+      outcome: { en: 'Reviewer being assigned', zh: '正在指派评审人' },
+      modifiedBy: f.name || 'Intake flow', modifiedAt: this.today()
+    };
+    this.mutate('ideas', c => { c.items.push(idea); });
+    this.setState({ ticketRef: ref, route: 'thanks' });
+    window.scrollTo(0, 0);
+  }
+
+  signIn(role, user) {
+    try { localStorage.setItem('lih.role', role); localStorage.setItem('lih.user', user); } catch (e) {}
+    this.setState({ role: role, user: user, signInOpen: false, route: 'admin' });
+    window.scrollTo(0, 0);
+  }
+  signOut() {
+    try { localStorage.removeItem('lih.role'); localStorage.removeItem('lih.user'); } catch (e) {}
+    this.setState({ role: 'visitor', user: null, route: 'home' });
+    window.scrollTo(0, 0);
+  }
+}
+
+</script>
+</body>
+</html>

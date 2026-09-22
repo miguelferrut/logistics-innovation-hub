@@ -1,0 +1,3235 @@
+{
+  "meta": {
+    "version": "1.2",
+    "generated": "2026-09-21",
+    "note": "Prototype content source. In production this document is not shipped: each collection below is read at runtime from its SharePoint List (phase 1) or Dataverse table (phase 2) through Power Automate, with the same field names. No portal content is held in code.",
+    "auth": {
+      "provider": "Microsoft Entra ID",
+      "readAccess": "anonymous — all published content is public to employees without sign-in",
+      "adminRole": "LIH.ContentAdmin (Entra security group)",
+      "ownerRole": "LIH.SolutionOwner (may edit only records where ownerId = self)"
+    },
+    "writePath": "Portal → Power Automate flow (LIH_UpsertRecord) → SharePoint List / Dataverse → cache invalidation",
+    "states": [
+      "published",
+      "draft",
+      "archived"
+    ]
+  },
+  "taxonomies": {
+    "sites": [
+      {
+        "id": "apo",
+        "label": {
+          "en": "Apodaca, MX",
+          "zh": "墨西哥 Apodaca"
+        },
+        "region": "mx"
+      },
+      {
+        "id": "mty",
+        "label": {
+          "en": "Monterrey, MX",
+          "zh": "墨西哥 Monterrey"
+        },
+        "region": "mx"
+      },
+      {
+        "id": "hz",
+        "label": {
+          "en": "Hangzhou, CN",
+          "zh": "中国杭州"
+        },
+        "region": "cn"
+      },
+      {
+        "id": "wh",
+        "label": {
+          "en": "Wuhu, CN",
+          "zh": "中国芜湖"
+        },
+        "region": "cn"
+      },
+      {
+        "id": "xc",
+        "label": {
+          "en": "Xinchang, CN",
+          "zh": "中国新昌"
+        },
+        "region": "cn"
+      }
+    ],
+    "areas": [
+      {
+        "id": "outbound",
+        "label": {
+          "en": "Outbound & shipping",
+          "zh": "出货与发运"
+        }
+      },
+      {
+        "id": "inbound",
+        "label": {
+          "en": "Inbound & receiving",
+          "zh": "收货与入库"
+        }
+      },
+      {
+        "id": "customs",
+        "label": {
+          "en": "Customs & trade",
+          "zh": "关务与贸易"
+        }
+      },
+      {
+        "id": "cost",
+        "label": {
+          "en": "Freight cost",
+          "zh": "运费成本"
+        }
+      },
+      {
+        "id": "visibility",
+        "label": {
+          "en": "Shipment visibility",
+          "zh": "在途可视化"
+        }
+      },
+      {
+        "id": "automation",
+        "label": {
+          "en": "Process automation",
+          "zh": "流程自动化"
+        }
+      }
+    ],
+    "statuses": [
+      {
+        "id": "live",
+        "label": {
+          "en": "Live",
+          "zh": "已上线"
+        },
+        "pill": "tag-accent"
+      },
+      {
+        "id": "pilot",
+        "label": {
+          "en": "Pilot",
+          "zh": "试点中"
+        },
+        "pill": "tag-outline"
+      },
+      {
+        "id": "dev",
+        "label": {
+          "en": "In development",
+          "zh": "开发中"
+        },
+        "pill": "tag-neutral"
+      },
+      {
+        "id": "discovery",
+        "label": {
+          "en": "Discovery",
+          "zh": "需求调研"
+        },
+        "pill": "tag-neutral"
+      }
+    ],
+    "stages": [
+      {
+        "id": "discovery",
+        "label": {
+          "en": "Discovery",
+          "zh": "需求调研"
+        },
+        "desc": {
+          "en": "Problem being defined with the people who have it.",
+          "zh": "与问题提出方共同界定需求。"
+        }
+      },
+      {
+        "id": "build",
+        "label": {
+          "en": "Build",
+          "zh": "开发中"
+        },
+        "desc": {
+          "en": "Scope agreed, being built and tested.",
+          "zh": "范围已确认，开发与测试中。"
+        }
+      },
+      {
+        "id": "pilot",
+        "label": {
+          "en": "Pilot",
+          "zh": "试点中"
+        },
+        "desc": {
+          "en": "Running with real work at one site.",
+          "zh": "在单一基地承载真实业务运行。"
+        }
+      },
+      {
+        "id": "live",
+        "label": {
+          "en": "Recently live",
+          "zh": "近期上线"
+        },
+        "desc": {
+          "en": "In production and rolling out to further sites.",
+          "zh": "已投产，并向更多基地推广。"
+        }
+      }
+    ],
+    "ideaStates": [
+      {
+        "id": "new",
+        "label": {
+          "en": "New",
+          "zh": "新提交"
+        },
+        "pill": "tag-neutral"
+      },
+      {
+        "id": "review",
+        "label": {
+          "en": "Under review",
+          "zh": "评审中"
+        },
+        "pill": "tag-outline"
+      },
+      {
+        "id": "accepted",
+        "label": {
+          "en": "Accepted",
+          "zh": "已立项"
+        },
+        "pill": "tag-accent"
+      },
+      {
+        "id": "build",
+        "label": {
+          "en": "In build",
+          "zh": "开发中"
+        },
+        "pill": "tag-accent"
+      },
+      {
+        "id": "delivered",
+        "label": {
+          "en": "Delivered",
+          "zh": "已交付"
+        },
+        "pill": "tag-accent"
+      },
+      {
+        "id": "merged",
+        "label": {
+          "en": "Merged",
+          "zh": "已合并"
+        },
+        "pill": "tag-neutral"
+      },
+      {
+        "id": "declined",
+        "label": {
+          "en": "Not proceeding",
+          "zh": "未立项"
+        },
+        "pill": "tag-neutral"
+      }
+    ],
+    "functions": [
+      {
+        "id": "import",
+        "label": {
+          "en": "Import Operations",
+          "zh": "进口运营"
+        },
+        "desc": {
+          "en": "Inbound shipments, supplier deliveries and receiving coordination.",
+          "zh": "进货、供应商交付与收货协调。"
+        }
+      },
+      {
+        "id": "export",
+        "label": {
+          "en": "Export Operations",
+          "zh": "出口运营"
+        },
+        "desc": {
+          "en": "Outbound shipments, customer deliveries and export documentation.",
+          "zh": "出货、客户交付与出口单据。"
+        }
+      },
+      {
+        "id": "transport",
+        "label": {
+          "en": "Transportation",
+          "zh": "运输管理"
+        },
+        "desc": {
+          "en": "Carrier management, freight cost and transport planning.",
+          "zh": "承运商管理、运费成本与运输计划。"
+        }
+      },
+      {
+        "id": "customs",
+        "label": {
+          "en": "Customs",
+          "zh": "关务"
+        },
+        "desc": {
+          "en": "Customs clearance, trade compliance and document release.",
+          "zh": "清关、贸易合规与单据放行。"
+        }
+      },
+      {
+        "id": "leadership",
+        "label": {
+          "en": "Logistics Leadership",
+          "zh": "物流管理层"
+        },
+        "desc": {
+          "en": "Regional logistics management and digital transformation.",
+          "zh": "区域物流管理与数字化转型。"
+        }
+      }
+    ]
+  },
+  "collections": {
+    "solutions": {
+      "label": {
+        "en": "Solutions Catalog",
+        "zh": "方案目录"
+      },
+      "group": "core",
+      "list": "LIH_Solutions",
+      "ownerEditable": true,
+      "fields": [
+        {
+          "name": "name",
+          "label": {
+            "en": "Name",
+            "zh": "名称"
+          },
+          "editor": "text",
+          "required": true
+        },
+        {
+          "name": "nameZh",
+          "label": {
+            "en": "Name (Chinese gloss)",
+            "zh": "中文名称"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "area",
+          "label": {
+            "en": "Process area",
+            "zh": "流程领域"
+          },
+          "editor": "select",
+          "taxonomy": "areas",
+          "required": true
+        },
+        {
+          "name": "status",
+          "label": {
+            "en": "Status",
+            "zh": "状态"
+          },
+          "editor": "select",
+          "taxonomy": "statuses",
+          "required": true
+        },
+        {
+          "name": "ownerId",
+          "label": {
+            "en": "Solution owner",
+            "zh": "方案负责人"
+          },
+          "editor": "ref",
+          "collection": "owners",
+          "required": true
+        },
+        {
+          "name": "launched",
+          "label": {
+            "en": "Launched / target",
+            "zh": "上线时间 / 目标"
+          },
+          "editor": "bi-text"
+        },
+        {
+          "name": "tagline",
+          "label": {
+            "en": "One-line value statement",
+            "zh": "一句话价值说明"
+          },
+          "editor": "bi-textarea",
+          "required": true
+        },
+        {
+          "name": "problem",
+          "label": {
+            "en": "The problem",
+            "zh": "要解决的问题"
+          },
+          "editor": "bi-textarea"
+        },
+        {
+          "name": "solution",
+          "label": {
+            "en": "What it does",
+            "zh": "方案做什么"
+          },
+          "editor": "bi-textarea"
+        },
+        {
+          "name": "how",
+          "label": {
+            "en": "How it works (one step per line)",
+            "zh": "运作方式（每行一步）"
+          },
+          "editor": "bi-list"
+        },
+        {
+          "name": "rollout",
+          "label": {
+            "en": "Rollout (siteId:statusId per line)",
+            "zh": "上线情况（每行 基地:状态）"
+          },
+          "editor": "kv-list",
+          "hint": {
+            "en": "Structured field — a site/status picker replaces this textarea when the list is on SharePoint.",
+            "zh": "结构化字段——接入 SharePoint 后由基地/状态选择器替代此文本框。"
+          }
+        },
+        {
+          "name": "systems",
+          "label": {
+            "en": "Systems involved",
+            "zh": "涉及系统"
+          },
+          "editor": "bi-text"
+        },
+        {
+          "name": "shots",
+          "label": {
+            "en": "Image slots (one caption per line)",
+            "zh": "图片位（每行一条说明）"
+          },
+          "editor": "bi-list"
+        },
+        {
+          "name": "shotImages",
+          "label": {
+            "en": "Screenshots (upload)",
+            "zh": "截图（上传）"
+          },
+          "editor": "image-list",
+          "hint": {
+            "en": "Each uploaded image replaces a blueprint placeholder on the solution page. Captions here override the text-only slots above.",
+            "zh": "每张上传图片将替换方案页上的线框占位图。此处的说明优先于上方纯文本图片位。"
+          }
+        },
+        {
+          "name": "faq",
+          "label": {
+            "en": "FAQ (question || answer per line)",
+            "zh": "常见问题（每行 问题 || 答案）"
+          },
+          "editor": "qa-list"
+        },
+        {
+          "name": "related",
+          "label": {
+            "en": "Related solutions",
+            "zh": "相关方案"
+          },
+          "editor": "multi-ref",
+          "collection": "solutions"
+        }
+      ],
+      "items": [
+        {
+          "id": "shipping-plan",
+          "state": "published",
+          "order": 1,
+          "name": "Shipping Plan 2.0",
+          "nameZh": "发运计划 2.0",
+          "area": "outbound",
+          "status": "live",
+          "ownerId": "zhang",
+          "launched": {
+            "en": "Mar 2025",
+            "zh": "2025 年 3 月"
+          },
+          "tagline": {
+            "en": "Build next week's outbound plan in twenty minutes instead of two days.",
+            "zh": "把下周的发运计划从两天压缩到二十分钟。"
+          },
+          "problem": {
+            "en": "Outbound plans were assembled by hand in spreadsheets from three different systems. Every customer change meant re-keying the whole sheet, versions circulated by email, and the plan was usually stale before the warehouse read it.",
+            "zh": "发运计划此前需从三个系统手工汇总到表格中。客户每有变动就要重新录入整张表，版本通过邮件流转，仓库拿到时计划往往已经过期。"
+          },
+          "solution": {
+            "en": "A single planning workspace that pulls orders, stock and carrier capacity, proposes a load plan against the planner's constraints, and publishes one version that the warehouse and the carriers both read.",
+            "zh": "统一的计划工作台：自动汇总订单、库存与承运商运力，按计划员设定的约束生成装载方案，并发布唯一版本供仓库与承运商共同查阅。"
+          },
+          "how": {
+            "en": [
+              "Orders, stock and open capacity sync from ERP and WMS every night.",
+              "The planner sets the week's constraints — dock hours, carrier capacity, priority customers.",
+              "The engine proposes a load plan and flags orders it cannot fit.",
+              "The planner adjusts by hand where judgement is needed, then publishes.",
+              "Warehouse, transport and carriers all read the same published version."
+            ],
+            "zh": [
+              "每晚从 ERP 与 WMS 同步订单、库存与可用运力。",
+              "计划员设定本周约束——月台工作时间、承运商运力、优先客户。",
+              "系统生成装载方案，并标出无法排入的订单。",
+              "计划员对需人工判断的部分进行调整后发布。",
+              "仓库、运输与承运商查阅同一个已发布版本。"
+            ]
+          },
+          "rollout": [
+            "apo:live",
+            "mty:live",
+            "hz:live"
+          ],
+          "systems": {
+            "en": "ERP, WMS, carrier portal",
+            "zh": "ERP、WMS、承运商门户"
+          },
+          "shots": {
+            "en": [
+              "screenshot — weekly plan grid with capacity warnings",
+              "screenshot — published plan as the warehouse sees it"
+            ],
+            "zh": [
+              "截图 — 周计划表与运力预警",
+              "截图 — 仓库端查看的已发布计划"
+            ]
+          },
+          "faq": {
+            "en": [
+              "Can I still override the proposed plan? || Yes. The engine proposes, the planner decides. Every manual change is kept in the version history with the name of whoever made it.",
+              "Does it replace the weekly planning meeting? || No. It removes the first forty minutes of that meeting, which used to be spent agreeing on which spreadsheet was current."
+            ],
+            "zh": [
+              "我还能手动调整系统建议的计划吗？ || 可以。系统只负责建议，决策权在计划员。每次手工修改都会连同操作人记录在版本历史中。",
+              "它会取代每周计划会议吗？ || 不会。它省去了会议开头约四十分钟——过去这段时间都用在确认哪份表格是最新版本。"
+            ]
+          },
+          "related": [
+            "receiving-plan",
+            "control-tower"
+          ],
+          "modifiedBy": "Zhang Wei",
+          "modifiedAt": "2026-09-12"
+        },
+        {
+          "id": "kuaibot",
+          "state": "published",
+          "order": 2,
+          "name": "KuaiBot",
+          "nameZh": "快机器人",
+          "area": "automation",
+          "status": "live",
+          "ownerId": "chen",
+          "launched": {
+            "en": "Aug 2025",
+            "zh": "2025 年 8 月"
+          },
+          "tagline": {
+            "en": "A desk robot that files the repetitive logistics paperwork nobody should be doing by hand.",
+            "zh": "替你完成重复性物流单据工作的桌面机器人。"
+          },
+          "problem": {
+            "en": "Teams spent two to three hours a day copying the same data between the ERP, customer portals and email. High volume, no judgement required, and a steady rate of transcription errors that only surfaced downstream.",
+            "zh": "各团队每天花两到三小时在 ERP、客户门户与邮件之间重复搬运同样的数据。工作量大、无需判断，而录入差错持续发生且往往到下游才被发现。"
+          },
+          "solution": {
+            "en": "A library of attended and unattended bots that log in, read, key and confirm. Each bot is owned by the team whose work it does, not by IT — they nominate the task and sign off the result.",
+            "zh": "一套有人值守与无人值守机器人库，可自动登录、读取、录入与确认。每个机器人归属其所服务的业务团队而非 IT——由业务提出任务并验收结果。"
+          },
+          "how": {
+            "en": [
+              "A team nominates a task that is high volume and requires no judgement.",
+              "The bot is built and tested alongside the people who do the task today.",
+              "It runs on a schedule, or on demand from the user's desktop.",
+              "Anything the bot cannot handle is routed to a human exception queue.",
+              "The owning team sees every run in a log and can stop the bot themselves."
+            ],
+            "zh": [
+              "团队提出一项高频且无需人工判断的任务。",
+              "机器人与现有操作人员共同开发并测试。",
+              "按计划运行，或由用户在桌面端按需触发。",
+              "机器人无法处理的情形转入人工例外队列。",
+              "归属团队可查看每次运行日志，并可自行停止机器人。"
+            ]
+          },
+          "rollout": [
+            "hz:live",
+            "wh:live",
+            "xc:live",
+            "apo:pilot"
+          ],
+          "systems": {
+            "en": "ERP, email, customer portals",
+            "zh": "ERP、邮件、客户门户"
+          },
+          "shots": {
+            "en": [
+              "screenshot — bot library with run status per team",
+              "screenshot — exception queue handed back to a human"
+            ],
+            "zh": [
+              "截图 — 各团队机器人清单与运行状态",
+              "截图 — 转交人工处理的例外队列"
+            ]
+          },
+          "faq": {
+            "en": [
+              "Will a bot take my job? || The tasks nominated so far are transcription tasks. Every bot in the library was proposed by the team that used to do the task by hand.",
+              "How do I get a bot for my task? || Submit it through the intake form. If it is high volume and rule-based, it usually reaches production in four to six weeks."
+            ],
+            "zh": [
+              "机器人会取代我的工作吗？ || 目前提出的任务均为数据搬运类工作。库中每个机器人都是由原本手工执行该任务的团队自己提出的。",
+              "我的任务如何申请机器人？ || 通过需求提交表单提出。若任务量大且规则明确，通常四到六周即可上线。"
+            ]
+          },
+          "related": [
+            "carrier-invoice",
+            "vobos"
+          ],
+          "modifiedBy": "Chen Hao",
+          "modifiedAt": "2026-09-04"
+        },
+        {
+          "id": "control-tower",
+          "state": "published",
+          "order": 3,
+          "name": "Control Tower",
+          "nameZh": "控制塔",
+          "area": "visibility",
+          "status": "pilot",
+          "ownerId": "elena",
+          "launched": {
+            "en": "Pilot since Sep 2026",
+            "zh": "自 2026 年 9 月起试点"
+          },
+          "tagline": {
+            "en": "One screen for every shipment in motion, from plant gate to customer dock.",
+            "zh": "一个屏幕看清所有在途货物，从工厂大门到客户月台。"
+          },
+          "problem": {
+            "en": "Shipment status lived in carrier portals, mailboxes and phone calls. Answering \"where is it?\" took three calls, and the answer was already out of date when it arrived.",
+            "zh": "货物状态分散在承运商门户、邮箱与电话中。回答一句\"货到哪了\"要打三个电话，而答案到手时往往已经过时。"
+          },
+          "solution": {
+            "en": "A live map and exception list built on carrier and forwarder feeds. It does not show you every shipment equally — it raises the ones whose ETA no longer matches the promise.",
+            "zh": "基于承运商与货代数据构建的实时地图与例外清单。它不会平铺所有货物，而是主动提示预计到达时间已偏离承诺的那些。"
+          },
+          "how": {
+            "en": [
+              "Tracking feeds are ingested from carriers and forwarders continuously.",
+              "Each movement is matched back to the order and the customer promise.",
+              "ETA is compared to promise; only deviations become exceptions.",
+              "Exceptions are assigned to a named owner with a countdown.",
+              "The resolution is recorded, so recurring lanes can be fixed at the root."
+            ],
+            "zh": [
+              "持续接入承运商与货代的跟踪数据。",
+              "每笔在途信息回溯匹配到订单与客户承诺。",
+              "将预计到达与承诺比对，仅偏差项生成例外。",
+              "例外项分派给指定责任人并附处理时限。",
+              "处理结果留档，便于对反复出问题的线路做根本改善。"
+            ]
+          },
+          "rollout": [
+            "apo:pilot",
+            "mty:dev",
+            "hz:dev"
+          ],
+          "systems": {
+            "en": "Carrier APIs, forwarder EDI, ERP",
+            "zh": "承运商接口、货代 EDI、ERP"
+          },
+          "shots": {
+            "en": [
+              "screenshot — live map, exceptions ranked by risk",
+              "screenshot — single shipment timeline with milestones"
+            ],
+            "zh": [
+              "截图 — 实时地图，例外按风险排序",
+              "截图 — 单票货物里程碑时间线"
+            ]
+          },
+          "faq": {
+            "en": [
+              "Which lanes are in the pilot? || Apodaca outbound to US customers, September to December 2026. Monterrey and Hangzhou follow once the feed quality is proven.",
+              "Can I join the pilot from another plant? || Yes, if your main carriers already provide a tracking feed. Use the join button and the owner will confirm feasibility in a week."
+            ],
+            "zh": [
+              "试点覆盖哪些线路？ || Apodaca 出口至美国客户，2026 年 9 月至 12 月。数据质量验证后再推广至 Monterrey 与杭州。",
+              "其他工厂可以加入试点吗？ || 可以，前提是你的主要承运商已提供跟踪数据。点击加入按钮，负责人将在一周内确认可行性。"
+            ]
+          },
+          "related": [
+            "shipping-plan",
+            "carrier-invoice"
+          ],
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-18"
+        },
+        {
+          "id": "carrier-invoice",
+          "state": "published",
+          "order": 4,
+          "name": "Carrier Invoice Validation",
+          "nameZh": "承运商发票校验",
+          "area": "cost",
+          "status": "live",
+          "ownerId": "lina",
+          "launched": {
+            "en": "Nov 2025",
+            "zh": "2025 年 11 月"
+          },
+          "tagline": {
+            "en": "Every freight invoice checked against the contracted rate before it reaches Finance.",
+            "zh": "每张运费发票在进入财务前自动与合同费率比对。"
+          },
+          "problem": {
+            "en": "Freight invoices were approved largely on trust because checking them by hand was not affordable at that volume. Discrepancies were found months later during audit, if at all.",
+            "zh": "受制于人力，运费发票基本靠信任放行。差异往往数月后审计时才被发现，甚至根本不被发现。"
+          },
+          "solution": {
+            "en": "An automated three-way match between the invoice, the shipment record and the contracted rate card. Clean invoices are approved automatically; mismatches arrive at Finance with the evidence already attached.",
+            "zh": "在发票、运输记录与合同费率之间自动三方比对。无差异发票自动放行；有差异的则连同证据一并推送给财务。"
+          },
+          "how": {
+            "en": [
+              "The invoice is received and parsed, whatever format the carrier sends.",
+              "Each line is matched to the shipment record it claims to bill.",
+              "Charges are compared against the contracted rate card and accessorial rules.",
+              "Clean invoices route straight to payment approval.",
+              "Mismatches are queued with a dispute pack the carrier can be sent as-is."
+            ],
+            "zh": [
+              "接收并解析发票，兼容承运商各种格式。",
+              "逐行匹配到其所对应的运输记录。",
+              "费用与合同费率及附加费规则比对。",
+              "无差异发票直接进入付款审批。",
+              "差异项生成可直接发送承运商的争议材料并排队处理。"
+            ]
+          },
+          "rollout": [
+            "hz:live",
+            "xc:live",
+            "apo:live",
+            "mty:pilot"
+          ],
+          "systems": {
+            "en": "ERP, Finance, carrier portal",
+            "zh": "ERP、财务系统、承运商门户"
+          },
+          "shots": {
+            "en": [
+              "screenshot — match result with the disputed line highlighted",
+              "screenshot — dispute pack generated for the carrier"
+            ],
+            "zh": [
+              "截图 — 比对结果，差异行高亮",
+              "截图 — 自动生成的承运商争议材料"
+            ]
+          },
+          "faq": {
+            "en": [
+              "What happens if the rate card is out of date? || Every invoice is matched against the rate card version that was valid on the shipment date, not the one loaded today.",
+              "Does Finance still approve payment? || Yes. The tool removes the checking, not the approval. Finance sees a clean queue and a dispute queue."
+            ],
+            "zh": [
+              "如果费率表未更新会怎样？ || 每张发票按发运日期当时生效的费率版本比对，而非当前版本。",
+              "财务还需要审批付款吗？ || 需要。工具替代的是核对而非审批。财务看到的是\"无差异\"与\"待争议\"两个队列。"
+            ]
+          },
+          "related": [
+            "control-tower",
+            "kuaibot"
+          ],
+          "modifiedBy": "Li Na",
+          "modifiedAt": "2026-09-09"
+        },
+        {
+          "id": "vobos",
+          "state": "published",
+          "order": 5,
+          "name": "VOBOS Automáticos",
+          "nameZh": "单据自动放行",
+          "area": "customs",
+          "status": "dev",
+          "ownerId": "carlos",
+          "launched": {
+            "en": "Target Q1 2027",
+            "zh": "目标 2027 年第一季度"
+          },
+          "tagline": {
+            "en": "Automated release approvals for import and export documents — no more chasing signatures.",
+            "zh": "进出口单据自动放行审批——不再四处追签字。"
+          },
+          "problem": {
+            "en": "Every shipment's document approval was chased by email across trade compliance, quality and finance. One missing sign-off held a loaded truck at the gate, and nobody could see whose desk it was sitting on.",
+            "zh": "每票货的单据审批都要在关务合规、质量与财务之间邮件催办。一个签字缺失就能让满载的卡车停在门口，而没人知道单子卡在谁手上。"
+          },
+          "solution": {
+            "en": "A rules engine that grants routine approvals automatically and escalates only the exceptions, keeping a full audit trail that customs can be shown directly.",
+            "zh": "规则引擎自动放行常规单据，仅将例外升级处理，同时保留可直接向海关出示的完整审计轨迹。"
+          },
+          "how": {
+            "en": [
+              "The document is submitted once, by whoever prepares it.",
+              "Rules are checked: HS code, licence validity, value threshold, partner status.",
+              "Routine cases are released automatically, in seconds.",
+              "Exceptions route to the named approver for that rule, with a deadline.",
+              "The full trail is stored for customs audit and internal control."
+            ],
+            "zh": [
+              "由单据制作人一次性提交。",
+              "系统校验规则：HS 编码、许可有效性、金额阈值、合作方状态。",
+              "常规情形数秒内自动放行。",
+              "例外情形按规则分派给指定审批人，并设定时限。",
+              "完整轨迹留存，供海关审计与内控使用。"
+            ]
+          },
+          "rollout": [
+            "mty:dev",
+            "apo:discovery"
+          ],
+          "systems": {
+            "en": "ERP, trade compliance, document archive",
+            "zh": "ERP、关务合规系统、单据归档"
+          },
+          "shots": {
+            "en": [
+              "wireframe — approval rules matrix, in design review",
+              "wireframe — exception queue with SLA countdown"
+            ],
+            "zh": [
+              "线框图 — 审批规则矩阵，设计评审中",
+              "线框图 — 例外队列与时限倒计时"
+            ]
+          },
+          "faq": {
+            "en": [
+              "Is an automatic approval legally acceptable? || The rules were written with trade compliance and are evidenced in the audit trail. Anything outside the agreed rules still needs a person.",
+              "When can Apodaca use it? || Monterrey pilots first in Q1 2027. Apodaca follows once the Mexican rule set is validated in production."
+            ],
+            "zh": [
+              "自动审批在法律上可以接受吗？ || 规则由关务合规团队共同制定，并在审计轨迹中留证。超出既定规则的情形仍需人工审批。",
+              "Apodaca 什么时候可以使用？ || Monterrey 于 2027 年第一季度先行试点。墨西哥规则集在生产环境验证后再推广至 Apodaca。"
+            ]
+          },
+          "related": [
+            "kuaibot",
+            "control-tower"
+          ],
+          "modifiedBy": "Carlos Rivera",
+          "modifiedAt": "2026-09-15"
+        },
+        {
+          "id": "receiving-plan",
+          "state": "published",
+          "order": 6,
+          "name": "Receiving Plan",
+          "nameZh": "收货计划",
+          "area": "inbound",
+          "status": "discovery",
+          "ownerId": "miguel",
+          "launched": {
+            "en": "Target Q2 2027",
+            "zh": "目标 2027 年第二季度"
+          },
+          "tagline": {
+            "en": "Give every inbound truck a slot, so the dock stops being a queue.",
+            "zh": "为每辆到货车辆分配时段，让月台不再排队。"
+          },
+          "problem": {
+            "en": "Inbound trucks arrive unannounced. Docks swing between idle and gridlocked within the same shift, receiving overtime is impossible to forecast, and suppliers are told to \"come in the morning\".",
+            "zh": "到货车辆不预约就来。同一个班次内月台时而空闲、时而堵死，收货加班无法预测，而给供应商的答复只是\"上午来\"。"
+          },
+          "solution": {
+            "en": "Supplier-facing slot booking tied to the receiving plan, so the dock knows what is arriving and when, and a late supplier is visible before the truck is at the gate.",
+            "zh": "面向供应商的时段预约，与收货计划联动。月台提前知道什么货何时到，供应商延误在车到门口之前就能被看到。"
+          },
+          "how": {
+            "en": [
+              "Currently in discovery — the flow below is the working hypothesis.",
+              "Suppliers book an unloading slot against published dock capacity.",
+              "The receiving plan is generated from confirmed bookings.",
+              "Arrivals are checked in against the slot they booked.",
+              "Deviations are measured per supplier and fed back to purchasing."
+            ],
+            "zh": [
+              "当前处于需求调研阶段——以下流程为工作假设。",
+              "供应商按公布的月台运力预约卸货时段。",
+              "基于已确认的预约生成收货计划。",
+              "到货按其预约时段签到。",
+              "按供应商统计偏差并反馈给采购。"
+            ]
+          },
+          "rollout": [
+            "apo:discovery",
+            "mty:discovery"
+          ],
+          "systems": {
+            "en": "ERP, WMS, supplier portal (proposed)",
+            "zh": "ERP、WMS、供应商门户（拟建）"
+          },
+          "shots": {
+            "en": [
+              "wireframe — supplier slot booking calendar",
+              "wireframe — dock capacity model per shift"
+            ],
+            "zh": [
+              "线框图 — 供应商时段预约日历",
+              "线框图 — 按班次的月台运力模型"
+            ]
+          },
+          "faq": {
+            "en": [
+              "Can I influence the scope? || Yes — discovery is open until December 2026. Contact the owner or submit your dock's specific constraints through the intake form.",
+              "Why is this not being built yet? || Two plants describe the problem differently. Discovery exists to find out whether one solution serves both before anything is committed."
+            ],
+            "zh": [
+              "我可以参与界定范围吗？ || 可以——需求调研开放至 2026 年 12 月。请联系负责人，或通过需求表单提交你月台的具体约束。",
+              "为什么还没开始开发？ || 两个工厂对问题的描述不同。调研的目的就是在投入之前确认一个方案能否同时适用。"
+            ]
+          },
+          "related": [
+            "shipping-plan",
+            "vobos"
+          ],
+          "modifiedBy": "Miguel Torres",
+          "modifiedAt": "2026-09-19"
+        }
+      ]
+    },
+    "portfolio": {
+      "label": {
+        "en": "Project Portfolio",
+        "zh": "项目组合"
+      },
+      "group": "core",
+      "list": "LIH_Portfolio",
+      "fields": [
+        {
+          "name": "name",
+          "label": {
+            "en": "Project name",
+            "zh": "项目名称"
+          },
+          "editor": "text",
+          "required": true
+        },
+        {
+          "name": "nameZh",
+          "label": {
+            "en": "Project name (Chinese)",
+            "zh": "项目中文名"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "solutionId",
+          "label": {
+            "en": "Delivered solution",
+            "zh": "交付方案"
+          },
+          "editor": "ref",
+          "collection": "solutions"
+        },
+        {
+          "name": "year",
+          "label": {
+            "en": "Delivered",
+            "zh": "交付时间"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "sponsor",
+          "label": {
+            "en": "Business sponsor",
+            "zh": "业务主管"
+          },
+          "editor": "bi-text"
+        },
+        {
+          "name": "sites",
+          "label": {
+            "en": "Sites in scope",
+            "zh": "覆盖基地"
+          },
+          "editor": "multi",
+          "taxonomy": "sites"
+        },
+        {
+          "name": "scope",
+          "label": {
+            "en": "Scope delivered",
+            "zh": "交付范围"
+          },
+          "editor": "bi-textarea"
+        },
+        {
+          "name": "outcome",
+          "label": {
+            "en": "Outcome statement",
+            "zh": "成效说明"
+          },
+          "editor": "bi-textarea"
+        }
+      ],
+      "items": [
+        {
+          "id": "p-2025-01",
+          "state": "published",
+          "order": 1,
+          "name": "Outbound Planning Rebuild",
+          "nameZh": "发运计划重构",
+          "solutionId": "shipping-plan",
+          "year": "2025 Q1",
+          "sponsor": {
+            "en": "Logistics Director, Asia",
+            "zh": "亚洲物流总监"
+          },
+          "sites": [
+            "apo",
+            "mty",
+            "hz"
+          ],
+          "scope": {
+            "en": "Replaced three plant-level spreadsheet processes with one planning workspace and one published plan.",
+            "zh": "以统一计划工作台与唯一发布版本，替代三个工厂各自的表格流程。"
+          },
+          "outcome": {
+            "en": "One plan of record across three sites. Baseline measurement of planning cycle time starts Q4 2026.",
+            "zh": "三个基地共用唯一计划版本。计划周期时间基线测量自 2026 年第四季度开始。"
+          },
+          "modifiedBy": "Zhang Wei",
+          "modifiedAt": "2026-09-12"
+        },
+        {
+          "id": "p-2025-02",
+          "state": "published",
+          "order": 2,
+          "name": "Logistics RPA Programme",
+          "nameZh": "物流 RPA 项目",
+          "solutionId": "kuaibot",
+          "year": "2025 Q3",
+          "sponsor": {
+            "en": "Plant Manager, Wuhu",
+            "zh": "芜湖工厂经理"
+          },
+          "sites": [
+            "hz",
+            "wh",
+            "xc"
+          ],
+          "scope": {
+            "en": "Bot library established with team-level ownership; nineteen transcription tasks automated.",
+            "zh": "建立机器人库并由业务团队自主管理；完成十九项数据搬运任务自动化。"
+          },
+          "outcome": {
+            "en": "Tasks moved from individual desks to a managed library with run logs and a human exception queue.",
+            "zh": "任务从个人电脑转入可管理的机器人库，具备运行日志与人工例外队列。"
+          },
+          "modifiedBy": "Chen Hao",
+          "modifiedAt": "2026-09-04"
+        },
+        {
+          "id": "p-2025-03",
+          "state": "published",
+          "order": 3,
+          "name": "Freight Cost Assurance",
+          "nameZh": "运费成本保障",
+          "solutionId": "carrier-invoice",
+          "year": "2025 Q4",
+          "sponsor": {
+            "en": "Finance Controller, Mexico",
+            "zh": "墨西哥财务控制人"
+          },
+          "sites": [
+            "hz",
+            "xc",
+            "apo"
+          ],
+          "scope": {
+            "en": "Three-way match between invoice, shipment and contracted rate card, with generated dispute packs.",
+            "zh": "实现发票、运输记录与合同费率三方比对，并自动生成争议材料。"
+          },
+          "outcome": {
+            "en": "Every invoice now checked before Finance approval instead of sampled at audit.",
+            "zh": "所有发票在财务审批前完成核对，替代以往审计抽检。"
+          },
+          "modifiedBy": "Li Na",
+          "modifiedAt": "2026-09-09"
+        },
+        {
+          "id": "p-2026-01",
+          "state": "published",
+          "order": 4,
+          "name": "Shipment Visibility Pilot",
+          "nameZh": "在途可视化试点",
+          "solutionId": "control-tower",
+          "year": "2026 Q3",
+          "sponsor": {
+            "en": "Logistics Digital Lead",
+            "zh": "物流数字化负责人"
+          },
+          "sites": [
+            "apo"
+          ],
+          "scope": {
+            "en": "Carrier and forwarder feeds ingested for Apodaca outbound lanes to US customers.",
+            "zh": "接入承运商与货代数据，覆盖 Apodaca 至美国客户的出口线路。"
+          },
+          "outcome": {
+            "en": "Pilot running to December 2026; feed quality is the gate for further sites.",
+            "zh": "试点运行至 2026 年 12 月；数据质量是推广至其他基地的前置条件。"
+          },
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-18"
+        },
+        {
+          "id": "p-2024-01",
+          "state": "archived",
+          "order": 5,
+          "name": "Carrier Portal Consolidation",
+          "nameZh": "承运商门户整合",
+          "solutionId": "",
+          "year": "2024 Q2",
+          "sponsor": {
+            "en": "Transport Manager, Hangzhou",
+            "zh": "杭州运输经理"
+          },
+          "sites": [
+            "hz"
+          ],
+          "scope": {
+            "en": "Superseded by Control Tower. Kept as a record of what was tried and why it was replaced.",
+            "zh": "已被控制塔取代。保留记录以说明此前尝试及被替代的原因。"
+          },
+          "outcome": {
+            "en": "Archived 2026 — retained for institutional memory, not shown to visitors.",
+            "zh": "2026 年归档——仅作组织记忆保留，不对访客展示。"
+          },
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-06-30"
+        }
+      ]
+    },
+    "pipeline": {
+      "label": {
+        "en": "Innovation Pipeline",
+        "zh": "创新管道"
+      },
+      "group": "core",
+      "list": "LIH_Pipeline",
+      "fields": [
+        {
+          "name": "name",
+          "label": {
+            "en": "Item name",
+            "zh": "项目名称"
+          },
+          "editor": "text",
+          "required": true
+        },
+        {
+          "name": "nameZh",
+          "label": {
+            "en": "Item name (Chinese)",
+            "zh": "中文名称"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "stage",
+          "label": {
+            "en": "Stage",
+            "zh": "阶段"
+          },
+          "editor": "select",
+          "taxonomy": "stages",
+          "required": true
+        },
+        {
+          "name": "area",
+          "label": {
+            "en": "Process area",
+            "zh": "流程领域"
+          },
+          "editor": "select",
+          "taxonomy": "areas",
+          "required": true
+        },
+        {
+          "name": "ownerId",
+          "label": {
+            "en": "Owner",
+            "zh": "负责人"
+          },
+          "editor": "ref",
+          "collection": "owners",
+          "required": true
+        },
+        {
+          "name": "target",
+          "label": {
+            "en": "Target quarter",
+            "zh": "目标季度"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "note",
+          "label": {
+            "en": "What it is",
+            "zh": "内容说明"
+          },
+          "editor": "bi-textarea"
+        },
+        {
+          "name": "solutionId",
+          "label": {
+            "en": "Linked solution page",
+            "zh": "关联方案页"
+          },
+          "editor": "ref",
+          "collection": "solutions"
+        }
+      ],
+      "items": [
+        {
+          "id": "pl-01",
+          "state": "published",
+          "order": 1,
+          "name": "Control Tower",
+          "nameZh": "控制塔",
+          "stage": "pilot",
+          "area": "visibility",
+          "ownerId": "elena",
+          "target": "Q4 2026",
+          "note": {
+            "en": "Live map and exception list for Apodaca outbound lanes.",
+            "zh": "面向 Apodaca 出口线路的实时地图与例外清单。"
+          },
+          "solutionId": "control-tower",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-18"
+        },
+        {
+          "id": "pl-02",
+          "state": "published",
+          "order": 2,
+          "name": "VOBOS Automáticos",
+          "nameZh": "单据自动放行",
+          "stage": "build",
+          "area": "customs",
+          "ownerId": "carlos",
+          "target": "Q1 2027",
+          "note": {
+            "en": "Rules engine releasing routine document approvals automatically.",
+            "zh": "规则引擎自动放行常规单据审批。"
+          },
+          "solutionId": "vobos",
+          "modifiedBy": "Carlos Rivera",
+          "modifiedAt": "2026-09-15"
+        },
+        {
+          "id": "pl-03",
+          "state": "published",
+          "order": 3,
+          "name": "Receiving Plan",
+          "nameZh": "收货计划",
+          "stage": "discovery",
+          "area": "inbound",
+          "ownerId": "miguel",
+          "target": "Q2 2027",
+          "note": {
+            "en": "Supplier slot booking against published dock capacity.",
+            "zh": "供应商按公布的月台运力预约时段。"
+          },
+          "solutionId": "receiving-plan",
+          "modifiedBy": "Miguel Torres",
+          "modifiedAt": "2026-09-19"
+        },
+        {
+          "id": "pl-04",
+          "state": "published",
+          "order": 4,
+          "name": "Export Document OCR",
+          "nameZh": "出口单据识别",
+          "stage": "build",
+          "area": "customs",
+          "ownerId": "carlos",
+          "target": "Q1 2027",
+          "note": {
+            "en": "Reads supplier invoices and packing lists into the trade file automatically.",
+            "zh": "自动将供应商发票与装箱单读入关务档案。"
+          },
+          "solutionId": "",
+          "modifiedBy": "Carlos Rivera",
+          "modifiedAt": "2026-08-28"
+        },
+        {
+          "id": "pl-05",
+          "state": "published",
+          "order": 5,
+          "name": "Yard & Trailer Tracking",
+          "nameZh": "堆场与挂车追踪",
+          "stage": "discovery",
+          "area": "visibility",
+          "ownerId": "miguel",
+          "target": "Q3 2027",
+          "note": {
+            "en": "Raised by two plants independently; scope being merged into one request.",
+            "zh": "由两个工厂分别提出，正在合并为同一需求。"
+          },
+          "solutionId": "",
+          "modifiedBy": "Miguel Torres",
+          "modifiedAt": "2026-09-02"
+        },
+        {
+          "id": "pl-06",
+          "state": "published",
+          "order": 6,
+          "name": "Freight Tender Auto-Award",
+          "nameZh": "运输招标自动派单",
+          "stage": "discovery",
+          "area": "cost",
+          "ownerId": "lina",
+          "target": "Q4 2027",
+          "note": {
+            "en": "Awards spot loads to the cheapest compliant carrier within the tender window.",
+            "zh": "在招标时限内将零散货量自动派给符合要求的最低价承运商。"
+          },
+          "solutionId": "",
+          "modifiedBy": "Li Na",
+          "modifiedAt": "2026-08-19"
+        },
+        {
+          "id": "pl-07",
+          "state": "published",
+          "order": 7,
+          "name": "Shipping Plan 2.0",
+          "nameZh": "发运计划 2.0",
+          "stage": "live",
+          "area": "outbound",
+          "ownerId": "zhang",
+          "target": "Live",
+          "note": {
+            "en": "In production at three sites; Wuhu and Xinchang next.",
+            "zh": "已在三个基地投产；下一步为芜湖与新昌。"
+          },
+          "solutionId": "shipping-plan",
+          "modifiedBy": "Zhang Wei",
+          "modifiedAt": "2026-09-12"
+        },
+        {
+          "id": "pl-08",
+          "state": "published",
+          "order": 8,
+          "name": "Carrier Invoice Validation",
+          "nameZh": "承运商发票校验",
+          "stage": "live",
+          "area": "cost",
+          "ownerId": "lina",
+          "target": "Live",
+          "note": {
+            "en": "Live at three sites, Monterrey in pilot.",
+            "zh": "三个基地已上线，Monterrey 试点中。"
+          },
+          "solutionId": "carrier-invoice",
+          "modifiedBy": "Li Na",
+          "modifiedAt": "2026-09-09"
+        },
+        {
+          "id": "pl-09",
+          "state": "published",
+          "order": 9,
+          "name": "KuaiBot",
+          "nameZh": "快机器人",
+          "stage": "live",
+          "area": "automation",
+          "ownerId": "chen",
+          "target": "Live",
+          "note": {
+            "en": "Bot library live in China; Apodaca joined as a pilot site.",
+            "zh": "机器人库已在中国上线；Apodaca 加入试点。"
+          },
+          "solutionId": "kuaibot",
+          "modifiedBy": "Chen Hao",
+          "modifiedAt": "2026-09-04"
+        },
+        {
+          "id": "pl-10",
+          "state": "draft",
+          "order": 10,
+          "name": "Returnable Packaging Tracking",
+          "nameZh": "循环包装追踪",
+          "stage": "discovery",
+          "area": "inbound",
+          "ownerId": "miguel",
+          "target": "TBC",
+          "note": {
+            "en": "Draft — not yet reviewed, so not visible to visitors.",
+            "zh": "草稿——尚未评审，访客不可见。"
+          },
+          "solutionId": "",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-20"
+        }
+      ]
+    },
+    "owners": {
+      "label": {
+        "en": "Logistics Team Directory",
+        "zh": "物流团队名录"
+      },
+      "group": "core",
+      "list": "LIH_TeamDirectory",
+      "fields": [
+        {
+          "name": "name",
+          "label": {
+            "en": "Name",
+            "zh": "姓名"
+          },
+          "editor": "text",
+          "required": true
+        },
+        {
+          "name": "nameZh",
+          "label": {
+            "en": "Name (Chinese)",
+            "zh": "中文姓名"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "initials",
+          "label": {
+            "en": "Initials (photo fallback)",
+            "zh": "姓名缩写（无照片时）"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "photo",
+          "label": {
+            "en": "Photo",
+            "zh": "照片"
+          },
+          "editor": "image",
+          "hint": {
+            "en": "Uploads to the LIH_Media library in production; the record stores the URL and alt text. Falls back to initials when empty.",
+            "zh": "正式环境上传至 LIH_Media 库，记录中保存地址与替代文字。为空时显示姓名缩写。"
+          }
+        },
+        {
+          "name": "position",
+          "label": {
+            "en": "Position",
+            "zh": "职位"
+          },
+          "editor": "bi-text",
+          "required": true
+        },
+        {
+          "name": "functionId",
+          "label": {
+            "en": "Operational area",
+            "zh": "业务领域"
+          },
+          "editor": "select",
+          "taxonomy": "functions",
+          "required": true
+        },
+        {
+          "name": "siteId",
+          "label": {
+            "en": "Site",
+            "zh": "所在基地"
+          },
+          "editor": "select",
+          "taxonomy": "sites",
+          "required": true
+        },
+        {
+          "name": "responsibilities",
+          "label": {
+            "en": "Main responsibilities (one per line)",
+            "zh": "主要职责（每行一项）"
+          },
+          "editor": "bi-list"
+        },
+        {
+          "name": "email",
+          "label": {
+            "en": "Email",
+            "zh": "邮箱"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "phone",
+          "label": {
+            "en": "Phone",
+            "zh": "电话"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "teams",
+          "label": {
+            "en": "Teams handle (optional)",
+            "zh": "Teams 账号（选填）"
+          },
+          "editor": "text"
+        }
+      ],
+      "items": [
+        {
+          "id": "david",
+          "state": "published",
+          "order": 1,
+          "name": "David Núñez",
+          "nameZh": "大卫·努涅斯",
+          "initials": "DN",
+          "position": {
+            "en": "Logistics Manager, Mexico",
+            "zh": "墨西哥物流经理"
+          },
+          "functionId": "leadership",
+          "siteId": "apo",
+          "responsibilities": {
+            "en": [
+              "Regional logistics performance across the Mexico plants",
+              "Escalation point for service failures affecting customers",
+              "Budget and headcount for logistics operations"
+            ],
+            "zh": [
+              "墨西哥各工厂的物流绩效",
+              "影响客户的服务异常升级处理",
+              "物流运营预算与人员编制"
+            ]
+          },
+          "email": "david.nunez@corp.example",
+          "phone": "+52 81 0000 0010",
+          "teams": "@david.nunez",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "elena",
+          "state": "published",
+          "order": 2,
+          "name": "Elena Márquez",
+          "nameZh": "艾莲娜·马尔克斯",
+          "initials": "EM",
+          "position": {
+            "en": "Logistics Digital Lead",
+            "zh": "物流数字化负责人"
+          },
+          "functionId": "leadership",
+          "siteId": "apo",
+          "responsibilities": {
+            "en": [
+              "Digital roadmap for logistics in Mexico and China",
+              "Intake and prioritisation of new digital requests",
+              "Portal and data governance"
+            ],
+            "zh": [
+              "墨西哥与中国物流数字化路线图",
+              "新数字化需求的受理与优先级排序",
+              "平台与数据治理"
+            ]
+          },
+          "email": "elena.marquez@corp.example",
+          "phone": "+52 81 0000 0001",
+          "teams": "@elena.marquez",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "chen",
+          "state": "published",
+          "order": 3,
+          "name": "Chen Hao",
+          "nameZh": "陈浩",
+          "initials": "CH",
+          "position": {
+            "en": "Process Automation Lead",
+            "zh": "流程自动化负责人"
+          },
+          "functionId": "leadership",
+          "siteId": "wh",
+          "responsibilities": {
+            "en": [
+              "Automation standards and tooling for logistics teams",
+              "Training and support for automated processes",
+              "Exception handling design"
+            ],
+            "zh": [
+              "物流团队自动化标准与工具",
+              "自动化流程的培训与支持",
+              "例外处理机制设计"
+            ]
+          },
+          "email": "chen.hao@corp.example",
+          "phone": "+86 553 0000 0005",
+          "teams": "@chen.hao",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "miguel",
+          "state": "published",
+          "order": 4,
+          "name": "Miguel Torres",
+          "nameZh": "米格尔·托雷斯",
+          "initials": "MT",
+          "position": {
+            "en": "Inbound Logistics Manager",
+            "zh": "进货物流经理"
+          },
+          "functionId": "import",
+          "siteId": "apo",
+          "responsibilities": {
+            "en": [
+              "Dock scheduling and receiving capacity",
+              "Supplier delivery performance and deviations",
+              "Inbound material flow to the lines"
+            ],
+            "zh": [
+              "月台排程与收货运力",
+              "供应商交付表现与偏差管理",
+              "入厂物料流转至产线"
+            ]
+          },
+          "email": "miguel.torres@corp.example",
+          "phone": "+52 81 0000 0006",
+          "teams": "@miguel.torres",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "ana",
+          "state": "published",
+          "order": 5,
+          "name": "Ana Delgado",
+          "nameZh": "安娜·德尔加多",
+          "initials": "AD",
+          "position": {
+            "en": "Import Operations Coordinator",
+            "zh": "进口运营协调员"
+          },
+          "functionId": "import",
+          "siteId": "mty",
+          "responsibilities": {
+            "en": [
+              "Import shipment tracking and arrival planning",
+              "Coordination with forwarders on inbound freight",
+              "Receiving documentation and discrepancies"
+            ],
+            "zh": [
+              "进口货物跟踪与到货计划",
+              "与货代协调进货运输",
+              "收货单据与差异处理"
+            ]
+          },
+          "email": "ana.delgado@corp.example",
+          "phone": "+52 81 0000 0011",
+          "teams": "@ana.delgado",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "zhang",
+          "state": "published",
+          "order": 6,
+          "name": "Zhang Wei",
+          "nameZh": "张伟",
+          "initials": "ZW",
+          "position": {
+            "en": "Export Operations Manager",
+            "zh": "出口运营经理"
+          },
+          "functionId": "export",
+          "siteId": "hz",
+          "responsibilities": {
+            "en": [
+              "Outbound shipping plan and load consolidation",
+              "Customer delivery commitments and cut-offs",
+              "Export packaging and labelling standards"
+            ],
+            "zh": [
+              "出货计划与拼载整合",
+              "客户交付承诺与截单管理",
+              "出口包装与标签标准"
+            ]
+          },
+          "email": "zhang.wei@corp.example",
+          "phone": "+86 571 0000 0002",
+          "teams": "@zhang.wei",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "wang",
+          "state": "published",
+          "order": 7,
+          "name": "Wang Lei",
+          "nameZh": "王磊",
+          "initials": "WL",
+          "position": {
+            "en": "Export Documentation Specialist",
+            "zh": "出口单据专员"
+          },
+          "functionId": "export",
+          "siteId": "hz",
+          "responsibilities": {
+            "en": [
+              "Commercial invoices, packing lists and certificates",
+              "Booking confirmations with carriers and forwarders",
+              "Document accuracy before shipment release"
+            ],
+            "zh": [
+              "商业发票、装箱单与证书",
+              "与承运商及货代确认订舱",
+              "放行前单据准确性核对"
+            ]
+          },
+          "email": "wang.lei@corp.example",
+          "phone": "+86 571 0000 0012",
+          "teams": "@wang.lei",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "lina",
+          "state": "published",
+          "order": 8,
+          "name": "Li Na",
+          "nameZh": "李娜",
+          "initials": "LN",
+          "position": {
+            "en": "Transportation & Freight Manager",
+            "zh": "运输与运费经理"
+          },
+          "functionId": "transport",
+          "siteId": "xc",
+          "responsibilities": {
+            "en": [
+              "Carrier contracts, rates and tenders",
+              "Freight cost control and invoice disputes",
+              "Carrier on-time performance reviews"
+            ],
+            "zh": [
+              "承运商合同、费率与招标",
+              "运费成本控制与发票争议",
+              "承运商准时率评估"
+            ]
+          },
+          "email": "li.na@corp.example",
+          "phone": "+86 575 0000 0004",
+          "teams": "@li.na",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "liu",
+          "state": "published",
+          "order": 9,
+          "name": "Liu Yang",
+          "nameZh": "刘洋",
+          "initials": "LY",
+          "position": {
+            "en": "Transportation Planner",
+            "zh": "运输计划员"
+          },
+          "functionId": "transport",
+          "siteId": "xc",
+          "responsibilities": {
+            "en": [
+              "Daily truck and container capacity planning",
+              "Route and mode selection for outbound freight",
+              "Transit time monitoring and recovery plans"
+            ],
+            "zh": [
+              "每日车辆与集装箱运力计划",
+              "出货路线与运输方式选择",
+              "在途时效监控与补救方案"
+            ]
+          },
+          "email": "liu.yang@corp.example",
+          "phone": "+86 575 0000 0013",
+          "teams": "@liu.yang",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "carlos",
+          "state": "published",
+          "order": 10,
+          "name": "Carlos Rivera",
+          "nameZh": "卡洛斯·里维拉",
+          "initials": "CR",
+          "position": {
+            "en": "Import & Export Manager, Customs",
+            "zh": "进出口关务经理"
+          },
+          "functionId": "customs",
+          "siteId": "mty",
+          "responsibilities": {
+            "en": [
+              "Customs clearance for import and export flows",
+              "Trade compliance, HS classification and licences",
+              "Relationship with brokers and authorities"
+            ],
+            "zh": [
+              "进出口清关",
+              "贸易合规、HS 归类与许可",
+              "与报关行及主管部门对接"
+            ]
+          },
+          "email": "carlos.rivera@corp.example",
+          "phone": "+52 81 0000 0003",
+          "teams": "@carlos.rivera",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "sofia",
+          "state": "published",
+          "order": 11,
+          "name": "Sofía Ramírez",
+          "nameZh": "索菲亚·拉米雷斯",
+          "initials": "SR",
+          "position": {
+            "en": "Customs Compliance Analyst",
+            "zh": "关务合规分析员"
+          },
+          "functionId": "customs",
+          "siteId": "apo",
+          "responsibilities": {
+            "en": [
+              "Document release approvals and audit trail",
+              "Duty, origin and free-trade programme checks",
+              "Customs audit preparation"
+            ],
+            "zh": [
+              "单据放行审批与审计留痕",
+              "关税、原产地与自贸计划核查",
+              "海关审计准备"
+            ]
+          },
+          "email": "sofia.ramirez@corp.example",
+          "phone": "+52 81 0000 0014",
+          "teams": "@sofia.ramirez",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-21"
+        }
+      ]
+    },
+    "quickLinks": {
+      "label": {
+        "en": "Quick Access Links",
+        "zh": "快速入口"
+      },
+      "group": "core",
+      "list": "LIH_QuickLinks",
+      "fields": [
+        {
+          "name": "label",
+          "label": {
+            "en": "Link label",
+            "zh": "入口名称"
+          },
+          "editor": "bi-text",
+          "required": true
+        },
+        {
+          "name": "note",
+          "label": {
+            "en": "One-line description",
+            "zh": "一句话说明"
+          },
+          "editor": "bi-text"
+        },
+        {
+          "name": "url",
+          "label": {
+            "en": "Target URL",
+            "zh": "目标地址"
+          },
+          "editor": "text",
+          "required": true
+        },
+        {
+          "name": "audience",
+          "label": {
+            "en": "Audience note",
+            "zh": "适用对象"
+          },
+          "editor": "bi-text"
+        }
+      ],
+      "items": [
+        {
+          "id": "ql-1",
+          "state": "published",
+          "order": 1,
+          "label": {
+            "en": "Shipping Plan 2.0",
+            "zh": "发运计划 2.0"
+          },
+          "note": {
+            "en": "Open the planning workspace",
+            "zh": "打开计划工作台"
+          },
+          "url": "#",
+          "audience": {
+            "en": "Planners",
+            "zh": "计划员"
+          },
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-01"
+        },
+        {
+          "id": "ql-2",
+          "state": "published",
+          "order": 2,
+          "label": {
+            "en": "Control Tower",
+            "zh": "控制塔"
+          },
+          "note": {
+            "en": "Track a shipment in motion",
+            "zh": "查询在途货物"
+          },
+          "url": "#",
+          "audience": {
+            "en": "Pilot users",
+            "zh": "试点用户"
+          },
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-01"
+        },
+        {
+          "id": "ql-3",
+          "state": "published",
+          "order": 3,
+          "label": {
+            "en": "Invoice dispute queue",
+            "zh": "发票争议队列"
+          },
+          "note": {
+            "en": "Freight invoices needing a decision",
+            "zh": "待处理的运费发票差异"
+          },
+          "url": "#",
+          "audience": {
+            "en": "Finance & transport",
+            "zh": "财务与运输"
+          },
+          "modifiedBy": "Li Na",
+          "modifiedAt": "2026-09-01"
+        },
+        {
+          "id": "ql-4",
+          "state": "published",
+          "order": 4,
+          "label": {
+            "en": "Bot request form",
+            "zh": "机器人申请表"
+          },
+          "note": {
+            "en": "Nominate a repetitive task",
+            "zh": "提出重复性任务"
+          },
+          "url": "#",
+          "audience": {
+            "en": "All employees",
+            "zh": "全体员工"
+          },
+          "modifiedBy": "Chen Hao",
+          "modifiedAt": "2026-09-01"
+        },
+        {
+          "id": "ql-5",
+          "state": "published",
+          "order": 5,
+          "label": {
+            "en": "Customs document archive",
+            "zh": "关务单据归档"
+          },
+          "note": {
+            "en": "Find a filed trade document",
+            "zh": "查找已归档贸易单据"
+          },
+          "url": "#",
+          "audience": {
+            "en": "Import / Export",
+            "zh": "进出口"
+          },
+          "modifiedBy": "Carlos Rivera",
+          "modifiedAt": "2026-09-01"
+        },
+        {
+          "id": "ql-6",
+          "state": "published",
+          "order": 6,
+          "label": {
+            "en": "Logistics KPI report",
+            "zh": "物流 KPI 报表"
+          },
+          "note": {
+            "en": "Monthly performance pack",
+            "zh": "月度绩效报告"
+          },
+          "url": "#",
+          "audience": {
+            "en": "Plant managers",
+            "zh": "工厂经理"
+          },
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-01"
+        }
+      ]
+    },
+    "announcements": {
+      "label": {
+        "en": "Announcements",
+        "zh": "公告"
+      },
+      "group": "core",
+      "list": "LIH_Announcements",
+      "fields": [
+        {
+          "name": "title",
+          "label": {
+            "en": "Headline",
+            "zh": "标题"
+          },
+          "editor": "bi-text",
+          "required": true
+        },
+        {
+          "name": "body",
+          "label": {
+            "en": "Body",
+            "zh": "正文"
+          },
+          "editor": "bi-textarea"
+        },
+        {
+          "name": "date",
+          "label": {
+            "en": "Date",
+            "zh": "日期"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "pinned",
+          "label": {
+            "en": "Pin to the top bar",
+            "zh": "置顶到提示条"
+          },
+          "editor": "bool"
+        },
+        {
+          "name": "expires",
+          "label": {
+            "en": "Expires",
+            "zh": "失效日期"
+          },
+          "editor": "text",
+          "hint": {
+            "en": "After this date the item auto-archives — no manual cleanup.",
+            "zh": "超过该日期自动归档，无需人工清理。"
+          }
+        }
+      ],
+      "items": [
+        {
+          "id": "an-1",
+          "state": "published",
+          "order": 1,
+          "title": {
+            "en": "Control Tower pilot is now live for Apodaca outbound lanes",
+            "zh": "控制塔试点已在 Apodaca 出口线路上线"
+          },
+          "body": {
+            "en": "Apodaca outbound lanes to US customers are on the live map and exception list until December. Other plants can request to join through the solution page.",
+            "zh": "Apodaca 至美国客户的出口线路已纳入实时地图与例外清单，试点至 12 月。其他工厂可通过方案页面申请加入。"
+          },
+          "date": "2026-09-18",
+          "pinned": true,
+          "expires": "2026-12-31",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-18"
+        },
+        {
+          "id": "an-2",
+          "state": "published",
+          "order": 2,
+          "title": {
+            "en": "Six new bots added to the KuaiBot library",
+            "zh": "KuaiBot 机器人库新增六个机器人"
+          },
+          "body": {
+            "en": "Covering export packing lists, customer portal uploads and ERP confirmations. Apodaca joins as a pilot site this month.",
+            "zh": "涵盖出口装箱单、客户门户上传与 ERP 确认。Apodaca 本月作为试点基地加入。"
+          },
+          "date": "2026-09-04",
+          "pinned": false,
+          "expires": "2026-11-30",
+          "modifiedBy": "Chen Hao",
+          "modifiedAt": "2026-09-04"
+        },
+        {
+          "id": "an-3",
+          "state": "published",
+          "order": 3,
+          "title": {
+            "en": "Receiving Plan discovery is open for input until December",
+            "zh": "收货计划需求调研开放至 12 月"
+          },
+          "body": {
+            "en": "If your dock has constraints the current hypothesis does not cover, tell the owner now — after December the scope is fixed.",
+            "zh": "若当前假设未覆盖你月台的约束，请现在告知负责人——12 月后范围将被锁定。"
+          },
+          "date": "2026-09-19",
+          "pinned": false,
+          "expires": "2026-12-31",
+          "modifiedBy": "Miguel Torres",
+          "modifiedAt": "2026-09-19"
+        },
+        {
+          "id": "an-4",
+          "state": "draft",
+          "order": 4,
+          "title": {
+            "en": "Q4 innovation council dates",
+            "zh": "第四季度创新委员会日期"
+          },
+          "body": {
+            "en": "Draft — dates not confirmed, so visitors do not see this item.",
+            "zh": "草稿——日期未确认，访客不可见。"
+          },
+          "date": "2026-09-20",
+          "pinned": false,
+          "expires": "2026-12-31",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-20"
+        }
+      ]
+    },
+    "highlights": {
+      "label": {
+        "en": "Homepage Highlights",
+        "zh": "首页推荐"
+      },
+      "group": "core",
+      "list": "LIH_Highlights",
+      "fields": [
+        {
+          "name": "kicker",
+          "label": {
+            "en": "Kicker",
+            "zh": "小标题"
+          },
+          "editor": "bi-text"
+        },
+        {
+          "name": "title",
+          "label": {
+            "en": "Title",
+            "zh": "标题"
+          },
+          "editor": "bi-text",
+          "required": true
+        },
+        {
+          "name": "blurb",
+          "label": {
+            "en": "Blurb",
+            "zh": "简介"
+          },
+          "editor": "bi-textarea"
+        },
+        {
+          "name": "imageCaption",
+          "label": {
+            "en": "Image slot caption",
+            "zh": "图片位说明"
+          },
+          "editor": "bi-text"
+        },
+        {
+          "name": "feature",
+          "label": {
+            "en": "Show as the large feature",
+            "zh": "作为主推位展示"
+          },
+          "editor": "bool"
+        },
+        {
+          "name": "targetType",
+          "label": {
+            "en": "Links to",
+            "zh": "跳转至"
+          },
+          "editor": "enum",
+          "options": [
+            "solution",
+            "pipeline",
+            "portfolio",
+            "announcement",
+            "route"
+          ]
+        },
+        {
+          "name": "targetId",
+          "label": {
+            "en": "Target record id / route",
+            "zh": "目标记录 ID / 路由"
+          },
+          "editor": "text"
+        }
+      ],
+      "items": [
+        {
+          "id": "hl-1",
+          "state": "published",
+          "order": 1,
+          "feature": true,
+          "kicker": {
+            "en": "Featured this month",
+            "zh": "本月重点"
+          },
+          "title": {
+            "en": "Control Tower",
+            "zh": "控制塔"
+          },
+          "blurb": {
+            "en": "One screen for every shipment in motion, from plant gate to customer dock. Pilot running at Apodaca until December.",
+            "zh": "一个屏幕看清所有在途货物，从工厂大门到客户月台。Apodaca 试点运行至 12 月。"
+          },
+          "imageCaption": {
+            "en": "featured solution screenshot — Control Tower map view",
+            "zh": "重点方案截图 — 控制塔地图视图"
+          },
+          "targetType": "solution",
+          "targetId": "control-tower",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-18"
+        },
+        {
+          "id": "hl-2",
+          "state": "published",
+          "order": 2,
+          "feature": false,
+          "kicker": {
+            "en": "Newly delivered",
+            "zh": "近期交付"
+          },
+          "title": {
+            "en": "Freight Cost Assurance",
+            "zh": "运费成本保障"
+          },
+          "blurb": {
+            "en": "Every freight invoice is now checked against the contract before Finance sees it.",
+            "zh": "所有运费发票在财务审批前均与合同比对。"
+          },
+          "imageCaption": {
+            "en": "",
+            "zh": ""
+          },
+          "targetType": "solution",
+          "targetId": "carrier-invoice",
+          "modifiedBy": "Li Na",
+          "modifiedAt": "2026-09-09"
+        },
+        {
+          "id": "hl-3",
+          "state": "published",
+          "order": 3,
+          "feature": false,
+          "kicker": {
+            "en": "Open for input",
+            "zh": "开放征集"
+          },
+          "title": {
+            "en": "Receiving Plan discovery",
+            "zh": "收货计划调研"
+          },
+          "blurb": {
+            "en": "Two plants describe the dock problem differently. Scope closes in December.",
+            "zh": "两个工厂对月台问题描述不同。范围将于 12 月锁定。"
+          },
+          "imageCaption": {
+            "en": "",
+            "zh": ""
+          },
+          "targetType": "solution",
+          "targetId": "receiving-plan",
+          "modifiedBy": "Miguel Torres",
+          "modifiedAt": "2026-09-19"
+        },
+        {
+          "id": "hl-4",
+          "state": "published",
+          "order": 4,
+          "feature": false,
+          "kicker": {
+            "en": "Ask for a tool",
+            "zh": "提出需求"
+          },
+          "title": {
+            "en": "The intake route now exists",
+            "zh": "需求提交渠道已建立"
+          },
+          "blurb": {
+            "en": "One form, a named reviewer in five days, a published decision in fifteen.",
+            "zh": "一张表单，五日内指派评审人，十五日内公布决策。"
+          },
+          "imageCaption": {
+            "en": "",
+            "zh": ""
+          },
+          "targetType": "route",
+          "targetId": "submit",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-01"
+        }
+      ]
+    },
+    "devArea": {
+      "label": {
+        "en": "Current Development Area",
+        "zh": "当前开发重点"
+      },
+      "group": "core",
+      "list": "LIH_DevelopmentArea",
+      "singleton": true,
+      "fields": [
+        {
+          "name": "heading",
+          "label": {
+            "en": "Heading",
+            "zh": "标题"
+          },
+          "editor": "bi-text",
+          "required": true
+        },
+        {
+          "name": "quarter",
+          "label": {
+            "en": "Period",
+            "zh": "周期"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "statement",
+          "label": {
+            "en": "Focus statement",
+            "zh": "重点说明"
+          },
+          "editor": "bi-textarea"
+        },
+        {
+          "name": "focusItems",
+          "label": {
+            "en": "What the team is working on (one per line)",
+            "zh": "团队当前工作（每行一项）"
+          },
+          "editor": "bi-list"
+        },
+        {
+          "name": "notDoing",
+          "label": {
+            "en": "Explicitly not this quarter (one per line)",
+            "zh": "本季度明确不做（每行一项）"
+          },
+          "editor": "bi-list"
+        },
+        {
+          "name": "ownerId",
+          "label": {
+            "en": "Accountable",
+            "zh": "负责人"
+          },
+          "editor": "ref",
+          "collection": "owners"
+        }
+      ],
+      "items": [
+        {
+          "id": "dev-current",
+          "state": "published",
+          "order": 1,
+          "heading": {
+            "en": "Where the team's effort is going right now",
+            "zh": "团队当前投入的重点"
+          },
+          "quarter": "2026 Q4",
+          "statement": {
+            "en": "Two things this quarter: prove the Control Tower feed quality well enough to extend past Apodaca, and get the Mexican VOBO rule set through compliance review so build can finish. Everything else is queued behind those two.",
+            "zh": "本季度聚焦两件事：验证控制塔的数据质量，使其足以推广至 Apodaca 以外；以及推动墨西哥单据放行规则集通过合规评审，以完成开发。其余事项均排在这两项之后。"
+          },
+          "focusItems": {
+            "en": [
+              "Control Tower — carrier feed quality and exception accuracy at Apodaca",
+              "VOBOS Automáticos — compliance review of the Mexican rule set",
+              "Export Document OCR — build, targeting Q1 2027",
+              "Receiving Plan — discovery interviews at Apodaca and Monterrey"
+            ],
+            "zh": [
+              "控制塔——Apodaca 承运商数据质量与例外准确性",
+              "单据自动放行——墨西哥规则集合规评审",
+              "出口单据识别——开发中，目标 2027 年第一季度",
+              "收货计划——Apodaca 与 Monterrey 需求访谈"
+            ]
+          },
+          "notDoing": {
+            "en": [
+              "Yard and trailer tracking — waiting on a merged scope from two plants",
+              "Freight tender auto-award — no capacity before Q2 2027"
+            ],
+            "zh": [
+              "堆场与挂车追踪——等待两个工厂合并范围",
+              "运输招标自动派单——2027 年第二季度前无资源"
+            ]
+          },
+          "ownerId": "elena",
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-20"
+        }
+      ]
+    },
+    "ideas": {
+      "label": {
+        "en": "Idea Board",
+        "zh": "想法看板"
+      },
+      "group": "intake",
+      "list": "LIH_Ideas",
+      "writePath": "Public form → Power Automate (LIH_IntakeSubmission) → list item + reviewer assignment + confirmation email",
+      "fields": [
+        {
+          "name": "ref",
+          "label": {
+            "en": "Reference",
+            "zh": "受理编号"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "title",
+          "label": {
+            "en": "Request",
+            "zh": "需求"
+          },
+          "editor": "bi-text",
+          "required": true
+        },
+        {
+          "name": "area",
+          "label": {
+            "en": "Process area",
+            "zh": "流程领域"
+          },
+          "editor": "select",
+          "taxonomy": "areas"
+        },
+        {
+          "name": "from",
+          "label": {
+            "en": "Submitted by",
+            "zh": "提交人"
+          },
+          "editor": "bi-text"
+        },
+        {
+          "name": "date",
+          "label": {
+            "en": "Submitted",
+            "zh": "提交日期"
+          },
+          "editor": "text"
+        },
+        {
+          "name": "ideaState",
+          "label": {
+            "en": "Review state",
+            "zh": "评审状态"
+          },
+          "editor": "select",
+          "taxonomy": "ideaStates",
+          "required": true
+        },
+        {
+          "name": "outcome",
+          "label": {
+            "en": "Outcome / reason",
+            "zh": "结果 / 原因"
+          },
+          "editor": "bi-textarea"
+        }
+      ],
+      "items": [
+        {
+          "id": "id-041",
+          "state": "published",
+          "order": 1,
+          "ref": "LIH-2026-041",
+          "title": {
+            "en": "Suppliers should book their own unloading slot",
+            "zh": "供应商应能自助预约卸货时段"
+          },
+          "area": "inbound",
+          "from": {
+            "en": "Miguel T. · Apodaca",
+            "zh": "Miguel T. · Apodaca"
+          },
+          "date": "2026-03-04",
+          "ideaState": "delivered",
+          "outcome": {
+            "en": "Became Receiving Plan",
+            "zh": "已立项为收货计划"
+          },
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-04-01"
+        },
+        {
+          "id": "id-046",
+          "state": "published",
+          "order": 2,
+          "ref": "LIH-2026-046",
+          "title": {
+            "en": "Stop re-keying supplier invoices into the trade file",
+            "zh": "停止将供应商发票重复录入关务档案"
+          },
+          "area": "customs",
+          "from": {
+            "en": "Carlos R. · Monterrey",
+            "zh": "Carlos R. · Monterrey"
+          },
+          "date": "2026-04-11",
+          "ideaState": "build",
+          "outcome": {
+            "en": "In build as Export Document OCR",
+            "zh": "以出口单据识别立项开发中"
+          },
+          "modifiedBy": "Carlos Rivera",
+          "modifiedAt": "2026-08-28"
+        },
+        {
+          "id": "id-052",
+          "state": "published",
+          "order": 3,
+          "ref": "LIH-2026-052",
+          "title": {
+            "en": "One weekly report instead of nine plant spreadsheets",
+            "zh": "用一份周报替代九份工厂表格"
+          },
+          "area": "outbound",
+          "from": {
+            "en": "Zhang W. · Hangzhou",
+            "zh": "张伟 · 杭州"
+          },
+          "date": "2026-05-20",
+          "ideaState": "accepted",
+          "outcome": {
+            "en": "Accepted, scheduled Q2 2027",
+            "zh": "已立项，计划 2027 年第二季度"
+          },
+          "modifiedBy": "Zhang Wei",
+          "modifiedAt": "2026-06-01"
+        },
+        {
+          "id": "id-058",
+          "state": "published",
+          "order": 4,
+          "ref": "LIH-2026-058",
+          "title": {
+            "en": "Alert me when a customer changes an order after cut-off",
+            "zh": "客户在截单后改单时提醒我"
+          },
+          "area": "outbound",
+          "from": {
+            "en": "Planning team · Apodaca",
+            "zh": "计划团队 · Apodaca"
+          },
+          "date": "2026-06-02",
+          "ideaState": "review",
+          "outcome": {
+            "en": "Under review with the Shipping Plan owner",
+            "zh": "与发运计划负责人评审中"
+          },
+          "modifiedBy": "Zhang Wei",
+          "modifiedAt": "2026-06-10"
+        },
+        {
+          "id": "id-061",
+          "state": "published",
+          "order": 5,
+          "ref": "LIH-2026-061",
+          "title": {
+            "en": "Mobile check-in for drivers at the gate",
+            "zh": "司机到厂门口手机签到"
+          },
+          "area": "inbound",
+          "from": {
+            "en": "Security · Monterrey",
+            "zh": "安保 · Monterrey"
+          },
+          "date": "2026-06-28",
+          "ideaState": "merged",
+          "outcome": {
+            "en": "Merged into Receiving Plan discovery",
+            "zh": "已并入收货计划调研"
+          },
+          "modifiedBy": "Miguel Torres",
+          "modifiedAt": "2026-07-02"
+        },
+        {
+          "id": "id-067",
+          "state": "published",
+          "order": 6,
+          "ref": "LIH-2026-067",
+          "title": {
+            "en": "Predict demurrage risk before the container is late",
+            "zh": "在集装箱延误前预测滞期风险"
+          },
+          "area": "visibility",
+          "from": {
+            "en": "Import team · Hangzhou",
+            "zh": "进口团队 · 杭州"
+          },
+          "date": "2026-07-14",
+          "ideaState": "review",
+          "outcome": {
+            "en": "Feasibility check with Control Tower",
+            "zh": "与控制塔评估可行性"
+          },
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-07-20"
+        },
+        {
+          "id": "id-070",
+          "state": "published",
+          "order": 7,
+          "ref": "LIH-2026-070",
+          "title": {
+            "en": "Automatic packing list for LCL consolidations",
+            "zh": "拼箱自动生成装箱单"
+          },
+          "area": "automation",
+          "from": {
+            "en": "Export team · Xinchang",
+            "zh": "出口团队 · 新昌"
+          },
+          "date": "2026-08-05",
+          "ideaState": "declined",
+          "outcome": {
+            "en": "Declined — volume too low to justify build",
+            "zh": "未立项——业务量不足以支撑开发"
+          },
+          "modifiedBy": "Chen Hao",
+          "modifiedAt": "2026-08-15"
+        },
+        {
+          "id": "id-074",
+          "state": "published",
+          "order": 8,
+          "ref": "LIH-2026-074",
+          "title": {
+            "en": "Show carrier on-time performance to the planners",
+            "zh": "向计划员展示承运商准时率"
+          },
+          "area": "cost",
+          "from": {
+            "en": "Li N. · Xinchang",
+            "zh": "李娜 · 新昌"
+          },
+          "date": "2026-08-22",
+          "ideaState": "accepted",
+          "outcome": {
+            "en": "Accepted as a Control Tower module",
+            "zh": "已立项，作为控制塔模块"
+          },
+          "modifiedBy": "Li Na",
+          "modifiedAt": "2026-08-25"
+        },
+        {
+          "id": "id-079",
+          "state": "published",
+          "order": 9,
+          "ref": "LIH-2026-079",
+          "title": {
+            "en": "Standard labels across Mexico and China plants",
+            "zh": "墨西哥与中国工厂统一标签标准"
+          },
+          "area": "outbound",
+          "from": {
+            "en": "Warehouse · Wuhu",
+            "zh": "仓库 · 芜湖"
+          },
+          "date": "2026-09-09",
+          "ideaState": "new",
+          "outcome": {
+            "en": "Reviewer assigned 12 Sep",
+            "zh": "已于 9 月 12 日指派评审人"
+          },
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-12"
+        },
+        {
+          "id": "id-081",
+          "state": "published",
+          "order": 10,
+          "ref": "LIH-2026-081",
+          "title": {
+            "en": "Let me see my shipment status without calling the plant",
+            "zh": "无需致电工厂即可查询货物状态"
+          },
+          "area": "visibility",
+          "from": {
+            "en": "Customer service · Apodaca",
+            "zh": "客服 · Apodaca"
+          },
+          "date": "2026-09-16",
+          "ideaState": "new",
+          "outcome": {
+            "en": "Awaiting reviewer",
+            "zh": "待指派评审人"
+          },
+          "modifiedBy": "Elena Márquez",
+          "modifiedAt": "2026-09-16"
+        }
+      ]
+    },
+    "governance": {
+      "label": {
+        "en": "Decision rights",
+        "zh": "决策权责"
+      },
+      "group": "reference",
+      "list": "LIH_Governance",
+      "fields": [
+        {
+          "name": "decision",
+          "label": {
+            "en": "Decision",
+            "zh": "决策事项"
+          },
+          "editor": "bi-text",
+          "required": true
+        },
+        {
+          "name": "who",
+          "label": {
+            "en": "Who decides",
+            "zh": "决策方"
+          },
+          "editor": "bi-text"
+        },
+        {
+          "name": "cadence",
+          "label": {
+            "en": "Cadence",
+            "zh": "频率"
+          },
+          "editor": "bi-text"
+        }
+      ],
+      "items": [
+        {
+          "id": "gv-1",
+          "state": "published",
+          "order": 1,
+          "decision": {
+            "en": "Whether a request is accepted",
+            "zh": "需求是否立项"
+          },
+          "who": {
+            "en": "Process owner for the area + Logistics Digital Lead",
+            "zh": "对应流程负责人 + 物流数字化负责人"
+          },
+          "cadence": {
+            "en": "Every two weeks",
+            "zh": "每两周"
+          }
+        },
+        {
+          "id": "gv-2",
+          "state": "published",
+          "order": 2,
+          "decision": {
+            "en": "Priority and quarter sequencing",
+            "zh": "优先级与季度排序"
+          },
+          "who": {
+            "en": "Logistics Digital council (site leads)",
+            "zh": "物流数字化委员会（各基地负责人）"
+          },
+          "cadence": {
+            "en": "Quarterly",
+            "zh": "每季度"
+          }
+        },
+        {
+          "id": "gv-3",
+          "state": "published",
+          "order": 3,
+          "decision": {
+            "en": "Content on a solution page",
+            "zh": "方案页面内容"
+          },
+          "who": {
+            "en": "The solution owner (self-service in the admin dashboard)",
+            "zh": "方案负责人（在管理后台自维护）"
+          },
+          "cadence": {
+            "en": "Anytime",
+            "zh": "随时"
+          }
+        },
+        {
+          "id": "gv-4",
+          "state": "published",
+          "order": 4,
+          "decision": {
+            "en": "Publishing an announcement or a highlight",
+            "zh": "发布公告或首页推荐"
+          },
+          "who": {
+            "en": "Content administrators (LIH.ContentAdmin group)",
+            "zh": "内容管理员（LIH.ContentAdmin 组）"
+          },
+          "cadence": {
+            "en": "Anytime",
+            "zh": "随时"
+          }
+        },
+        {
+          "id": "gv-5",
+          "state": "published",
+          "order": 5,
+          "decision": {
+            "en": "Pilot to full rollout",
+            "zh": "试点转正式推广"
+          },
+          "who": {
+            "en": "Solution owner + receiving plant manager",
+            "zh": "方案负责人 + 承接基地工厂经理"
+          },
+          "cadence": {
+            "en": "Per project",
+            "zh": "按项目"
+          }
+        },
+        {
+          "id": "gv-6",
+          "state": "published",
+          "order": 6,
+          "decision": {
+            "en": "Chinese content review",
+            "zh": "中文内容审核"
+          },
+          "who": {
+            "en": "Hangzhou process team",
+            "zh": "杭州流程团队"
+          },
+          "cadence": {
+            "en": "Monthly",
+            "zh": "每月"
+          }
+        }
+      ]
+    },
+    "glossary": {
+      "label": {
+        "en": "Glossary",
+        "zh": "术语表"
+      },
+      "group": "reference",
+      "list": "LIH_Glossary",
+      "fields": [
+        {
+          "name": "term",
+          "label": {
+            "en": "Term",
+            "zh": "术语"
+          },
+          "editor": "bi-text",
+          "required": true
+        },
+        {
+          "name": "definition",
+          "label": {
+            "en": "Definition",
+            "zh": "释义"
+          },
+          "editor": "bi-textarea"
+        }
+      ],
+      "items": [
+        {
+          "id": "gl-1",
+          "state": "published",
+          "order": 1,
+          "term": {
+            "en": "Process owner",
+            "zh": "流程负责人"
+          },
+          "definition": {
+            "en": "Accountable for how a logistics process runs, and decides how it should work.",
+            "zh": "对某一物流流程负责的人，决定该流程如何运作。"
+          }
+        },
+        {
+          "id": "gl-2",
+          "state": "published",
+          "order": 2,
+          "term": {
+            "en": "Solution owner",
+            "zh": "方案负责人"
+          },
+          "definition": {
+            "en": "Accountable for one digital solution: keeps its page current and grants access.",
+            "zh": "对某一数字化方案负责的人，维护其页面并开通访问权限。"
+          }
+        },
+        {
+          "id": "gl-3",
+          "state": "published",
+          "order": 3,
+          "term": {
+            "en": "Discovery",
+            "zh": "需求调研"
+          },
+          "definition": {
+            "en": "The stage where a problem is defined before anything is committed to build.",
+            "zh": "在承诺开发之前界定问题的阶段。"
+          }
+        },
+        {
+          "id": "gl-4",
+          "state": "published",
+          "order": 4,
+          "term": {
+            "en": "Pilot",
+            "zh": "试点"
+          },
+          "definition": {
+            "en": "Running with real work at a single site to prove the solution before rollout.",
+            "zh": "在单一基地以真实业务运行，用于验证方案。"
+          }
+        },
+        {
+          "id": "gl-5",
+          "state": "published",
+          "order": 5,
+          "term": {
+            "en": "VOBO",
+            "zh": "VOBO / 单据放行"
+          },
+          "definition": {
+            "en": "A document release approval — the sign-off a shipment needs before it can leave.",
+            "zh": "单据放行审批——货物发出前所需的签字确认。"
+          }
+        },
+        {
+          "id": "gl-6",
+          "state": "published",
+          "order": 6,
+          "term": {
+            "en": "Reference number",
+            "zh": "受理编号"
+          },
+          "definition": {
+            "en": "The identifier you get on submission, used to track your request on the board.",
+            "zh": "提交需求后获得的编号，用于在看板上追踪。"
+          }
+        }
+      ]
+    },
+    "releases": {
+      "label": {
+        "en": "Release notes",
+        "zh": "更新日志"
+      },
+      "group": "reference",
+      "list": "LIH_ReleaseNotes",
+      "fields": [
+        {
+          "name": "date",
+          "label": {
+            "en": "Date",
+            "zh": "日期"
+          },
+          "editor": "text",
+          "required": true
+        },
+        {
+          "name": "title",
+          "label": {
+            "en": "Title",
+            "zh": "标题"
+          },
+          "editor": "bi-text",
+          "required": true
+        },
+        {
+          "name": "body",
+          "label": {
+            "en": "Detail",
+            "zh": "详情"
+          },
+          "editor": "bi-textarea"
+        }
+      ],
+      "items": [
+        {
+          "id": "rl-1",
+          "state": "published",
+          "order": 1,
+          "date": "2026-09-18",
+          "title": {
+            "en": "Control Tower pilot is live",
+            "zh": "控制塔试点上线"
+          },
+          "body": {
+            "en": "Apodaca outbound lanes to US customers now on the live map and exception list.",
+            "zh": "Apodaca 出口至美国客户线路接入实时地图与例外清单。"
+          }
+        },
+        {
+          "id": "rl-2",
+          "state": "published",
+          "order": 2,
+          "date": "2026-09-04",
+          "title": {
+            "en": "KuaiBot library extended",
+            "zh": "KuaiBot 机器人库扩展"
+          },
+          "body": {
+            "en": "Six new bots added; Apodaca joins as a pilot site.",
+            "zh": "新增 6 个机器人，Apodaca 进入试点。"
+          }
+        },
+        {
+          "id": "rl-3",
+          "state": "published",
+          "order": 3,
+          "date": "2026-08-22",
+          "title": {
+            "en": "Carrier on-time performance accepted",
+            "zh": "承运商准时率已立项"
+          },
+          "body": {
+            "en": "Request from Xinchang accepted; will ship as a Control Tower module.",
+            "zh": "来自新昌的需求，将作为控制塔模块交付。"
+          }
+        },
+        {
+          "id": "rl-4",
+          "state": "published",
+          "order": 4,
+          "date": "2026-08-01",
+          "title": {
+            "en": "This portal went live",
+            "zh": "本平台上线"
+          },
+          "body": {
+            "en": "Portfolio, pipeline, intake and the owner directory published in one place for the first time.",
+            "zh": "方案组合、创新管道、需求入口与人员名录首次统一发布。"
+          }
+        }
+      ]
+    },
+    "roadmap": {
+      "label": {
+        "en": "Portal roadmap",
+        "zh": "平台路线图"
+      },
+      "group": "reference",
+      "list": "LIH_PortalRoadmap",
+      "fields": [
+        {
+          "name": "title",
+          "label": {
+            "en": "Capability",
+            "zh": "能力"
+          },
+          "editor": "bi-text",
+          "required": true
+        },
+        {
+          "name": "phase",
+          "label": {
+            "en": "Phase",
+            "zh": "阶段"
+          },
+          "editor": "bi-text"
+        }
+      ],
+      "items": [
+        {
+          "id": "rm-1",
+          "state": "published",
+          "order": 1,
+          "title": {
+            "en": "Entra ID sign-in, admin and owner roles",
+            "zh": "Entra ID 登录，管理员与负责人角色"
+          },
+          "phase": {
+            "en": "Phase 1",
+            "zh": "第一阶段"
+          }
+        },
+        {
+          "id": "rm-2",
+          "state": "published",
+          "order": 2,
+          "title": {
+            "en": "All eight sections on SharePoint Lists",
+            "zh": "八个板块接入 SharePoint 列表"
+          },
+          "phase": {
+            "en": "Phase 1",
+            "zh": "第一阶段"
+          }
+        },
+        {
+          "id": "rm-3",
+          "state": "published",
+          "order": 3,
+          "title": {
+            "en": "Intake form writes through Power Automate",
+            "zh": "需求表单经 Power Automate 写入"
+          },
+          "phase": {
+            "en": "Phase 1",
+            "zh": "第一阶段"
+          }
+        },
+        {
+          "id": "rm-4",
+          "state": "published",
+          "order": 4,
+          "title": {
+            "en": "Follow a solution · email on status change",
+            "zh": "关注方案 · 状态变更邮件提醒"
+          },
+          "phase": {
+            "en": "Phase 2",
+            "zh": "第二阶段"
+          }
+        },
+        {
+          "id": "rm-5",
+          "state": "published",
+          "order": 5,
+          "title": {
+            "en": "\"Available at my plant\" personalised view",
+            "zh": "\"我所在基地可用的方案\"个性化视图"
+          },
+          "phase": {
+            "en": "Phase 2",
+            "zh": "第二阶段"
+          }
+        },
+        {
+          "id": "rm-6",
+          "state": "published",
+          "order": 6,
+          "title": {
+            "en": "Approval workflow for content publishing",
+            "zh": "内容发布审批流"
+          },
+          "phase": {
+            "en": "Phase 2",
+            "zh": "第二阶段"
+          }
+        },
+        {
+          "id": "rm-7",
+          "state": "published",
+          "order": 7,
+          "title": {
+            "en": "Migration from SharePoint Lists to Dataverse",
+            "zh": "由 SharePoint 列表迁移至 Dataverse"
+          },
+          "phase": {
+            "en": "Phase 3",
+            "zh": "第三阶段"
+          }
+        },
+        {
+          "id": "rm-8",
+          "state": "published",
+          "order": 8,
+          "title": {
+            "en": "Live KPI feeds from the solutions themselves",
+            "zh": "方案实时指标接入"
+          },
+          "phase": {
+            "en": "Phase 3",
+            "zh": "第三阶段"
+          }
+        },
+        {
+          "id": "rm-9",
+          "state": "published",
+          "order": 9,
+          "title": {
+            "en": "Idea voting and commenting",
+            "zh": "想法投票与评论"
+          },
+          "phase": {
+            "en": "Phase 3",
+            "zh": "第三阶段"
+          }
+        },
+        {
+          "id": "rm-10",
+          "state": "published",
+          "order": 10,
+          "title": {
+            "en": "Spanish added for the Mexico sites",
+            "zh": "增加西班牙语（墨西哥基地）"
+          },
+          "phase": {
+            "en": "Phase 3",
+            "zh": "第三阶段"
+          }
+        }
+      ]
+    }
+  }
+}
