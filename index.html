@@ -132,7 +132,12 @@
           </div>
         </div>
         <figure class="blueprint duotone" style="position: relative; aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center;">
-          <figcaption style="font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: 0.06em; color: rgba(29,31,32,0.58); text-align: center; padding: 0 20px; margin: 0;">{{ T.heroImgCap }}</figcaption>
+          <sc-if value="{{ hasHero }}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; inset: 0; overflow: hidden;">{{ heroImg }}</div>
+          </sc-if>
+          <sc-if value="{{ noHero }}" hint-placeholder-val="{{ false }}">
+            <figcaption style="font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: 0.06em; color: rgba(29,31,32,0.58); text-align: center; padding: 0 20px; margin: 0;">{{ T.heroImgCap }}</figcaption>
+          </sc-if>
           <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
         </figure>
       </section>
@@ -1581,6 +1586,29 @@
     </div>
   </footer>
 
+  <sc-if value="{{ recoveryOpen }}" hint-placeholder-val="{{ false }}">
+    <div class="dialog-backdrop" style="z-index: 61;">
+      <div class="dialog blueprint" style="width: min(460px, 100%); background: #f2f2f3;">
+        <div class="dialog-title" style="font-size: 24px;">{{ T.newPwTitle }}</div>
+        <div class="dialog-body" style="font-size: 13.5px; line-height: 1.6;">{{ T.newPwBody }}</div>
+        <form onSubmit="{{ doSetPw }}" style="display: flex; flex-direction: column; gap: 12px; margin-top: 4px;">
+          <label class="field" style="display: flex; flex-direction: column; gap: 5px;">
+            <span style="font-size: 12.5px;">{{ T.fNewPw }}</span>
+            <input class="input" type="password" autocomplete="new-password" value="{{ sbNewPw }}" onChange="{{ onSbNewPw }}" style="width: 100%; box-sizing: border-box;">
+          </label>
+          <sc-if value="{{ sbErr }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size: 12.5px; line-height: 1.5; color: var(--color-accent-900); border: 1px solid var(--color-accent-300); padding: 8px 10px;">{{ sbErr }}</div>
+          </sc-if>
+          <button type="submit" class="btn btn-primary btn-block blueprint" style="padding: 10px 16px; font-size: 14px; white-space: nowrap;">
+            {{ T.newPwSave }}
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          </button>
+        </form>
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ signInOpen }}">
     <div class="dialog-backdrop" style="z-index: 60;">
       <div class="dialog blueprint" style="width: min(460px, 100%); background: #f2f2f3;">
@@ -1603,6 +1631,7 @@
             {{ signInLabel }}
             <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
           </button>
+          <button type="button" onClick="{{ doForgot }}" class="btn btn-ghost" style="font-size: 12.5px; align-self: flex-start; padding: 4px 0;">{{ T.forgotPw }}</button>
         </form>
         <div class="dialog-actions">
           <button onClick="{{ closeSignIn }}" class="btn btn-ghost" style="font-size: 13px; white-space: nowrap;">{{ T.cancel }}</button>
@@ -1635,7 +1664,7 @@ class Component extends DCLogic {
     lang: 'en', route: 'home', detailId: null, query: '',
     db: null, loading: true, loadError: false,
     role: 'visitor', user: null, showDrafts: true, signInOpen: false,
-    sbEmail: '', sbPass: '', sbErr: '', sbBusy: false,
+    sbEmail: '', sbPass: '', sbErr: '', sbBusy: false, sbNewPw: '', recoveryOpen: false,
     fStatus: 'all', fProcess: 'all', fSite: 'all', fIdea: 'all', fRegion: 'all',
     accessSent: false, ticketRef: null,
     form: { name: '', site: '', fn: '', title: '', desc: '', today: '', freq: '', people: '', hours: '', systems: '', share: true },
@@ -1681,7 +1710,7 @@ class Component extends DCLogic {
     ctaExplore: ['Explore solutions', '浏览方案'],
     ctaSubmit: ['Submit an idea', '提交想法'],
     ctaBoard: ['See the idea board', '查看想法看板'],
-    heroImgCap: ['hero image — outbound dock, Apodaca plant (duotone)', '主视觉图 — 出货月台，Apodaca 工厂（双色调）'],
+    heroImgCap: ['hero image — add one in Admin → Site settings', '主视觉图 — 请在 管理 → 站点设置 中添加'],
     asOf: ['All content on this page is read from the portal content source and maintained by administrators and solution owners — not fixed in the page.', '本页所有内容均从门户内容源读取，由管理员与方案负责人维护，不写死在页面中。'],
     readMore: ['Read the full page', '查看完整介绍'],
     quickAccess: ['Quick access', '快速入口'],
@@ -1875,7 +1904,16 @@ class Component extends DCLogic {
     sbNoRole: ['This account has no admin or owner role yet. Ask the content administrator to grant one.', '该账号尚未分配管理员或负责人角色，请联系内容管理员开通。'],
     sbSaveErr: ['Could not save to the database. The change is kept on this device only — try again.', '无法保存到数据库。更改仅保留在本设备上，请重试。'],
     sbUploadErr: ['Upload failed. Check the file and try again.', '上传失败，请检查文件后重试。'],
-    uploading: ['Uploading image…', '正在上传图片…']
+    uploading: ['Uploading image…', '正在上传图片…'],
+    forgotPw: ['Forgot password?', '忘记密码？'],
+    sbNeedEmail: ['Enter your email above first.', '请先在上方输入邮箱。'],
+    sbResetSent: ['Check your inbox — we sent a link to set a new password.', '请查收邮件——我们已发送重设密码链接。'],
+    sbUnconfirmed: ['This email is not confirmed yet. Open the confirmation email Supabase sent you, then try again.', '该邮箱尚未确认。请先打开确认邮件后再试。'],
+    newPwTitle: ['Set a new password', '设置新密码'],
+    newPwBody: ['Choose a new password for your staff account. At least 8 characters.', '为你的员工账号设置新密码，至少 8 个字符。'],
+    fNewPw: ['New password', '新密码'],
+    newPwSave: ['Save password and sign in', '保存密码并登录'],
+    sbPwShort: ['Use at least 8 characters.', '请至少使用 8 个字符。']
   };
 
   componentDidMount() {
@@ -1884,7 +1922,7 @@ class Component extends DCLogic {
       if (l === 'en' || l === 'zh') this.setState({ lang: l });
       localStorage.removeItem('lih.role'); localStorage.removeItem('lih.user');
     } catch (e) {}
-    this.waitSB().then(sb => sb && sb.whoami().then(me => { if (me && me.role) this.setState({ role: me.role, user: me.name }, () => this.sbHydrate()); }).catch(() => {}));
+    this.waitSB().then(sb => { if (sb && sb.recovery) this.setState({ recoveryOpen: true }); return sb; }).then(sb => sb && !sb.recovery && sb.whoami().then(me => { if (me && me.role) this.setState({ role: me.role, user: me.name }, () => this.sbHydrate()); }).catch(() => {}));
     fetch('content.json')
       .then(r => r.json())
       .then(db => {
@@ -1946,7 +1984,20 @@ class Component extends DCLogic {
       this.setState({ sbBusy: false, sbPass: '' });
       this.signIn(me.role, me.name);
       this.sbHydrate();
-    }).catch(() => this.setState({ sbBusy: false, sbErr: this.S.sbBadLogin[i] }));
+    }).catch(err => this.setState({ sbBusy: false, sbErr: (err && err.code === 'email_not_confirmed' ? this.S.sbUnconfirmed : this.S.sbBadLogin)[i] }));
+  }
+  doForgot() {
+    const i = this.L(), email = this.state.sbEmail.trim();
+    if (!email) { this.setState({ sbErr: this.S.sbNeedEmail[i] }); return; }
+    this.waitSB().then(sb => sb.resetPassword(email)).then(() => this.setState({ sbErr: this.S.sbResetSent[i] })).catch(err => this.setState({ sbErr: (err && err.message) || this.S.sbBadLogin[i] }));
+  }
+  doSetPw() {
+    const i = this.L(), pw = this.state.sbNewPw;
+    if (pw.length < 8) { this.setState({ sbErr: this.S.sbPwShort[i] }); return; }
+    this.waitSB().then(sb => sb.updatePassword(pw)).then(me => {
+      this.setState({ recoveryOpen: false, sbNewPw: '', sbErr: '' });
+      if (me && me.role) { this.signIn(me.role, me.name); this.sbHydrate(); }
+    }).catch(err => this.setState({ sbErr: (err && err.message) || this.S.sbBadLogin[i] }));
   }
 
   L() { return this.state.lang === 'zh' ? 1 : 0; }
@@ -2029,9 +2080,13 @@ class Component extends DCLogic {
     Object.keys(this.S).forEach(k => { T[k] = this.S[k][i]; });
     const ready = !!st.db && !st.loading;
     const isAdmin = st.role === 'admin' || st.role === 'owner';
+    const heroRec = (st.db && st.db.collections.siteSettings && st.db.collections.siteSettings.items[0]) || {};
+    const heroUrl = (heroRec.heroImage && heroRec.heroImage.url) || '';
+    const heroAlt = heroRec.heroImage ? this.p(heroRec.heroImage.alt) : '';
 
     const base = {
       T: T, lang: st.lang, query: st.query,
+      heroImg: heroUrl ? this.imgEl(heroUrl, heroAlt) : null, hasHero: !!heroUrl, noHero: ready && !heroUrl,
       loading: st.loading, loadError: st.loadError,
       isAdmin: isAdmin, isVisitor: !isAdmin, signInOpen: st.signInOpen,
       adminIdentity: (st.user || '') + ' · ' + (st.role === 'admin' ? (i ? '内容管理员 (LIH.ContentAdmin)' : 'Content administrator (LIH.ContentAdmin)') : (i ? '方案负责人 (LIH.SolutionOwner)' : 'Solution owner (LIH.SolutionOwner)')),
@@ -2066,6 +2121,10 @@ class Component extends DCLogic {
       onSbEmail: (e) => this.setState({ sbEmail: e.target.value }),
       onSbPass: (e) => this.setState({ sbPass: e.target.value }),
       doSignIn: (e) => { if (e) e.preventDefault(); this.doSignIn(); },
+      doForgot: (e) => { if (e) e.preventDefault(); this.doForgot(); },
+      recoveryOpen: st.recoveryOpen, sbNewPw: st.sbNewPw,
+      onSbNewPw: (e) => this.setState({ sbNewPw: e.target.value }),
+      doSetPw: (e) => { if (e) e.preventDefault(); this.doSetPw(); },
       signOut: (e) => { if (e) e.preventDefault(); this.signOut(); },
       toggleDrafts: (e) => { if (e) e.preventDefault(); this.setState(s => ({ showDrafts: !s.showDrafts })); },
       onQuery: (e) => {

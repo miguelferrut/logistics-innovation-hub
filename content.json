@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "1.2",
+    "version": "1.3",
     "generated": "2026-09-21",
     "note": "Prototype content source. In production this document is not shipped: each collection below is read at runtime from its SharePoint List (phase 1) or Dataverse table (phase 2) through Power Automate, with the same field names. No portal content is held in code.",
     "auth": {
@@ -19,42 +19,42 @@
   "taxonomies": {
     "sites": [
       {
-        "id": "B",
+        "id": "apo",
         "label": {
           "en": "Plant B",
-          "zh": "B厂"
+          "zh": "工厂 B"
         },
         "region": "mx"
       },
       {
-        "id": "D",
+        "id": "mty",
         "label": {
           "en": "Plant D",
-          "zh": "D厂"
+          "zh": "工厂 D"
         },
         "region": "mx"
       },
       {
-        "id": "G",
+        "id": "hz",
         "label": {
           "en": "Plant G",
-          "zh": "G厂"
+          "zh": "工厂 G"
         },
         "region": "mx"
       },
       {
-        "id": "MP",
-        "label": {
-          "en": "MicroPark",
-          "zh": "MP仓库"
-        },
-        "region": "mx"
-      },
-      {
-        "id": "H",
+        "id": "wh",
         "label": {
           "en": "Plant H",
-          "zh": "H厂"
+          "zh": "工厂 H"
+        },
+        "region": "mx"
+      },
+      {
+        "id": "xc",
+        "label": {
+          "en": "MicroPark Warehouse",
+          "zh": "MicroPark 仓库"
         },
         "region": "mx"
       }
@@ -3227,6 +3227,44 @@
           "phase": {
             "en": "Phase 3",
             "zh": "第三阶段"
+          }
+        }
+      ]
+    },
+    "siteSettings": {
+      "label": {
+        "en": "Site settings",
+        "zh": "站点设置"
+      },
+      "group": "core",
+      "list": "LIH_SiteSettings",
+      "singleton": true,
+      "fields": [
+        {
+          "name": "heroImage",
+          "label": {
+            "en": "Home hero image",
+            "zh": "首页主视觉图"
+          },
+          "editor": "image",
+          "hint": {
+            "en": "Shown on the right of the home page headline. Landscape 4:3 works best; JPG, PNG or WebP up to 2 MB. Leave empty to show the blueprint placeholder.",
+            "zh": "显示在首页标题右侧。建议横向 4:3；JPG、PNG 或 WebP，最大 2 MB。留空则显示线框占位图。"
+          }
+        }
+      ],
+      "items": [
+        {
+          "id": "site",
+          "state": "published",
+          "order": 1,
+          "heroImage": {
+            "url": "",
+            "name": "",
+            "alt": {
+              "en": "",
+              "zh": ""
+            }
           }
         }
       ]

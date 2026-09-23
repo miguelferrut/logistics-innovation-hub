@@ -3,11 +3,13 @@
   var URL = 'https://knbnsbvtvyminkqhjdxg.supabase.co';
   var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuYm5zYnZ0dnltaW5rcWhqZHhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwOTkwMzksImV4cCI6MjEwNTY3NTAzOX0.PCjAGdvDMns5P-a7HZYHK0W3cAWqYkizx6cykrsy89I';
   var BUCKET = 'lih-media';
-  var SYNCED = ['owners', 'solutions'];
+  var SYNCED = ['owners', 'solutions', 'siteSettings'];
+  var JSONB = { siteSettings: 'site_settings' };
 
   function boot() {
     if (!window.supabase || !window.supabase.createClient) return setTimeout(boot, 40);
     var sb = window.supabase.createClient(URL, KEY);
+    var recovery = /type=recovery/.test(location.hash);
     var day = function (v) { return v ? String(v).slice(0, 10) : ''; };
     var clean = function (u) { return u && !/^data:/.test(u) ? u : null; };
     var chk = function (r) { if (r.error) throw r.error; return r.data || []; };
@@ -24,7 +26,8 @@
         sb.from('statuses').select('*').order('sort_order'),
         sb.from('stages').select('*').order('sort_order'),
         sb.from('idea_states').select('*').order('sort_order'),
-        sb.from('functions').select('*').order('sort_order')
+        sb.from('functions').select('*').order('sort_order'),
+        sb.from('site_settings').select('*').order('sort_order')
       ]);
       var d = q.map(chk);
       var tx = function (rows) { return rows.map(function (r) { var o = { id: r.id, label: r.label }; if (r.region != null) o.region = r.region; if (r.pill != null) o.pill = r.pill; if (r.desc != null) o.desc = r.desc; return o; }); };
@@ -50,14 +53,18 @@
         };
       });
       return {
-        collections: { owners: owners, solutions: solutions },
+        collections: { owners: owners, solutions: solutions, siteSettings: d[11].map(function (x) { return Object.assign({}, x.data, { id: x.id, state: x.state, order: x.sort_order, modifiedBy: x.modified_by || '', modifiedAt: day(x.modified_at) }); }) },
         taxonomies: { sites: tx(d[5]), areas: tx(d[6]), statuses: tx(d[7]), stages: tx(d[8]), ideaStates: tx(d[9]), functions: tx(d[10]) }
       };
     }
 
     async function save(coll, r, user) {
       var meta = { id: r.id, state: r.state || 'draft', sort_order: r.order || 0, modified_by: user || null, modified_at: new Date().toISOString() };
-      if (coll === 'owners') {
+      if (JSONB[coll]) {
+        var data = {}; Object.keys(r).forEach(function (k) { if (['id', 'state', 'order', 'modifiedBy', 'modifiedAt'].indexOf(k) < 0) data[k] = r[k]; });
+        Object.keys(data).forEach(function (k) { var v = data[k]; if (v && typeof v === 'object' && typeof v.url === 'string' && /^data:/.test(v.url)) data[k] = Object.assign({}, v, { url: '' }); });
+        chk(await sb.from(JSONB[coll]).upsert(Object.assign(meta, { data: data })));
+      } else if (coll === 'owners') {
         var img = r.photo || r.image || {};
         chk(await sb.from('owners').upsert(Object.assign(meta, {
           name: r.name || '(untitled)', name_zh: r.nameZh || null, initials: r.initials || null,
@@ -82,7 +89,7 @@
       }
     }
 
-    async function remove(coll, id) { chk(await sb.from(coll).delete().eq('id', id)); }
+    async function remove(coll, id) { chk(await sb.from(JSONB[coll] || coll).delete().eq('id', id)); }
 
     async function upload(file, folder) {
       var ext = (file.name.split('.').pop() || 'png').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -107,9 +114,19 @@
       if (r.error) throw r.error;
       return whoami();
     }
+    async function resetPassword(email) {
+      var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+      if (r.error) throw r.error;
+    }
+    async function updatePassword(pw) {
+      var r = await sb.auth.updateUser({ password: pw });
+      if (r.error) throw r.error;
+      try { history.replaceState(null, '', location.pathname); } catch (e) {}
+      return whoami();
+    }
     async function signOut() { await sb.auth.signOut(); }
 
-    window.LIH_SB = { client: sb, synced: SYNCED, load: load, save: save, remove: remove, upload: upload, whoami: whoami, signIn: signIn, signOut: signOut };
+    window.LIH_SB = { client: sb, synced: SYNCED, load: load, save: save, remove: remove, upload: upload, whoami: whoami, signIn: signIn, signOut: signOut, resetPassword: resetPassword, updatePassword: updatePassword, recovery: recovery };
   }
   boot();
 })();
