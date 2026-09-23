@@ -10,6 +10,8 @@
 <helmet>
 <link rel="stylesheet" href="_ds/industry-fa1160d7-a9b5-43fd-984a-0edd3304048d/styles.css">
 <script src="_ds/industry-fa1160d7-a9b5-43fd-984a-0edd3304048d/_ds_bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./lih-supabase.js"></script>
 <style>
   html { scroll-behavior: smooth; }
   body { margin: 0; }
@@ -1585,13 +1587,23 @@
         <div style="font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(29,31,32,0.5);">{{ T.entra }}</div>
         <div class="dialog-title" style="font-size: 24px;">{{ T.signInTitle }}</div>
         <div class="dialog-body" style="font-size: 13.5px; line-height: 1.6;">{{ T.signInBody }}</div>
-        <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 4px;">
-          <button onClick="{{ signInAdmin }}" class="btn btn-primary btn-block blueprint" style="padding: 10px 16px; font-size: 14px; white-space: nowrap;">
-            {{ T.signInAdmin }}
+        <form onSubmit="{{ doSignIn }}" style="display: flex; flex-direction: column; gap: 12px; margin-top: 4px;">
+          <label class="field" style="display: flex; flex-direction: column; gap: 5px;">
+            <span style="font-size: 12.5px;">{{ T.fEmail }}</span>
+            <input class="input" type="email" autocomplete="username" value="{{ sbEmail }}" onChange="{{ onSbEmail }}" style="width: 100%; box-sizing: border-box;">
+          </label>
+          <label class="field" style="display: flex; flex-direction: column; gap: 5px;">
+            <span style="font-size: 12.5px;">{{ T.fPassword }}</span>
+            <input class="input" type="password" autocomplete="current-password" value="{{ sbPass }}" onChange="{{ onSbPass }}" style="width: 100%; box-sizing: border-box;">
+          </label>
+          <sc-if value="{{ sbErr }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size: 12.5px; line-height: 1.5; color: var(--color-accent-900); border: 1px solid var(--color-accent-300); padding: 8px 10px;">{{ sbErr }}</div>
+          </sc-if>
+          <button type="submit" class="btn btn-primary btn-block blueprint" style="padding: 10px 16px; font-size: 14px; white-space: nowrap;">
+            {{ signInLabel }}
             <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
           </button>
-          <button onClick="{{ signInOwner }}" class="btn btn-secondary btn-block" style="padding: 10px 16px; font-size: 14px; white-space: nowrap;">{{ T.signInOwner }}</button>
-        </div>
+        </form>
         <div class="dialog-actions">
           <button onClick="{{ closeSignIn }}" class="btn btn-ghost" style="font-size: 13px; white-space: nowrap;">{{ T.cancel }}</button>
         </div>
@@ -1623,6 +1635,7 @@ class Component extends DCLogic {
     lang: 'en', route: 'home', detailId: null, query: '',
     db: null, loading: true, loadError: false,
     role: 'visitor', user: null, showDrafts: true, signInOpen: false,
+    sbEmail: '', sbPass: '', sbErr: '', sbBusy: false,
     fStatus: 'all', fProcess: 'all', fSite: 'all', fIdea: 'all', fRegion: 'all',
     accessSent: false, ticketRef: null,
     form: { name: '', site: '', fn: '', title: '', desc: '', today: '', freq: '', people: '', hours: '', systems: '', share: true },
@@ -1650,9 +1663,9 @@ class Component extends DCLogic {
     showDrafts: ['Show drafts on public pages', '在公开页显示草稿'],
     manage: ['Manage', '管理'],
     draft: ['Draft', '草稿'],
-    entra: ['Microsoft Entra ID', 'Microsoft Entra ID'],
+    entra: ['Staff account', '员工账号'],
     signInTitle: ['Sign in to manage content', '登录以管理内容'],
-    signInBody: ['In production this is a Microsoft Entra ID sign-in, and your role comes from your security group — nothing is chosen here. In this prototype, pick a role to see what each one can do. Visitors need no sign-in at all.', '在正式环境中，此处为 Microsoft Entra ID 登录，角色来自你所属的安全组，无需在此选择。本原型中可选择角色以查看各自权限。访客无需登录即可浏览。'],
+    signInBody: ['Sign in with the email and password your content administrator set up for you. Your role — content administrator or solution owner — comes from your account.', '使用内容管理员为你开通的邮箱和密码登录。你的角色（内容管理员或方案负责人）由账号决定。'],
     signInAdmin: ['Sign in as content administrator', '以内容管理员身份登录'],
     signInOwner: ['Sign in as solution owner', '以方案负责人身份登录'],
     cancel: ['Cancel', '取消'],
@@ -1841,7 +1854,7 @@ class Component extends DCLogic {
     flashDeleted: ['Record deleted from the list.', '记录已从列表中删除。'],
     flashDuplicated: ['Record duplicated as a draft.', '记录已复制为草稿。'],
     flashImgType: ['That file is not an image — upload a PNG or JPG.', '该文件不是图片——请上传 PNG 或 JPG。'],
-    flashImgSize: ['Image too large for the prototype store (2 MB limit). In production the file goes to the SharePoint media library and only its URL is stored.', '图片超出原型存储上限（2 MB）。正式环境中文件将存入 SharePoint 媒体库，记录中仅保存其地址。'],
+    flashImgSize: ['Image is larger than 2 MB — resize it and try again.', '图片超过 2 MB——请压缩后重试。'],
     fUpload: ['Choose image', '选择图片'],
     fReplace: ['Replace', '更换'],
     fRemove: ['Remove', '移除'],
@@ -1854,16 +1867,24 @@ class Component extends DCLogic {
     flashSchema: ['The content schema changed — local draft edits were discarded and the published content source reloaded.', '内容结构已更新——本地草稿更改已放弃，并重新加载已发布内容源。'],
     flashReset: ['Local changes discarded — reloaded from the content source.', '本地更改已放弃——已从内容源重新加载。'],
     newRecordTitle: ['New record', '新建记录'],
-    untitled: ['(untitled)', '（未命名）']
+    untitled: ['(untitled)', '（未命名）'],
+    fEmail: ['Email', '邮箱'],
+    fPassword: ['Password', '密码'],
+    signingIn: ['Signing in…', '正在登录…'],
+    sbBadLogin: ['Email or password is incorrect.', '邮箱或密码不正确。'],
+    sbNoRole: ['This account has no admin or owner role yet. Ask the content administrator to grant one.', '该账号尚未分配管理员或负责人角色，请联系内容管理员开通。'],
+    sbSaveErr: ['Could not save to the database. The change is kept on this device only — try again.', '无法保存到数据库。更改仅保留在本设备上，请重试。'],
+    sbUploadErr: ['Upload failed. Check the file and try again.', '上传失败，请检查文件后重试。'],
+    uploading: ['Uploading image…', '正在上传图片…']
   };
 
   componentDidMount() {
     try {
       const l = localStorage.getItem('lih.lang');
       if (l === 'en' || l === 'zh') this.setState({ lang: l });
-      const r = localStorage.getItem('lih.role');
-      if (r === 'admin' || r === 'owner') this.setState({ role: r, user: localStorage.getItem('lih.user') || 'Elena Márquez' });
+      localStorage.removeItem('lih.role'); localStorage.removeItem('lih.user');
     } catch (e) {}
+    this.waitSB().then(sb => sb && sb.whoami().then(me => { if (me && me.role) this.setState({ role: me.role, user: me.name }, () => this.sbHydrate()); }).catch(() => {}));
     fetch('content.json')
       .then(r => r.json())
       .then(db => {
@@ -1880,9 +1901,52 @@ class Component extends DCLogic {
         this.setState({
           db: use, loading: false,
           flash: (cached && !compatible) ? this.S.flashSchema[this.L()] : null
-        });
+        }, () => this.sbHydrate());
       })
       .catch(() => this.setState({ loading: false, loadError: true }));
+  }
+
+  waitSB() {
+    return new Promise(res => {
+      if (window.LIH_SB) return res(window.LIH_SB);
+      let n = 0; const t = setInterval(() => { if (window.LIH_SB || ++n > 200) { clearInterval(t); res(window.LIH_SB || null); } }, 40);
+    });
+  }
+  sbHydrate() {
+    return this.waitSB().then(sb => sb && sb.load()).then(remote => {
+      if (!remote || !this.state.db) return;
+      const db = JSON.parse(JSON.stringify(this.state.db));
+      Object.keys(remote.collections).forEach(k => {
+        const c = db.collections[k]; if (!c) return;
+        const prev = {}; (c.items || []).forEach(x => { prev[x.id] = x; });
+        c.items = remote.collections[k].map(x => Object.assign({}, prev[x.id] || {}, x));
+      });
+      Object.keys(remote.taxonomies).forEach(k => { if (remote.taxonomies[k].length) db.taxonomies[k] = remote.taxonomies[k]; });
+      this.persist(db);
+      this.setState({ db: db });
+    }).catch(err => console.warn('Supabase load failed', err));
+  }
+  sbPush(collKey, ids) {
+    const sb = window.LIH_SB; if (!sb || sb.synced.indexOf(collKey) < 0) return;
+    setTimeout(() => {
+      const items = this.state.db.collections[collKey].items.filter(x => ids.indexOf(x.id) >= 0);
+      Promise.all(items.map(x => sb.save(collKey, x, this.state.user))).catch(err => { console.warn(err); this.setState({ flash: this.S.sbSaveErr[this.L()] }); });
+    }, 30);
+  }
+  sbDrop(collKey, id) {
+    const sb = window.LIH_SB; if (!sb || sb.synced.indexOf(collKey) < 0) return;
+    sb.remove(collKey, id).catch(err => { console.warn(err); this.setState({ flash: this.S.sbSaveErr[this.L()] }); });
+  }
+  doSignIn() {
+    const st = this.state, i = this.L();
+    if (st.sbBusy) return;
+    this.setState({ sbBusy: true, sbErr: '' });
+    this.waitSB().then(sb => sb.signIn(st.sbEmail.trim(), st.sbPass)).then(me => {
+      if (!me || !me.role) { window.LIH_SB.signOut(); this.setState({ sbBusy: false, sbErr: this.S.sbNoRole[i] }); return; }
+      this.setState({ sbBusy: false, sbPass: '' });
+      this.signIn(me.role, me.name);
+      this.sbHydrate();
+    }).catch(() => this.setState({ sbBusy: false, sbErr: this.S.sbBadLogin[i] }));
   }
 
   L() { return this.state.lang === 'zh' ? 1 : 0; }
@@ -1996,9 +2060,12 @@ class Component extends DCLogic {
       setEn: (e) => { if (e) e.preventDefault(); this.setLang('en'); },
       setZh: (e) => { if (e) e.preventDefault(); this.setLang('zh'); },
       openSignIn: (e) => { if (e) e.preventDefault(); this.setState({ signInOpen: true }); },
-      closeSignIn: (e) => { if (e) e.preventDefault(); this.setState({ signInOpen: false }); },
-      signInAdmin: (e) => { if (e) e.preventDefault(); this.signIn('admin', 'Elena Márquez'); },
-      signInOwner: (e) => { if (e) e.preventDefault(); this.signIn('owner', 'Zhang Wei'); },
+      closeSignIn: (e) => { if (e) e.preventDefault(); this.setState({ signInOpen: false, sbErr: '' }); },
+      sbEmail: st.sbEmail, sbPass: st.sbPass, sbErr: st.sbErr,
+      signInLabel: st.sbBusy ? T.signingIn : T.signInTitle,
+      onSbEmail: (e) => this.setState({ sbEmail: e.target.value }),
+      onSbPass: (e) => this.setState({ sbPass: e.target.value }),
+      doSignIn: (e) => { if (e) e.preventDefault(); this.doSignIn(); },
       signOut: (e) => { if (e) e.preventDefault(); this.signOut(); },
       toggleDrafts: (e) => { if (e) e.preventDefault(); this.setState(s => ({ showDrafts: !s.showDrafts })); },
       onQuery: (e) => {
@@ -2529,7 +2596,15 @@ class Component extends DCLogic {
   readImageFile(file, cb) {
     if (!file) return;
     if (!/^image\//.test(file.type)) { this.setState({ flash: this.S.flashImgType[this.L()] }); return; }
-    if (file.size > 2200000) { this.setState({ flash: this.S.flashImgSize[this.L()] }); return; }
+    if (file.size > 2097152) { this.setState({ flash: this.S.flashImgSize[this.L()] }); return; }
+    const size = Math.round(file.size / 1024) + ' KB';
+    if (window.LIH_SB && this.state.role !== 'visitor') {
+      this.setState({ flash: this.S.uploading[this.L()] });
+      window.LIH_SB.upload(file, this.state.adminColl || 'misc')
+        .then(url => { this.setState({ flash: '' }); cb({ url: url, name: file.name, size: size }); })
+        .catch(err => { console.warn(err); this.setState({ flash: this.S.sbUploadErr[this.L()] }); });
+      return;
+    }
     const fr = new FileReader();
     fr.onload = () => cb({ url: String(fr.result), name: file.name, size: Math.round(file.size / 1024) + ' KB' });
     fr.readAsDataURL(file);
@@ -2565,6 +2640,7 @@ class Component extends DCLogic {
       const n = c.items.findIndex(x => x.id === out.id);
       if (n >= 0) c.items[n] = out; else c.items.push(out);
     });
+    this.sbPush(collKey, [out.id]);
     this.setState({ editRec: null, editId: null, route: 'admin', flash: this.S.flashSaved[this.L()] });
     window.scrollTo(0, 0);
   }
@@ -2575,11 +2651,13 @@ class Component extends DCLogic {
       const x = c.items.find(y => y.id === id);
       if (x) { x.state = state; x.modifiedBy = user; x.modifiedAt = this.today(); }
     });
+    this.sbPush(collKey, [id]);
     this.setState({ flash: (state === 'archived' ? this.S.flashArchived : this.S.flashPublished)[this.L()] });
   }
 
   duplicateRecord(collKey, id) {
     const user = this.state.user || 'Administrator';
+    let newId = null;
     this.mutate(collKey, c => {
       const x = c.items.find(y => y.id === id);
       if (!x) return;
@@ -2589,13 +2667,16 @@ class Component extends DCLogic {
       copy.order = c.items.length + 1;
       copy.modifiedBy = user; copy.modifiedAt = this.today();
       c.items.push(copy);
+      newId = copy.id;
     });
+    if (newId) this.sbPush(collKey, [newId]);
     this.setState({ flash: this.S.flashDuplicated[this.L()] });
   }
 
   deleteRecord() {
     const collKey = this.state.adminColl, id = this.state.confirmId;
     this.mutate(collKey, c => { c.items = c.items.filter(x => x.id !== id); });
+    this.sbDrop(collKey, id);
     this.setState({ confirmId: null, flash: this.S.flashDeleted[this.L()] });
   }
 
@@ -2608,12 +2689,15 @@ class Component extends DCLogic {
       const a = list[n].order || n + 1, b = list[m].order || m + 1;
       list[n].order = b; list[m].order = a;
     });
+    const ord = this.all(collKey).map(x => x.id);
+    const k = ord.indexOf(id);
+    if (k >= 0) this.sbPush(collKey, [id, ord[k + dir]].filter(Boolean));
   }
 
   resetContent() {
     try { localStorage.removeItem('lih.db'); } catch (e) {}
     fetch('content.json').then(r => r.json()).then(db => {
-      this.setState({ db: db, editRec: null, flash: this.S.flashReset[this.L()] });
+      this.setState({ db: db, editRec: null, flash: this.S.flashReset[this.L()] }, () => this.sbHydrate());
     });
   }
 
@@ -2640,12 +2724,12 @@ class Component extends DCLogic {
   }
 
   signIn(role, user) {
-    try { localStorage.setItem('lih.role', role); localStorage.setItem('lih.user', user); } catch (e) {}
     this.setState({ role: role, user: user, signInOpen: false, route: 'admin' });
     window.scrollTo(0, 0);
   }
   signOut() {
     try { localStorage.removeItem('lih.role'); localStorage.removeItem('lih.user'); } catch (e) {}
+    if (window.LIH_SB) window.LIH_SB.signOut().then(() => this.sbHydrate());
     this.setState({ role: 'visitor', user: null, route: 'home' });
     window.scrollTo(0, 0);
   }
