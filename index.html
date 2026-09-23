@@ -78,8 +78,8 @@
       <a href="#" onClick="{{ goCatalog }}" aria-current="{{ cur.catalog }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navCatalog }}</a>
       <a href="#" onClick="{{ goPortfolio }}" aria-current="{{ cur.portfolio }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navPortfolio }}</a>
       <a href="#" onClick="{{ goPipeline }}" aria-current="{{ cur.pipeline }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navPipeline }}</a>
-      <a href="#" onClick="{{ goPeople }}" aria-current="{{ cur.people }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navPeople }}</a>
-      <a href="#" onClick="{{ goAbout }}" aria-current="{{ cur.about }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navAbout }}</a>
+      <sc-if value="{{ signedIn }}"><a href="#" onClick="{{ goPeople }}" aria-current="{{ cur.people }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navPeople }}</a></sc-if>
+      <sc-if value="{{ signedIn }}"><a href="#" onClick="{{ goAbout }}" aria-current="{{ cur.about }}" style="text-decoration: none; color: inherit; font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap;" style-hover="color: #5980a6;">{{ T.navAbout }}</a></sc-if>
       <a href="#" onClick="{{ goSubmit }}" class="btn btn-primary blueprint" style="text-decoration: none; padding: 7px 16px; white-space: nowrap;">
         {{ T.navSubmit }}
         <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
@@ -369,6 +369,7 @@
         </div>
       </section>
 
+      <sc-if value="{{ signedIn }}">
       <section style="max-width: 1360px; margin: 0 auto; padding: 56px 28px;">
         <div style="display: flex; align-items: flex-end; gap: 20px; margin-bottom: 26px; border-bottom: 1px solid rgba(29,31,32,0.16); padding-bottom: 14px;">
           <div>
@@ -401,6 +402,7 @@
           </sc-for>
         </div>
       </section>
+      </sc-if>
     </div>
     </sc-if>
 
@@ -817,10 +819,14 @@
                 <span style="font-family: ui-monospace, monospace; font-size: 10px; color: #5980a6;">01</span>
                 <span style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 20px;">{{ T.fsWho }}</span>
               </div>
-              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
                 <div class="field">
                   <label>{{ T.fName }}</label>
                   <input class="input" value="{{ form.name }}" onInput="{{ onField.name }}" placeholder="{{ T.phName }}" />
+                </div>
+                <div class="field">
+                  <label>{{ T.fYourEmail }}</label>
+                  <input class="input" type="email" value="{{ form.email }}" onInput="{{ onField.email }}" placeholder="{{ T.phEmail }}" />
                 </div>
                 <div class="field">
                   <label>{{ T.fSite }}</label>
@@ -915,6 +921,9 @@
               </button>
               <span style="font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.55);">{{ submitHint }}</span>
             </div>
+            <sc-if value="{{ submitErr }}" hint-placeholder-val="{{ false }}">
+              <div role="alert" style="font-size: 13px; line-height: 1.5; color: #7a2e22; border: 1px solid rgba(122,46,34,0.35); padding: 10px 14px;">{{ submitErr }}</div>
+            </sc-if>
           </div>
           <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
         </div>
@@ -1034,6 +1043,21 @@
           </sc-for>
         </tbody>
       </table>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isLocked }}">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 72px 28px 96px;">
+      <div class="blueprint" style="max-width: 560px; padding: 36px 32px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #416180;">{{ T.lockedKicker }}</div>
+        <h1 style="font-family: 'Barlow Condensed', system-ui, sans-serif; font-weight: 600; font-size: 36px; line-height: 1.05; margin: 0;">{{ T.lockedTitle }}</h1>
+        <p style="font-size: 15px; line-height: 1.6; color: rgba(29,31,32,0.78); margin: 0; text-wrap: pretty;">{{ T.lockedBody }}</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 6px;">
+          <button onClick="{{ openSignIn }}" class="btn btn-primary blueprint" style="padding: 10px 22px;">{{ T.staffSignIn }}<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></button>
+          <button onClick="{{ goHome }}" class="btn btn-ghost" style="padding: 10px 18px;">{{ T.backHome }}</button>
+        </div>
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      </div>
     </div>
     </sc-if>
 
@@ -1557,7 +1581,7 @@
           <a href="#" onClick="{{ goCatalog }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navCatalog }}</a>
           <a href="#" onClick="{{ goPortfolio }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navPortfolio }}</a>
           <a href="#" onClick="{{ goPipeline }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navPipeline }}</a>
-          <a href="#" onClick="{{ goPeople }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navPeople }}</a>
+          <sc-if value="{{ signedIn }}"><a href="#" onClick="{{ goPeople }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navPeople }}</a></sc-if>
         </div>
       </div>
       <div>
@@ -1566,7 +1590,7 @@
           <a href="#" onClick="{{ goSubmit }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navSubmit }}</a>
           <a href="#" onClick="{{ goBoard }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.ctaBoard }}</a>
           <a href="#" onClick="{{ goNews }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.announcements }}</a>
-          <a href="#" onClick="{{ goAbout }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navAbout }}</a>
+          <sc-if value="{{ signedIn }}"><a href="#" onClick="{{ goAbout }}" style="color: rgba(242,242,243,0.85); text-decoration: none;">{{ T.navAbout }}</a></sc-if>
         </div>
       </div>
       <div>
@@ -1667,7 +1691,8 @@ class Component extends DCLogic {
     sbEmail: '', sbPass: '', sbErr: '', sbBusy: false, sbNewPw: '', recoveryOpen: false,
     fStatus: 'all', fProcess: 'all', fSite: 'all', fIdea: 'all', fRegion: 'all',
     accessSent: false, ticketRef: null,
-    form: { name: '', site: '', fn: '', title: '', desc: '', today: '', freq: '', people: '', hours: '', systems: '', share: true },
+    submitting: false, submitErr: '',
+    form: { name: '', email: '', site: '', fn: '', title: '', desc: '', today: '', freq: '', people: '', hours: '', systems: '', share: true },
     adminColl: 'solutions', editId: null, editRec: null, confirmId: null, flash: ''
   };
 
@@ -1782,7 +1807,7 @@ class Component extends DCLogic {
     newsIntro: ['Everything administrators have published, newest first. Items carry an expiry date and archive themselves — the page never goes stale by neglect.', '管理员发布的全部内容，最新在前。每条均设失效日期并自动归档——页面不会因疏于维护而过期。'],
     pinned: ['Pinned', '置顶'],
     submitTitle: ['Submit an idea or request a project', '提交想法或申请项目'],
-    submitIntro: ['Eight required fields, about four minutes. You get a reference number immediately, a named reviewer within five working days, and a published decision within fifteen. Your submission appears on the idea board so you can see it move.', '八个必填项，约四分钟。你会立即获得受理编号，五个工作日内收到指定评审人，十五个工作日内获得公开决策结果。你的提交将显示在想法看板上，可随时查看进展。'],
+    submitIntro: ['Nine required fields, about four minutes. You get a reference number immediately, a named reviewer within five working days, and a published decision within fifteen. Your submission appears on the idea board so you can see it move.', '九个必填项，约四分钟。你会立即获得受理编号，五个工作日内收到指定评审人，十五个工作日内获得公开决策结果。你的提交将显示在想法看板上，可随时查看进展。'],
     fsWho: ['Who you are', '你是谁'],
     fsProblem: ['The problem', '问题描述'],
     fsImpact: ['Size of the problem', '问题规模'],
@@ -1800,7 +1825,14 @@ class Component extends DCLogic {
     fAttach: ['drag a screenshot, spreadsheet or photo here — optional but it doubles the chance of a fast decision', '可拖入截图、表格或照片——非必填，但能显著加快评审'],
     fShare: ['Show this idea publicly on the idea board so other sites can see it and add their support.', '在想法看板上公开此想法，以便其他基地了解并表示支持。'],
     btnSubmit: ['Submit request', '提交需求'],
+    lockedKicker: ['Staff only', '仅限内部人员'],
+    lockedTitle: ['Sign in to see this page', '登录后查看此页面'],
+    lockedBody: ['The team directory and the About page are available to signed-in users only.', '团队名录与“关于”页面仅对已登录用户开放。'],
     phName: ['e.g. Miguel Torres', '例如：张伟'],
+    fYourEmail: ['Your email', '你的邮箱'],
+    phEmail: ['name@company.com', 'name@company.com'],
+    submitting: ['Submitting…', '正在提交…'],
+    submitErr: ['Could not submit — check your connection and email address, then try again.', '提交失败，请检查网络和邮箱地址后重试。'],
     phTitle: ['e.g. Suppliers should book their own unloading slot', '例如：供应商应能自助预约卸货时段'],
     phDesc: ['Describe the situation in plain words — no need for a business case.', '用平实的语言描述情况——无需撰写商业论证。'],
     phToday: ['e.g. Excel sheet emailed twice a day', '例如：每天两次通过邮件发送 Excel 表'],
@@ -1810,10 +1842,10 @@ class Component extends DCLogic {
     whatNext: ['What happens next', '后续流程'],
     criteria: ['How requests are prioritised', '需求优先级评判标准'],
     flowNote: ['Where this form goes', '表单流向'],
-    flowNoteBody: ['On submit, a Power Automate flow writes the request to the intake list, assigns the reviewer for that process area, and emails you the reference. Nothing is handled by an inbox.', '提交后，Power Automate 流程将需求写入受理列表、按流程领域指派评审人，并将受理编号邮件发送给你。全程不经由邮箱人工处理。'],
+    flowNoteBody: ['On submit, the request is saved to the intake register with a reference number, the hub team is notified, and a confirmation with your reference is emailed to you.', '提交后，需求将以受理编号存入受理登记表，同时通知创新中心团队，并将含受理编号的确认邮件发送给你。'],
     received: ['Request received', '需求已受理'],
     thanksTitle: ['Logged. Here is your reference.', '已受理。这是你的受理编号。'],
-    thanksBody: ['Nothing else is required from you right now. Your reviewer will contact you if the problem needs clarifying, and the decision is published on the idea board whether it is a yes or a no.', '目前无需你再做任何事。如需澄清问题，评审人会与你联系；无论是否立项，决策结果都会在想法看板上公布。'],
+    thanksBody: ['A confirmation with this reference is on its way to your email. Nothing else is required from you right now. Your reviewer will contact you if the problem needs clarifying, and the decision is published on the idea board whether it is a yes or a no.', '确认邮件已发送至你的邮箱。目前无需你再做任何事。如需澄清问题，评审人会与你联系；无论是否立项，决策结果都会在想法看板上公布。'],
     backHome: ['Back to home', '返回首页'],
     tkRef: ['Reference', '受理编号'],
     tkReviewer: ['Your reviewer', '评审人'],
@@ -1956,6 +1988,7 @@ class Component extends DCLogic {
       const db = JSON.parse(JSON.stringify(this.state.db));
       Object.keys(remote.collections).forEach(k => {
         const c = db.collections[k]; if (!c) return;
+        if (k === 'ideas' && !remote.collections[k].length) return;
         const prev = {}; (c.items || []).forEach(x => { prev[x.id] = x; });
         c.items = remote.collections[k].map(x => Object.assign({}, prev[x.id] || {}, x));
       });
@@ -2088,7 +2121,7 @@ class Component extends DCLogic {
       T: T, lang: st.lang, query: st.query,
       heroImg: heroUrl ? this.imgEl(heroUrl, heroAlt) : null, hasHero: !!heroUrl, noHero: ready && !heroUrl,
       loading: st.loading, loadError: st.loadError,
-      isAdmin: isAdmin, isVisitor: !isAdmin, signInOpen: st.signInOpen,
+      isAdmin: isAdmin, isVisitor: !isAdmin, signedIn: isAdmin, signInOpen: st.signInOpen,
       adminIdentity: (st.user || '') + ' · ' + (st.role === 'admin' ? (i ? '内容管理员 (LIH.ContentAdmin)' : 'Content administrator (LIH.ContentAdmin)') : (i ? '方案负责人 (LIH.SolutionOwner)' : 'Solution owner (LIH.SolutionOwner)')),
       draftsCls: st.showDrafts ? 'tag-accent' : 'tag-outline',
       cur: {
@@ -2132,7 +2165,7 @@ class Component extends DCLogic {
         this.setState(s => ({ query: v, route: v.trim() ? 'search' : (s.route === 'search' ? 'home' : s.route) }));
       },
       isHome: false, isCatalog: false, isPortfolio: false, isDetail: false, isPipeline: false,
-      isSubmit: false, isThanks: false, isBoard: false, isPeople: false, isAbout: false,
+      isSubmit: false, isThanks: false, isBoard: false, isPeople: false, isAbout: false, isLocked: false,
       isNews: false, isSearch: false, isAdminHome: false, isAdminEdit: false
     };
 
@@ -2195,7 +2228,7 @@ class Component extends DCLogic {
     });
 
     const intakeSteps = [
-      { no: '01', t: i ? '你提交需求' : 'You describe the problem', d: i ? '一张表单，八个必填项，约四分钟。' : 'One form, eight required fields, about four minutes.', sla: i ? '立即获得受理编号' : 'Reference number issued instantly' },
+      { no: '01', t: i ? '你提交需求' : 'You describe the problem', d: i ? '一张表单，九个必填项，约四分钟。' : 'One form, nine required fields, about four minutes.', sla: i ? '立即获得受理编号' : 'Reference number issued instantly' },
       { no: '02', t: i ? '指派评审人' : 'A reviewer is named', d: i ? '由对应流程负责人接手，而非匿名邮箱。' : 'The process owner for that area picks it up — not a shared mailbox.', sla: i ? '5 个工作日内' : 'Within 5 working days' },
       { no: '03', t: i ? '公开决策结果' : 'A decision is published', d: i ? '立项、合并、或说明原因不予立项。' : 'Accepted, merged with an existing request, or declined with a reason.', sla: i ? '15 个工作日内' : 'Within 15 working days' },
       { no: '04', t: i ? '进入创新管道' : 'It appears in the pipeline', d: i ? '已立项需求进入管道，附负责人与目标季度。' : 'Accepted requests enter the pipeline with an owner and a target quarter.', sla: i ? '全程可在看板查看' : 'Visible on the board throughout' }
@@ -2340,10 +2373,10 @@ class Component extends DCLogic {
       cls: st.form.freq === l ? 'tag-accent' : 'tag-outline',
       pick: (e) => { if (e) e.preventDefault(); this.setField('freq', l); }
     }));
-    const req = ['name', 'site', 'fn', 'title', 'desc', 'today', 'freq', 'people'];
-    const done = req.filter(k => String(st.form[k] || '').trim().length > 0).length;
+    const req = ['name', 'email', 'site', 'fn', 'title', 'desc', 'today', 'freq', 'people'];
+    const done = req.filter(k => k === 'email' ? /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(st.form.email || '').trim()) : String(st.form[k] || '').trim().length > 0).length;
     const onField = {};
-    ['name', 'site', 'fn', 'title', 'desc', 'today', 'people', 'hours', 'systems'].forEach(k => {
+    ['name', 'email', 'site', 'fn', 'title', 'desc', 'today', 'people', 'hours', 'systems'].forEach(k => {
       onField[k] = (e) => this.setField(k, e.target.value);
     });
     onField.share = (e) => this.setField('share', e.target.checked);
@@ -2382,7 +2415,7 @@ class Component extends DCLogic {
           searchResults.push({ kind: i ? '项目' : 'Project', title: x.name, snippet: x.year + ' · ' + this.p(x.scope), open: (e) => { if (e) e.preventDefault(); this.nav('portfolio'); } });
         }
       });
-      this.pub('owners').forEach(o => {
+      if (isAdmin) this.pub('owners').forEach(o => {
         if (hit(o.name) || hit(o.nameZh) || hit(this.p(o.position)) || this.pl(o.responsibilities).some(r => hit(r))) {
           searchResults.push({ kind: i ? '人员' : 'Person', title: o.name, snippet: this.p(o.position) + ' · ' + this.p((this.taxOne('sites', o.siteId) || {}).label), open: (e) => { if (e) e.preventDefault(); this.nav('people'); } });
         }
@@ -2568,7 +2601,8 @@ class Component extends DCLogic {
       isHome: st.route === 'home', isCatalog: st.route === 'catalog', isPortfolio: st.route === 'portfolio',
       isDetail: st.route === 'detail' && !!detail, isPipeline: st.route === 'pipeline',
       isSubmit: st.route === 'submit', isThanks: st.route === 'thanks', isBoard: st.route === 'board',
-      isPeople: st.route === 'people', isAbout: st.route === 'about', isNews: st.route === 'news',
+      isPeople: st.route === 'people' && isAdmin, isAbout: st.route === 'about' && isAdmin,
+      isLocked: (st.route === 'people' || st.route === 'about') && !isAdmin, isNews: st.route === 'news',
       isSearch: st.route === 'search',
       isAdminHome: st.route === 'admin' && isAdmin, isAdminEdit: st.route === 'adminEdit' && isAdmin && !!st.editRec,
       stats: [
@@ -2591,8 +2625,9 @@ class Component extends DCLogic {
       siteOptions: siteOptions, functionOptions: functionOptions, frequencyOptions: frequencyOptions,
       progressPct: Math.round(done / req.length * 100) + '%',
       progressLabel: done + ' / ' + req.length + (i ? ' 必填项' : ' required'),
-      submitDisabled: done < req.length,
-      submitHint: done < req.length
+      submitDisabled: done < req.length || st.submitting,
+      submitErr: st.submitErr,
+      submitHint: st.submitting ? this.S.submitting[i] : done < req.length
         ? (i ? '还需填写 ' + (req.length - done) + ' 项' : (req.length - done) + ' fields still needed')
         : (i ? '提交后立即获得受理编号' : 'You get a reference number immediately'),
       submitIdea: () => this.doSubmit(),
@@ -2762,24 +2797,20 @@ class Component extends DCLogic {
 
   doSubmit() {
     const st = this.state, f = st.form;
-    const n = this.state.db.collections.ideas.items.length + 82;
-    const ref = 'LIH-2026-0' + n;
-    const site = this.taxOne('sites', f.site);
-    const idea = {
-      id: 'id-' + n, state: 'published', order: n, ref: ref,
-      title: { en: f.title, zh: f.title },
-      area: /Import|关务|Export/.test(f.fn) ? 'customs' : 'automation',
-      from: {
-        en: (f.name || '—') + ' · ' + (site ? site.label.en : ''),
-        zh: (f.name || '—') + ' · ' + (site ? site.label.zh : '')
-      },
-      date: this.today(), ideaState: 'new',
-      outcome: { en: 'Reviewer being assigned', zh: '正在指派评审人' },
-      modifiedBy: f.name || 'Intake flow', modifiedAt: this.today()
-    };
-    this.mutate('ideas', c => { c.items.push(idea); });
-    this.setState({ ticketRef: ref, route: 'thanks' });
-    window.scrollTo(0, 0);
+    if (st.submitting) return;
+    const payload = Object.assign({}, f, {
+      email: String(f.email || '').trim(), lang: st.lang,
+      area: /Import|关务|Export/.test(f.fn) ? 'customs' : 'automation'
+    });
+    this.setState({ submitting: true, submitErr: '' });
+    this.waitSB().then(sb => { if (!sb) throw new Error('offline'); return sb.submitIdea(payload); }).then(ref => {
+      this.setState({
+        submitting: false, ticketRef: ref, route: 'thanks',
+        form: { name: '', email: '', site: '', fn: '', title: '', desc: '', today: '', freq: '', people: '', hours: '', systems: '', share: true }
+      });
+      window.scrollTo(0, 0);
+      if (st.role !== 'visitor') this.sbHydrate();
+    }).catch(err => { console.warn(err); this.setState({ submitting: false, submitErr: this.S.submitErr[this.L()] }); });
   }
 
   signIn(role, user) {

@@ -2436,7 +2436,7 @@
       },
       "group": "intake",
       "list": "LIH_Ideas",
-      "writePath": "Public form → Power Automate (LIH_IntakeSubmission) → list item + reviewer assignment + confirmation email",
+      "writePath": "Public form → Supabase submit_idea() → ideas (draft) + idea_submissions → idea-notify emails (admin + submitter)",
       "fields": [
         {
           "name": "ref",

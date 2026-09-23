@@ -3,8 +3,8 @@
   var URL = 'https://knbnsbvtvyminkqhjdxg.supabase.co';
   var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuYm5zYnZ0dnltaW5rcWhqZHhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwOTkwMzksImV4cCI6MjEwNTY3NTAzOX0.PCjAGdvDMns5P-a7HZYHK0W3cAWqYkizx6cykrsy89I';
   var BUCKET = 'lih-media';
-  var SYNCED = ['owners', 'solutions', 'siteSettings'];
-  var JSONB = { siteSettings: 'site_settings' };
+  var SYNCED = ['owners', 'solutions', 'siteSettings', 'ideas'];
+  var JSONB = { siteSettings: 'site_settings', ideas: 'ideas' };
 
   function boot() {
     if (!window.supabase || !window.supabase.createClient) return setTimeout(boot, 40);
@@ -27,7 +27,8 @@
         sb.from('stages').select('*').order('sort_order'),
         sb.from('idea_states').select('*').order('sort_order'),
         sb.from('functions').select('*').order('sort_order'),
-        sb.from('site_settings').select('*').order('sort_order')
+        sb.from('site_settings').select('*').order('sort_order'),
+        sb.from('ideas').select('*').order('sort_order')
       ]);
       var d = q.map(chk);
       var tx = function (rows) { return rows.map(function (r) { var o = { id: r.id, label: r.label }; if (r.region != null) o.region = r.region; if (r.pill != null) o.pill = r.pill; if (r.desc != null) o.desc = r.desc; return o; }); };
@@ -52,8 +53,9 @@
           shotImages: d[3].filter(function (r) { return r.solution_id === s.id; }).map(function (r) { return { url: r.url || '', name: '', caption: r.caption || { en: '', zh: '' } }; })
         };
       });
+      var jb = function (rows) { return rows.map(function (x) { return Object.assign({}, x.data, { id: x.id, state: x.state, order: x.sort_order, modifiedBy: x.modified_by || '', modifiedAt: day(x.modified_at) }); }); };
       return {
-        collections: { owners: owners, solutions: solutions, siteSettings: d[11].map(function (x) { return Object.assign({}, x.data, { id: x.id, state: x.state, order: x.sort_order, modifiedBy: x.modified_by || '', modifiedAt: day(x.modified_at) }); }) },
+        collections: { owners: owners, solutions: solutions, siteSettings: jb(d[11]), ideas: jb(d[12]) },
         taxonomies: { sites: tx(d[5]), areas: tx(d[6]), statuses: tx(d[7]), stages: tx(d[8]), ideaStates: tx(d[9]), functions: tx(d[10]) }
       };
     }
@@ -99,6 +101,12 @@
       return sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
     }
 
+    async function submitIdea(p) {
+      var r = await sb.rpc('submit_idea', { p: p });
+      if (r.error) throw r.error;
+      return r.data;
+    }
+
     async function whoami() {
       var s = (await sb.auth.getSession()).data.session;
       if (!s) return null;
@@ -126,7 +134,7 @@
     }
     async function signOut() { await sb.auth.signOut(); }
 
-    window.LIH_SB = { client: sb, synced: SYNCED, load: load, save: save, remove: remove, upload: upload, whoami: whoami, signIn: signIn, signOut: signOut, resetPassword: resetPassword, updatePassword: updatePassword, recovery: recovery };
+    window.LIH_SB = { client: sb, synced: SYNCED, load: load, save: save, remove: remove, upload: upload, submitIdea: submitIdea, whoami: whoami, signIn: signIn, signOut: signOut, resetPassword: resetPassword, updatePassword: updatePassword, recovery: recovery };
   }
   boot();
 })();
