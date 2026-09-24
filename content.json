@@ -1,7 +1,7 @@
 {
   "meta": {
-    "version": "1.3",
-    "generated": "2026-09-21",
+    "version": "1.4",
+    "generated": "2026-09-24",
     "note": "Prototype content source. In production this document is not shipped: each collection below is read at runtime from its SharePoint List (phase 1) or Dataverse table (phase 2) through Power Automate, with the same field names. No portal content is held in code.",
     "auth": {
       "provider": "Microsoft Entra ID",
@@ -458,465 +458,530 @@
       "items": [
         {
           "id": "shipping-plan",
-          "state": "published",
-          "order": 1,
           "name": "Shipping Plan 2.0",
           "nameZh": "发运计划 2.0",
           "area": "outbound",
           "status": "live",
-          "ownerId": "zhang",
           "launched": {
-            "en": "Mar 2025",
-            "zh": "2025 年 3 月"
+            "en": "Jul 2026",
+            "zh": "2026 年 7 月"
           },
           "tagline": {
-            "en": "Build next week's outbound plan in twenty minutes instead of two days.",
-            "zh": "把下周的发运计划从两天压缩到二十分钟。"
+            "en": "Shipments, events, evidence and export documents in one place — Carta Porte in 30 seconds instead of 8 minutes.",
+            "zh": "发运、事件、证据与出口单据集中在同一平台——Carta Porte 生成时间从 8 分钟缩短至 30 秒。"
           },
           "problem": {
-            "en": "Outbound plans were assembled by hand in spreadsheets from three different systems. Every customer change meant re-keying the whole sheet, versions circulated by email, and the plan was usually stale before the warehouse read it.",
-            "zh": "发运计划此前需从三个系统手工汇总到表格中。客户每有变动就要重新录入整张表，版本通过邮件流转，仓库拿到时计划往往已经过期。"
+            "en": "Shipment information was spread across lists, spreadsheets, emails, photos and manual records. Following a shipment, finding its evidence or preparing its export documents meant searching in several places.",
+            "zh": "发运信息分散在列表、电子表格、邮件、照片和手工记录中。跟踪一票货、查找证据或准备出口单据，都需要在多个地方来回查找。"
           },
           "solution": {
-            "en": "A single planning workspace that pulls orders, stock and carrier capacity, proposes a load plan against the planner's constraints, and publishes one version that the warehouse and the carriers both read.",
-            "zh": "统一的计划工作台：自动汇总订单、库存与承运商运力，按计划员设定的约束生成装载方案，并发布唯一版本供仓库与承运商共同查阅。"
+            "en": "A digital platform that brings shipment records, events, photo evidence and export documentation together, with role-based modules, mobile apps and automated flows. Initial scope: daily operation for customer HC18.",
+            "zh": "一个数字化平台，将发运记录、事件、照片证据与出口单据整合在一起，配有按角色划分的模块、移动应用和自动化流程。初始范围：客户 HC18 的日常运营。"
           },
           "how": {
             "en": [
-              "Orders, stock and open capacity sync from ERP and WMS every night.",
-              "The planner sets the week's constraints — dock hours, carrier capacity, priority customers.",
-              "The engine proposes a load plan and flags orders it cannot fit.",
-              "The planner adjusts by hand where judgement is needed, then publishes.",
-              "Warehouse, transport and carriers all read the same published version."
+              "Shipments and their events are registered and tracked in one data model.",
+              "Photo evidence is captured from a mobile app at the point of work.",
+              "Export documentation, including Carta Porte, is generated automatically.",
+              "Documents and evidence are kept in one central repository.",
+              "Role-based views give visibility for follow-up and incident handling."
             ],
             "zh": [
-              "每晚从 ERP 与 WMS 同步订单、库存与可用运力。",
-              "计划员设定本周约束——月台工作时间、承运商运力、优先客户。",
-              "系统生成装载方案，并标出无法排入的订单。",
-              "计划员对需人工判断的部分进行调整后发布。",
-              "仓库、运输与承运商查阅同一个已发布版本。"
+              "发运及其事件在统一的数据模型中登记和跟踪。",
+              "在作业现场通过移动应用拍摄照片证据。",
+              "自动生成出口单据，包括 Carta Porte。",
+              "单据与证据集中存放在统一的资料库中。",
+              "按角色划分的视图支持跟进与异常处理。"
+            ]
+          },
+          "systems": {
+            "en": "Power Apps, Power Automate, Dataverse, SharePoint, Office Scripts",
+            "zh": "Power Apps、Power Automate、Dataverse、SharePoint、Office Scripts"
+          },
+          "shots": {
+            "en": [
+              "screenshot — shipment record with events and evidence",
+              "screenshot — mobile evidence capture"
+            ],
+            "zh": [
+              "截图 — 含事件与证据的发运记录",
+              "截图 — 移动端证据采集"
+            ]
+          },
+          "faq": {
+            "en": [
+              "What results are documented? || Carta Porte generation went from 8 minutes to 30 seconds, average processing from 2 hours to under 1.5 hours, and chargeback delay risk from 26% to 7%. About 163 hours are saved per year.",
+              "Who is on the team? || Project lead: Pablo David Gonzalez Barron. Solution architecture, app development, interface design, flow automation, deployment and maintenance: Miguel Angel Contreras Ferrut."
+            ],
+            "zh": [
+              "有哪些已记录的成果？ || Carta Porte 生成时间从 8 分钟降至 30 秒，平均处理时间从 2 小时降至 1.5 小时以内，拒付延误风险从 26% 降至 7%。每年约节省 163 小时。",
+              "团队成员有哪些？ || 项目负责人：Pablo David Gonzalez Barron。方案架构、应用开发、界面设计、流程自动化、部署与维护：Miguel Angel Contreras Ferrut。"
             ]
           },
           "rollout": [
             "apo:live",
             "mty:live",
-            "hz:live"
-          ],
-          "systems": {
-            "en": "ERP, WMS, carrier portal",
-            "zh": "ERP、WMS、承运商门户"
-          },
-          "shots": {
-            "en": [
-              "screenshot — weekly plan grid with capacity warnings",
-              "screenshot — published plan as the warehouse sees it"
-            ],
-            "zh": [
-              "截图 — 周计划表与运力预警",
-              "截图 — 仓库端查看的已发布计划"
-            ]
-          },
-          "faq": {
-            "en": [
-              "Can I still override the proposed plan? || Yes. The engine proposes, the planner decides. Every manual change is kept in the version history with the name of whoever made it.",
-              "Does it replace the weekly planning meeting? || No. It removes the first forty minutes of that meeting, which used to be spent agreeing on which spreadsheet was current."
-            ],
-            "zh": [
-              "我还能手动调整系统建议的计划吗？ || 可以。系统只负责建议，决策权在计划员。每次手工修改都会连同操作人记录在版本历史中。",
-              "它会取代每周计划会议吗？ || 不会。它省去了会议开头约四十分钟——过去这段时间都用在确认哪份表格是最新版本。"
-            ]
-          },
-          "related": [
-            "receiving-plan",
-            "control-tower"
-          ],
-          "modifiedBy": "Zhang Wei",
-          "modifiedAt": "2026-09-12"
-        },
-        {
-          "id": "kuaibot",
-          "state": "published",
-          "order": 2,
-          "name": "KuaiBot",
-          "nameZh": "快机器人",
-          "area": "automation",
-          "status": "live",
-          "ownerId": "chen",
-          "launched": {
-            "en": "Aug 2025",
-            "zh": "2025 年 8 月"
-          },
-          "tagline": {
-            "en": "A desk robot that files the repetitive logistics paperwork nobody should be doing by hand.",
-            "zh": "替你完成重复性物流单据工作的桌面机器人。"
-          },
-          "problem": {
-            "en": "Teams spent two to three hours a day copying the same data between the ERP, customer portals and email. High volume, no judgement required, and a steady rate of transcription errors that only surfaced downstream.",
-            "zh": "各团队每天花两到三小时在 ERP、客户门户与邮件之间重复搬运同样的数据。工作量大、无需判断，而录入差错持续发生且往往到下游才被发现。"
-          },
-          "solution": {
-            "en": "A library of attended and unattended bots that log in, read, key and confirm. Each bot is owned by the team whose work it does, not by IT — they nominate the task and sign off the result.",
-            "zh": "一套有人值守与无人值守机器人库，可自动登录、读取、录入与确认。每个机器人归属其所服务的业务团队而非 IT——由业务提出任务并验收结果。"
-          },
-          "how": {
-            "en": [
-              "A team nominates a task that is high volume and requires no judgement.",
-              "The bot is built and tested alongside the people who do the task today.",
-              "It runs on a schedule, or on demand from the user's desktop.",
-              "Anything the bot cannot handle is routed to a human exception queue.",
-              "The owning team sees every run in a log and can stop the bot themselves."
-            ],
-            "zh": [
-              "团队提出一项高频且无需人工判断的任务。",
-              "机器人与现有操作人员共同开发并测试。",
-              "按计划运行，或由用户在桌面端按需触发。",
-              "机器人无法处理的情形转入人工例外队列。",
-              "归属团队可查看每次运行日志，并可自行停止机器人。"
-            ]
-          },
-          "rollout": [
             "hz:live",
             "wh:live",
-            "xc:live",
-            "apo:pilot"
+            "xc:live"
           ],
-          "systems": {
-            "en": "ERP, email, customer portals",
-            "zh": "ERP、邮件、客户门户"
-          },
-          "shots": {
-            "en": [
-              "screenshot — bot library with run status per team",
-              "screenshot — exception queue handed back to a human"
-            ],
-            "zh": [
-              "截图 — 各团队机器人清单与运行状态",
-              "截图 — 转交人工处理的例外队列"
-            ]
-          },
-          "faq": {
-            "en": [
-              "Will a bot take my job? || The tasks nominated so far are transcription tasks. Every bot in the library was proposed by the team that used to do the task by hand.",
-              "How do I get a bot for my task? || Submit it through the intake form. If it is high volume and rule-based, it usually reaches production in four to six weeks."
-            ],
-            "zh": [
-              "机器人会取代我的工作吗？ || 目前提出的任务均为数据搬运类工作。库中每个机器人都是由原本手工执行该任务的团队自己提出的。",
-              "我的任务如何申请机器人？ || 通过需求提交表单提出。若任务量大且规则明确，通常四到六周即可上线。"
-            ]
-          },
           "related": [
-            "carrier-invoice",
-            "vobos"
+            "ccp-import",
+            "carrier-invoice"
           ],
-          "modifiedBy": "Chen Hao",
-          "modifiedAt": "2026-09-04"
+          "state": "published",
+          "order": 1,
+          "ownerId": "miguel",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         },
         {
-          "id": "control-tower",
-          "state": "published",
-          "order": 3,
-          "name": "Control Tower",
-          "nameZh": "控制塔",
-          "area": "visibility",
-          "status": "pilot",
-          "ownerId": "elena",
+          "id": "vobos",
+          "name": "Automated VoBo",
+          "nameZh": "自动 VoBo 校验",
+          "area": "customs",
+          "status": "live",
           "launched": {
-            "en": "Pilot since Sep 2026",
-            "zh": "自 2026 年 9 月起试点"
+            "en": "Mar 2026",
+            "zh": "2026 年 3 月"
           },
           "tagline": {
-            "en": "One screen for every shipment in motion, from plant gate to customer dock.",
-            "zh": "一个屏幕看清所有在途货物，从工厂大门到客户月台。"
+            "en": "Complex customs declarations verified in 20 minutes instead of 90.",
+            "zh": "复杂报关单核对从 90 分钟缩短至 20 分钟。"
           },
           "problem": {
-            "en": "Shipment status lived in carrier portals, mailboxes and phone calls. Answering \"where is it?\" took three calls, and the answer was already out of date when it arrived.",
-            "zh": "货物状态分散在承运商门户、邮箱与电话中。回答一句\"货到哪了\"要打三个电话，而答案到手时往往已经过时。"
+            "en": "The export VoBo meant extracting and comparing information from the pedimento or proforma and the invoices by hand. Complex declarations, with more than 40 lines, took about 90 minutes each.",
+            "zh": "出口 VoBo 需要人工从报关单（pedimento）或形式发票与商业发票中提取并比对信息。超过 40 行的复杂报关单，每份约需 90 分钟。"
           },
           "solution": {
-            "en": "A live map and exception list built on carrier and forwarder feeds. It does not show you every shipment equally — it raises the ones whose ETA no longer matches the promise.",
-            "zh": "基于承运商与货代数据构建的实时地图与例外清单。它不会平铺所有货物，而是主动提示预计到达时间已偏离承诺的那些。"
+            "en": "Automates reading and comparing the pedimento or proforma against the invoices. The data is organised into a standard validation template that supports the review of declared quantities, invoice information and packing requirements. It started with one customer and now covers all export customers.",
+            "zh": "自动读取并比对报关单或形式发票与商业发票。数据整理为标准校验模板，支持核对申报数量、发票信息与包装要求。最初仅服务一个客户，现已覆盖全部出口客户。"
           },
           "how": {
             "en": [
-              "Tracking feeds are ingested from carriers and forwarders continuously.",
-              "Each movement is matched back to the order and the customer promise.",
-              "ETA is compared to promise; only deviations become exceptions.",
-              "Exceptions are assigned to a named owner with a countdown.",
-              "The resolution is recorded, so recurring lanes can be fixed at the root."
+              "The export clerk loads the pedimento or proforma and the invoices.",
+              "Python executables extract and parse both documents.",
+              "Data is reorganised and compared automatically — no copy and paste.",
+              "A finished validation template is generated for the clerk to review.",
+              "The analysed pedimento layout is produced alongside it."
             ],
             "zh": [
-              "持续接入承运商与货代的跟踪数据。",
-              "每笔在途信息回溯匹配到订单与客户承诺。",
-              "将预计到达与承诺比对，仅偏差项生成例外。",
-              "例外项分派给指定责任人并附处理时限。",
-              "处理结果留档，便于对反复出问题的线路做根本改善。"
+              "出口文员载入报关单或形式发票及商业发票。",
+              "Python 可执行程序提取并解析两类单据。",
+              "数据自动重组与比对——无需复制粘贴。",
+              "生成完整的校验模板，供文员审核。",
+              "同时生成已解析的报关单版式。"
             ]
           },
-          "rollout": [
-            "apo:pilot",
-            "mty:dev",
-            "hz:dev"
-          ],
           "systems": {
-            "en": "Carrier APIs, forwarder EDI, ERP",
-            "zh": "承运商接口、货代 EDI、ERP"
+            "en": "Python executables, Excel (first version: Power Automate, AI Builder)",
+            "zh": "Python 可执行程序、Excel（首版：Power Automate、AI Builder）"
           },
           "shots": {
             "en": [
-              "screenshot — live map, exceptions ranked by risk",
-              "screenshot — single shipment timeline with milestones"
+              "screenshot — finished validation template",
+              "screenshot — analysed pedimento layout"
             ],
             "zh": [
-              "截图 — 实时地图，例外按风险排序",
-              "截图 — 单票货物里程碑时间线"
+              "截图 — 完成的校验模板",
+              "截图 — 已解析的报关单版式"
             ]
           },
           "faq": {
             "en": [
-              "Which lanes are in the pilot? || Apodaca outbound to US customers, September to December 2026. Monterrey and Hangzhou follow once the feed quality is proven.",
-              "Can I join the pilot from another plant? || Yes, if your main carriers already provide a tracking feed. Use the join button and the owner will confirm feasibility in a week."
+              "What results are documented? || Complex declarations went from 90 to 20 minutes, across roughly 312 declarations a year — about 364 hours of capacity released.",
+              "Does it still use AI Builder? || No. The first version used Power Automate, AI Builder and Excel. The current version runs as Python executables that extract and parse the documents directly.",
+              "Who is on the team? || Business lead: Adriana Juarez. Design, development, testing and deployment: Miguel Angel Contreras Ferrut. Users: export clerks."
             ],
             "zh": [
-              "试点覆盖哪些线路？ || Apodaca 出口至美国客户，2026 年 9 月至 12 月。数据质量验证后再推广至 Monterrey 与杭州。",
-              "其他工厂可以加入试点吗？ || 可以，前提是你的主要承运商已提供跟踪数据。点击加入按钮，负责人将在一周内确认可行性。"
+              "有哪些已记录的成果？ || 复杂报关单从 90 分钟降至 20 分钟，每年约 312 份，约释放 364 小时产能。",
+              "现在还使用 AI Builder 吗？ || 不再使用。首版基于 Power Automate、AI Builder 与 Excel；当前版本以 Python 可执行程序直接提取并解析单据。",
+              "团队成员有哪些？ || 业务负责人：Adriana Juarez。设计、开发、测试与部署：Miguel Angel Contreras Ferrut。使用者：出口文员。"
             ]
           },
-          "related": [
-            "shipping-plan",
-            "carrier-invoice"
+          "rollout": [
+            "apo:live"
           ],
-          "modifiedBy": "Elena Márquez",
-          "modifiedAt": "2026-09-18"
+          "related": [
+            "carrier-invoice",
+            "ccp-import"
+          ],
+          "state": "published",
+          "order": 2,
+          "ownerId": "miguel",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         },
         {
           "id": "carrier-invoice",
-          "state": "published",
-          "order": 4,
           "name": "Carrier Invoice Validation",
           "nameZh": "承运商发票校验",
           "area": "cost",
           "status": "live",
-          "ownerId": "lina",
           "launched": {
-            "en": "Nov 2025",
-            "zh": "2025 年 11 月"
+            "en": "Jul 2026",
+            "zh": "2026 年 7 月"
           },
           "tagline": {
-            "en": "Every freight invoice checked against the contracted rate before it reaches Finance.",
-            "zh": "每张运费发票在进入财务前自动与合同费率比对。"
+            "en": "Every carrier invoice validated in 1.5 minutes instead of 15, with the evidence filed automatically.",
+            "zh": "每张承运商发票的校验时间从 15 分钟缩短至 1.5 分钟，证据自动归档。"
           },
           "problem": {
-            "en": "Freight invoices were approved largely on trust because checking them by hand was not affordable at that volume. Discrepancies were found months later during audit, if at all.",
-            "zh": "受制于人力，运费发票基本靠信任放行。差异往往数月后审计时才被发现，甚至根本不被发现。"
+            "en": "Each transport service invoice was checked by hand: read the invoice, work out the applicable rate, compare the amount and chase the supporting documents — about 15 minutes per invoice, around 1,040 times a year.",
+            "zh": "每张运输服务发票都需人工核对：阅读发票、确定适用费率、比对金额并追查支持文件——每张约 15 分钟，每年约 1,040 次。"
           },
           "solution": {
-            "en": "An automated three-way match between the invoice, the shipment record and the contracted rate card. Clean invoices are approved automatically; mismatches arrive at Finance with the evidence already attached.",
-            "zh": "在发票、运输记录与合同费率之间自动三方比对。无差异发票自动放行；有差异的则连同证据一并推送给财务。"
+            "en": "An automated validator that extracts the invoice data, applies the rate rules, detects exceptions and records the evidence. Successful validations are notified by email with the documents attached.",
+            "zh": "自动校验工具：提取发票数据、应用费率规则、识别异常并记录证据。校验通过后自动发送邮件通知，并附上相关单据。"
           },
           "how": {
             "en": [
-              "The invoice is received and parsed, whatever format the carrier sends.",
-              "Each line is matched to the shipment record it claims to bill.",
-              "Charges are compared against the contracted rate card and accessorial rules.",
-              "Clean invoices route straight to payment approval.",
-              "Mismatches are queued with a dispute pack the carrier can be sent as-is."
+              "The carrier's invoice is received and processed.",
+              "AI Builder extracts the relevant data.",
+              "The applicable rate is determined from the number of containers.",
+              "The amount and the supporting documents are validated.",
+              "A folio, stamp and evidence record are generated, and the validation is notified."
             ],
             "zh": [
-              "接收并解析发票，兼容承运商各种格式。",
-              "逐行匹配到其所对应的运输记录。",
-              "费用与合同费率及附加费规则比对。",
-              "无差异发票直接进入付款审批。",
-              "差异项生成可直接发送承运商的争议材料并排队处理。"
+              "接收并处理承运商发票。",
+              "AI Builder 提取相关数据。",
+              "根据集装箱数量确定适用费率。",
+              "校验金额与支持文件。",
+              "生成编号、印章与证据记录，并发送校验通知。"
             ]
           },
-          "rollout": [
-            "hz:live",
-            "xc:live",
-            "apo:live",
-            "mty:pilot"
-          ],
           "systems": {
-            "en": "ERP, Finance, carrier portal",
-            "zh": "ERP、财务系统、承运商门户"
+            "en": "Power Automate, AI Builder, SharePoint",
+            "zh": "Power Automate、AI Builder、SharePoint"
           },
           "shots": {
             "en": [
-              "screenshot — match result with the disputed line highlighted",
-              "screenshot — dispute pack generated for the carrier"
+              "screenshot — validation email with attached evidence",
+              "screenshot — evidence record in SharePoint"
             ],
             "zh": [
-              "截图 — 比对结果，差异行高亮",
-              "截图 — 自动生成的承运商争议材料"
+              "截图 — 附证据的校验邮件",
+              "截图 — SharePoint 中的证据记录"
             ]
           },
           "faq": {
             "en": [
-              "What happens if the rate card is out of date? || Every invoice is matched against the rate card version that was valid on the shipment date, not the one loaded today.",
-              "Does Finance still approve payment? || Yes. The tool removes the checking, not the approval. Finance sees a clean queue and a dispute queue."
+              "What results are documented? || Validation time fell from 15 to 1.5 minutes (90% less), across about 1,040 validations a year — 234 hours saved annually. Testing logged 60 successful runs.",
+              "What happens if the extraction is wrong? || The flows are designed so that an incorrect detection does not continue automatically; it stops for review.",
+              "Who is on the team? || Lead: Miguel Angel Contreras Ferrut — architecture, automation and deployment."
             ],
             "zh": [
-              "如果费率表未更新会怎样？ || 每张发票按发运日期当时生效的费率版本比对，而非当前版本。",
-              "财务还需要审批付款吗？ || 需要。工具替代的是核对而非审批。财务看到的是\"无差异\"与\"待争议\"两个队列。"
+              "有哪些已记录的成果？ || 校验时间从 15 分钟降至 1.5 分钟（减少 90%），每年约 1,040 次，年节省 234 小时。测试阶段成功运行 60 次。",
+              "如果识别出错怎么办？ || 流程设计为识别错误时不会自动继续，而是停下等待人工审核。",
+              "团队成员有哪些？ || 负责人：Miguel Angel Contreras Ferrut——架构、自动化与部署。"
             ]
           },
-          "related": [
-            "control-tower",
-            "kuaibot"
+          "rollout": [
+            "apo:live"
           ],
-          "modifiedBy": "Li Na",
-          "modifiedAt": "2026-09-09"
+          "related": [
+            "vobos",
+            "shipping-plan"
+          ],
+          "state": "published",
+          "order": 3,
+          "ownerId": "miguel",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         },
         {
-          "id": "vobos",
+          "id": "ocean-hub",
+          "name": "Ocean Import Intelligence Hub",
+          "nameZh": "海运进口智能中心",
+          "area": "inbound",
+          "status": "live",
+          "launched": {
+            "en": "Jun 2026",
+            "zh": "2026 年 6 月"
+          },
+          "tagline": {
+            "en": "One Master Report instead of 23 tracking reports — with KuaiBot and Ocean Control Tower answering from the same source.",
+            "zh": "以一份主报表取代 23 份跟踪报表——KuaiBot 与 Ocean Control Tower 基于同一数据源作答。"
+          },
+          "problem": {
+            "en": "Ocean import depended on 23 separate tracking reports. Updating them over and over meant double capture, lost time, possible inconsistencies and limited visibility of upcoming events.",
+            "zh": "海运进口依赖 23 份独立的跟踪报表。反复更新导致重复录入、耗费时间、可能出现数据不一致，且难以预见即将发生的事件。"
+          },
+          "solution": {
+            "en": "A Master Report with ocean shipment, container, status and progress data. It replaces the fragmented reports and feeds the operational outputs and two AI agents: KuaiBot, which gives container status to users outside Logistics with per-user access filters, and Ocean Control Tower, which analyses the same source for KPIs, risks and trends for authorised users.",
+            "zh": "一份包含海运发运、集装箱、状态与进度数据的主报表。它取代分散的报表，并为各项运营输出和两个 AI 助手提供数据：KuaiBot 向物流以外的用户提供集装箱状态，并按用户设定访问权限；Ocean Control Tower 基于同一数据源为授权用户分析 KPI、风险与趋势。"
+          },
+          "how": {
+            "en": [
+              "Ocean shipment, container and status data are kept in one Master Report.",
+              "Critical-container reports and the daily ocean report are generated from it.",
+              "Upcoming warehouse arrivals and carrier arrivals are notified.",
+              "Cycle time is measured from arrival to operation close.",
+              "Data is extracted for cartas encomienda and the China report flow.",
+              "KuaiBot and Ocean Control Tower answer questions from the same source."
+            ],
+            "zh": [
+              "海运发运、集装箱与状态数据集中在一份主报表中。",
+              "据此生成关键集装箱报表与每日海运报表。",
+              "提前通知即将到达仓库的货物及承运商到场信息。",
+              "测量从到港到作业关闭的周期时间。",
+              "为委托书（cartas encomienda）与 China report 流程提取数据。",
+              "KuaiBot 与 Ocean Control Tower 基于同一数据源回答问题。"
+            ]
+          },
+          "systems": {
+            "en": "Excel Online, SharePoint, Power Automate, AI agents (KuaiBot, Ocean Control Tower)",
+            "zh": "Excel Online、SharePoint、Power Automate、AI 助手（KuaiBot、Ocean Control Tower）"
+          },
+          "shots": {
+            "en": [
+              "screenshot — Master Report",
+              "screenshot — KuaiBot answering a container status question"
+            ],
+            "zh": [
+              "截图 — 主报表",
+              "截图 — KuaiBot 回答集装箱状态查询"
+            ]
+          },
+          "faq": {
+            "en": [
+              "What results are documented? || Tracking sources went from 23 to 1, and the daily update cycle from 4.5 to 1.5 hours.",
+              "What is the difference between KuaiBot and Ocean Control Tower? || KuaiBot shares container status with users outside Logistics and filters what each user can see. Ocean Control Tower reads the whole source without per-user filters and offers KPIs, observations, risks and trends, so it is shared only with authorised users.",
+              "Who is on the team? || Lead: Litzy Sanchez. Team: Pablo David Gonzalez Barron and Gualberto Carlos."
+            ],
+            "zh": [
+              "有哪些已记录的成果？ || 跟踪数据源从 23 个减至 1 个，每日更新周期从 4.5 小时缩短至 1.5 小时。",
+              "KuaiBot 与 Ocean Control Tower 有何区别？ || KuaiBot 向物流以外的用户共享集装箱状态，并按用户过滤可见内容。Ocean Control Tower 读取完整数据源、不做用户级过滤，提供 KPI、观察、风险与趋势分析，因此仅向授权用户开放。",
+              "团队成员有哪些？ || 负责人：Litzy Sanchez。团队：Pablo David Gonzalez Barron、Gualberto Carlos。"
+            ]
+          },
+          "rollout": [
+            "apo:live",
+            "mty:live",
+            "hz:live",
+            "wh:live",
+            "xc:live"
+          ],
+          "related": [
+            "rpa-status",
+            "ccp-import"
+          ],
+          "state": "published",
+          "order": 4,
+          "ownerId": "miguel",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "rpa-status",
+          "name": "RPA Status Container",
+          "nameZh": "集装箱状态 RPA",
+          "area": "visibility",
+          "status": "pilot",
+          "launched": {
+            "en": "Pilot since Jul 2026",
+            "zh": "自 2026 年 7 月起试点"
+          },
+          "tagline": {
+            "en": "Container status checked on the carrier's platform by a robot — 2 minutes a day instead of 20.",
+            "zh": "由机器人在承运商平台查询集装箱状态——每天 2 分钟，而非 20 分钟。"
+          },
+          "problem": {
+            "en": "Ocean import container status had to be looked up by hand on the carrier's platform every day and copied into the tracking files.",
+            "zh": "海运进口集装箱状态每天都要在承运商平台人工查询，再复制到跟踪文件中。"
+          },
+          "solution": {
+            "en": "A robot that queries container status on the COSCO Shipping platform on a schedule and syncs the results to a central SharePoint repository, so the team can focus on following up exceptions.",
+            "zh": "机器人定时在中远海运（COSCO Shipping）平台查询集装箱状态，并将结果同步至 SharePoint 中央资料库，让团队专注于跟进异常。"
+          },
+          "how": {
+            "en": [
+              "The robot runs on a recurring schedule.",
+              "It queries each container's status on the COSCO Shipping platform.",
+              "Results are synced to the central SharePoint repository.",
+              "The team follows up only the exceptions."
+            ],
+            "zh": [
+              "机器人按固定周期运行。",
+              "在中远海运平台逐一查询集装箱状态。",
+              "结果同步至 SharePoint 中央资料库。",
+              "团队只需跟进异常情况。"
+            ]
+          },
+          "systems": {
+            "en": "RPA, COSCO Shipping platform, SharePoint",
+            "zh": "RPA、中远海运平台、SharePoint"
+          },
+          "shots": {
+            "en": [
+              "screenshot — container status repository"
+            ],
+            "zh": [
+              "截图 — 集装箱状态资料库"
+            ]
+          },
+          "faq": {
+            "en": [
+              "Can it cover other carriers? || Yes. The approach extends to any logistics provider that requires recurring look-ups and manual capture.",
+              "Who built it? || Miguel Angel Contreras Ferrut — design and development."
+            ],
+            "zh": [
+              "能否扩展到其他承运商？ || 可以。该方法适用于任何需要定期查询和人工录入的物流服务商。",
+              "由谁开发？ || Miguel Angel Contreras Ferrut——设计与开发。"
+            ]
+          },
+          "rollout": [
+            "apo:pilot"
+          ],
+          "related": [
+            "ocean-hub"
+          ],
           "state": "published",
           "order": 5,
-          "name": "VOBOS Automáticos",
-          "nameZh": "单据自动放行",
-          "area": "customs",
-          "status": "dev",
-          "ownerId": "carlos",
-          "launched": {
-            "en": "Target Q1 2027",
-            "zh": "目标 2027 年第一季度"
-          },
-          "tagline": {
-            "en": "Automated release approvals for import and export documents — no more chasing signatures.",
-            "zh": "进出口单据自动放行审批——不再四处追签字。"
-          },
-          "problem": {
-            "en": "Every shipment's document approval was chased by email across trade compliance, quality and finance. One missing sign-off held a loaded truck at the gate, and nobody could see whose desk it was sitting on.",
-            "zh": "每票货的单据审批都要在关务合规、质量与财务之间邮件催办。一个签字缺失就能让满载的卡车停在门口，而没人知道单子卡在谁手上。"
-          },
-          "solution": {
-            "en": "A rules engine that grants routine approvals automatically and escalates only the exceptions, keeping a full audit trail that customs can be shown directly.",
-            "zh": "规则引擎自动放行常规单据，仅将例外升级处理，同时保留可直接向海关出示的完整审计轨迹。"
-          },
-          "how": {
-            "en": [
-              "The document is submitted once, by whoever prepares it.",
-              "Rules are checked: HS code, licence validity, value threshold, partner status.",
-              "Routine cases are released automatically, in seconds.",
-              "Exceptions route to the named approver for that rule, with a deadline.",
-              "The full trail is stored for customs audit and internal control."
-            ],
-            "zh": [
-              "由单据制作人一次性提交。",
-              "系统校验规则：HS 编码、许可有效性、金额阈值、合作方状态。",
-              "常规情形数秒内自动放行。",
-              "例外情形按规则分派给指定审批人，并设定时限。",
-              "完整轨迹留存，供海关审计与内控使用。"
-            ]
-          },
-          "rollout": [
-            "mty:dev",
-            "apo:discovery"
-          ],
-          "systems": {
-            "en": "ERP, trade compliance, document archive",
-            "zh": "ERP、关务合规系统、单据归档"
-          },
-          "shots": {
-            "en": [
-              "wireframe — approval rules matrix, in design review",
-              "wireframe — exception queue with SLA countdown"
-            ],
-            "zh": [
-              "线框图 — 审批规则矩阵，设计评审中",
-              "线框图 — 例外队列与时限倒计时"
-            ]
-          },
-          "faq": {
-            "en": [
-              "Is an automatic approval legally acceptable? || The rules were written with trade compliance and are evidenced in the audit trail. Anything outside the agreed rules still needs a person.",
-              "When can Apodaca use it? || Monterrey pilots first in Q1 2027. Apodaca follows once the Mexican rule set is validated in production."
-            ],
-            "zh": [
-              "自动审批在法律上可以接受吗？ || 规则由关务合规团队共同制定，并在审计轨迹中留证。超出既定规则的情形仍需人工审批。",
-              "Apodaca 什么时候可以使用？ || Monterrey 于 2027 年第一季度先行试点。墨西哥规则集在生产环境验证后再推广至 Apodaca。"
-            ]
-          },
-          "related": [
-            "kuaibot",
-            "control-tower"
-          ],
-          "modifiedBy": "Carlos Rivera",
-          "modifiedAt": "2026-09-15"
+          "ownerId": "miguel",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         },
         {
-          "id": "receiving-plan",
-          "state": "published",
-          "order": 6,
-          "name": "Receiving Plan",
-          "nameZh": "收货计划",
+          "id": "ccp-import",
+          "name": "CCP Import Automation",
+          "nameZh": "进口 Carta Porte 自动化",
           "area": "inbound",
-          "status": "discovery",
-          "ownerId": "miguel",
+          "status": "live",
           "launched": {
-            "en": "Target Q2 2027",
-            "zh": "目标 2027 年第二季度"
+            "en": "Jul 2026",
+            "zh": "2026 年 7 月"
           },
           "tagline": {
-            "en": "Give every inbound truck a slot, so the dock stops being a queue.",
-            "zh": "为每辆到货车辆分配时段，让月台不再排队。"
+            "en": "Import Carta Porte prepared in 5–10 minutes instead of 45–60.",
+            "zh": "进口 Carta Porte 编制时间从 45–60 分钟缩短至 5–10 分钟。"
           },
           "problem": {
-            "en": "Inbound trucks arrive unannounced. Docks swing between idle and gridlocked within the same shift, receiving overtime is impossible to forecast, and suppliers are told to \"come in the morning\".",
-            "zh": "到货车辆不预约就来。同一个班次内月台时而空闲、时而堵死，收货加班无法预测，而给供应商的答复只是\"上午来\"。"
+            "en": "Preparing an import Carta Porte meant searching the validation file across several sheets and copying invoice numbers, parts, descriptions, quantities and CNY values by hand — 45 to 60 minutes each, with a real risk of errors.",
+            "zh": "编制进口 Carta Porte 需要在校验文件的多个工作表中查找，并手工复制发票号、零件号、描述、数量与人民币金额——每份 45 至 60 分钟，且容易出错。"
           },
           "solution": {
-            "en": "Supplier-facing slot booking tied to the receiving plan, so the dock knows what is arriving and when, and a late supplier is visible before the truck is at the gate.",
-            "zh": "面向供应商的时段预约，与收货计划联动。月台提前知道什么货何时到，供应商延误在车到门口之前就能被看到。"
+            "en": "A semi-automatic template: the import analyst enters the shipment's invoices and the template pulls the rest from the validation file automatically.",
+            "zh": "半自动模板：进口分析员输入该票货的发票，其余信息由模板自动从校验文件中调取。"
           },
           "how": {
             "en": [
-              "Currently in discovery — the flow below is the working hypothesis.",
-              "Suppliers book an unloading slot against published dock capacity.",
-              "The receiving plan is generated from confirmed bookings.",
-              "Arrivals are checked in against the slot they booked.",
-              "Deviations are measured per supplier and fed back to purchasing."
+              "The import analyst enters the shipment's invoice numbers.",
+              "The template looks them up across the sheets of the validation file.",
+              "Parts, descriptions, quantities and CNY values are filled in automatically.",
+              "The analyst reviews and issues the Carta Porte."
             ],
             "zh": [
-              "当前处于需求调研阶段——以下流程为工作假设。",
-              "供应商按公布的月台运力预约卸货时段。",
-              "基于已确认的预约生成收货计划。",
-              "到货按其预约时段签到。",
-              "按供应商统计偏差并反馈给采购。"
+              "进口分析员输入该票货的发票号。",
+              "模板在校验文件的各工作表中查找对应数据。",
+              "自动填入零件号、描述、数量与人民币金额。",
+              "分析员审核后开具 Carta Porte。"
             ]
           },
-          "rollout": [
-            "apo:discovery",
-            "mty:discovery"
-          ],
           "systems": {
-            "en": "ERP, WMS, supplier portal (proposed)",
-            "zh": "ERP、WMS、供应商门户（拟建）"
+            "en": "Excel, SharePoint",
+            "zh": "Excel、SharePoint"
           },
           "shots": {
             "en": [
-              "wireframe — supplier slot booking calendar",
-              "wireframe — dock capacity model per shift"
+              "screenshot — Carta Porte template filled from the validation file"
             ],
             "zh": [
-              "线框图 — 供应商时段预约日历",
-              "线框图 — 按班次的月台运力模型"
+              "截图 — 由校验文件自动填写的 Carta Porte 模板"
             ]
           },
           "faq": {
             "en": [
-              "Can I influence the scope? || Yes — discovery is open until December 2026. Contact the owner or submit your dock's specific constraints through the intake form.",
-              "Why is this not being built yet? || Two plants describe the problem differently. Discovery exists to find out whether one solution serves both before anything is committed."
+              "How many are prepared? || About 624 import Cartas Porte a year.",
+              "Who is on the team? || Lead: Juan Manuel Cardona Dominguez. Users: import analysts."
             ],
             "zh": [
-              "我可以参与界定范围吗？ || 可以——需求调研开放至 2026 年 12 月。请联系负责人，或通过需求表单提交你月台的具体约束。",
-              "为什么还没开始开发？ || 两个工厂对问题的描述不同。调研的目的就是在投入之前确认一个方案能否同时适用。"
+              "每年编制多少份？ || 每年约 624 份进口 Carta Porte。",
+              "团队成员有哪些？ || 负责人：Juan Manuel Cardona Dominguez。使用者：进口分析员。"
             ]
           },
+          "rollout": [
+            "apo:live"
+          ],
           "related": [
             "shipping-plan",
+            "ocean-hub"
+          ],
+          "state": "published",
+          "order": 6,
+          "ownerId": "miguel",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "rpa-audit",
+          "name": "RPA Audit Files",
+          "nameZh": "档案审计 RPA",
+          "area": "automation",
+          "status": "pilot",
+          "launched": {
+            "en": "Pilot since Jul 2026",
+            "zh": "自 2026 年 7 月起试点"
+          },
+          "tagline": {
+            "en": "About 58,000 files checked for missing documents in 15–20 minutes.",
+            "zh": "15–20 分钟内检查约 58,000 份档案的缺失文件。"
+          },
+          "problem": {
+            "en": "Legal audits require every shipment file to hold its required documents. Across tens of thousands of files, checking this by hand was a long review.",
+            "zh": "法律审计要求每份发运档案都具备规定文件。面对数万份档案，人工逐一核查耗时漫长。"
+          },
+          "solution": {
+            "en": "A Python robot that walks through the required files, builds an inventory and a summary in Excel, and flags what is missing.",
+            "zh": "Python 机器人遍历规定档案，在 Excel 中生成清单与汇总，并标出缺失文件。"
+          },
+          "how": {
+            "en": [
+              "The robot runs monthly over the files required for legal audit.",
+              "It builds an inventory of every file found.",
+              "It checks against the required documents and flags the gaps.",
+              "An Excel summary is produced for follow-up."
+            ],
+            "zh": [
+              "机器人每月对法律审计所需档案运行一次。",
+              "为找到的每份文件建立清单。",
+              "对照规定文件核查并标出缺失。",
+              "生成 Excel 汇总，便于后续跟进。"
+            ]
+          },
+          "systems": {
+            "en": "Python, Excel",
+            "zh": "Python、Excel"
+          },
+          "shots": {
+            "en": [
+              "screenshot — Excel audit summary"
+            ],
+            "zh": [
+              "截图 — Excel 审计汇总"
+            ]
+          },
+          "faq": {
+            "en": [
+              "How big was the test? || 55,846 files covering eight months.",
+              "Who is on the team? || Lead: Pablo David Gonzalez Barron."
+            ],
+            "zh": [
+              "测试规模有多大？ || 覆盖八个月的 55,846 份文件。",
+              "团队成员有哪些？ || 负责人：Pablo David Gonzalez Barron。"
+            ]
+          },
+          "rollout": [
+            "apo:pilot"
+          ],
+          "related": [
             "vobos"
           ],
-          "modifiedBy": "Miguel Torres",
-          "modifiedAt": "2026-09-19"
+          "state": "published",
+          "order": 7,
+          "ownerId": "miguel",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         }
       ]
     },
@@ -998,140 +1063,194 @@
       ],
       "items": [
         {
-          "id": "p-2025-01",
+          "id": "p-2026-01",
           "state": "published",
           "order": 1,
-          "name": "Outbound Planning Rebuild",
-          "nameZh": "发运计划重构",
-          "solutionId": "shipping-plan",
-          "year": "2025 Q1",
+          "name": "Ocean Import Intelligence Hub",
+          "nameZh": "海运进口智能中心",
+          "solutionId": "ocean-hub",
+          "year": "2026 Q2",
           "sponsor": {
-            "en": "Logistics Director, Asia",
-            "zh": "亚洲物流总监"
+            "en": "Litzy Sanchez (project lead)",
+            "zh": "Litzy Sanchez（项目负责人）"
           },
           "sites": [
             "apo",
             "mty",
-            "hz"
-          ],
-          "scope": {
-            "en": "Replaced three plant-level spreadsheet processes with one planning workspace and one published plan.",
-            "zh": "以统一计划工作台与唯一发布版本，替代三个工厂各自的表格流程。"
-          },
-          "outcome": {
-            "en": "One plan of record across three sites. Baseline measurement of planning cycle time starts Q4 2026.",
-            "zh": "三个基地共用唯一计划版本。计划周期时间基线测量自 2026 年第四季度开始。"
-          },
-          "modifiedBy": "Zhang Wei",
-          "modifiedAt": "2026-09-12"
-        },
-        {
-          "id": "p-2025-02",
-          "state": "published",
-          "order": 2,
-          "name": "Logistics RPA Programme",
-          "nameZh": "物流 RPA 项目",
-          "solutionId": "kuaibot",
-          "year": "2025 Q3",
-          "sponsor": {
-            "en": "Plant Manager, Wuhu",
-            "zh": "芜湖工厂经理"
-          },
-          "sites": [
             "hz",
             "wh",
             "xc"
           ],
           "scope": {
-            "en": "Bot library established with team-level ownership; nineteen transcription tasks automated.",
-            "zh": "建立机器人库并由业务团队自主管理；完成十九项数据搬运任务自动化。"
+            "en": "Master Report replacing 23 separate ocean import tracking reports, feeding daily outputs and the KuaiBot and Ocean Control Tower agents.",
+            "zh": "以主报表取代 23 份独立的海运进口跟踪报表，为每日输出及 KuaiBot、Ocean Control Tower 提供数据。"
           },
           "outcome": {
-            "en": "Tasks moved from individual desks to a managed library with run logs and a human exception queue.",
-            "zh": "任务从个人电脑转入可管理的机器人库，具备运行日志与人工例外队列。"
+            "en": "Deployed and in use since 29 June 2026; daily cycle from 4.5 to 1.5 hours.",
+            "zh": "自 2026 年 6 月 29 日起部署使用；每日周期从 4.5 小时缩短至 1.5 小时。"
           },
-          "modifiedBy": "Chen Hao",
-          "modifiedAt": "2026-09-04"
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         },
         {
-          "id": "p-2025-03",
+          "id": "p-2026-02",
           "state": "published",
-          "order": 3,
-          "name": "Freight Cost Assurance",
-          "nameZh": "运费成本保障",
-          "solutionId": "carrier-invoice",
-          "year": "2025 Q4",
-          "sponsor": {
-            "en": "Finance Controller, Mexico",
-            "zh": "墨西哥财务控制人"
-          },
-          "sites": [
-            "hz",
-            "xc",
-            "apo"
-          ],
-          "scope": {
-            "en": "Three-way match between invoice, shipment and contracted rate card, with generated dispute packs.",
-            "zh": "实现发票、运输记录与合同费率三方比对，并自动生成争议材料。"
-          },
-          "outcome": {
-            "en": "Every invoice now checked before Finance approval instead of sampled at audit.",
-            "zh": "所有发票在财务审批前完成核对，替代以往审计抽检。"
-          },
-          "modifiedBy": "Li Na",
-          "modifiedAt": "2026-09-09"
-        },
-        {
-          "id": "p-2026-01",
-          "state": "published",
-          "order": 4,
-          "name": "Shipment Visibility Pilot",
-          "nameZh": "在途可视化试点",
-          "solutionId": "control-tower",
+          "order": 2,
+          "name": "Shipping Plan 2.0",
+          "nameZh": "发运计划 2.0",
+          "solutionId": "shipping-plan",
           "year": "2026 Q3",
           "sponsor": {
-            "en": "Logistics Digital Lead",
-            "zh": "物流数字化负责人"
+            "en": "Pablo David Gonzalez Barron (project lead)",
+            "zh": "Pablo David Gonzalez Barron（项目负责人）"
+          },
+          "sites": [
+            "apo",
+            "mty",
+            "hz",
+            "wh",
+            "xc"
+          ],
+          "scope": {
+            "en": "One platform for shipments, events, photo evidence and export documentation, starting with customer HC18.",
+            "zh": "统一平台管理发运、事件、照片证据与出口单据，首先覆盖客户 HC18。"
+          },
+          "outcome": {
+            "en": "In daily use. Carta Porte in 30 seconds instead of 8 minutes; chargeback delay risk from 26% to 7%.",
+            "zh": "已投入日常使用。Carta Porte 生成从 8 分钟降至 30 秒；拒付延误风险从 26% 降至 7%。"
+          },
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "p-2026-03",
+          "state": "published",
+          "order": 3,
+          "name": "Carrier Invoice Validation",
+          "nameZh": "承运商发票校验",
+          "solutionId": "carrier-invoice",
+          "year": "2026 Q3",
+          "sponsor": {
+            "en": "Miguel Angel Contreras Ferrut (project lead)",
+            "zh": "Miguel Angel Contreras Ferrut（项目负责人）"
           },
           "sites": [
             "apo"
           ],
           "scope": {
-            "en": "Carrier and forwarder feeds ingested for Apodaca outbound lanes to US customers.",
-            "zh": "接入承运商与货代数据，覆盖 Apodaca 至美国客户的出口线路。"
+            "en": "Automated extraction, rate rules, exception detection and evidence for transport service invoices.",
+            "zh": "运输服务发票的自动提取、费率规则、异常识别与证据记录。"
           },
           "outcome": {
-            "en": "Pilot running to December 2026; feed quality is the gate for further sites.",
-            "zh": "试点运行至 2026 年 12 月；数据质量是推广至其他基地的前置条件。"
+            "en": "Stable operation; validation from 15 to 1.5 minutes, 234 hours saved a year.",
+            "zh": "稳定运行；校验时间从 15 分钟降至 1.5 分钟，年节省 234 小时。"
           },
-          "modifiedBy": "Elena Márquez",
-          "modifiedAt": "2026-09-18"
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         },
         {
-          "id": "p-2024-01",
-          "state": "archived",
-          "order": 5,
-          "name": "Carrier Portal Consolidation",
-          "nameZh": "承运商门户整合",
-          "solutionId": "",
-          "year": "2024 Q2",
+          "id": "p-2026-04",
+          "state": "published",
+          "order": 4,
+          "name": "Automated VoBo",
+          "nameZh": "自动 VoBo 校验",
+          "solutionId": "vobos",
+          "year": "2026 Q1",
           "sponsor": {
-            "en": "Transport Manager, Hangzhou",
-            "zh": "杭州运输经理"
+            "en": "Adriana Juarez (business lead)",
+            "zh": "Adriana Juarez（业务负责人）"
           },
           "sites": [
-            "hz"
+            "apo"
           ],
           "scope": {
-            "en": "Superseded by Control Tower. Kept as a record of what was tried and why it was replaced.",
-            "zh": "已被控制塔取代。保留记录以说明此前尝试及被替代的原因。"
+            "en": "Structured extraction and comparison of pedimentos/proformas and invoices; extended from one customer to all export customers.",
+            "zh": "报关单/形式发票与商业发票的结构化提取与比对；从一个客户扩展至全部出口客户。"
           },
           "outcome": {
-            "en": "Archived 2026 — retained for institutional memory, not shown to visitors.",
-            "zh": "2026 年归档——仅作组织记忆保留，不对访客展示。"
+            "en": "Complex declarations in 20 minutes instead of 90; about 364 hours of capacity released a year.",
+            "zh": "复杂报关单从 90 分钟降至 20 分钟；每年约释放 364 小时产能。"
           },
-          "modifiedBy": "Elena Márquez",
-          "modifiedAt": "2026-06-30"
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "p-2026-05",
+          "state": "published",
+          "order": 5,
+          "name": "CCP Import Automation",
+          "nameZh": "进口 Carta Porte 自动化",
+          "solutionId": "ccp-import",
+          "year": "2026 Q3",
+          "sponsor": {
+            "en": "Juan Manuel Cardona Dominguez (project lead)",
+            "zh": "Juan Manuel Cardona Dominguez（项目负责人）"
+          },
+          "sites": [
+            "apo"
+          ],
+          "scope": {
+            "en": "Semi-automatic import Carta Porte template fed from the validation file.",
+            "zh": "由校验文件驱动的半自动进口 Carta Porte 模板。"
+          },
+          "outcome": {
+            "en": "Live since 9 July 2026; each Carta Porte in 5–10 minutes instead of 45–60.",
+            "zh": "自 2026 年 7 月 9 日上线；每份 Carta Porte 从 45–60 分钟缩短至 5–10 分钟。"
+          },
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "p-2026-06",
+          "state": "published",
+          "order": 6,
+          "name": "RPA Status Container",
+          "nameZh": "集装箱状态 RPA",
+          "solutionId": "rpa-status",
+          "year": "2026 Q3",
+          "sponsor": {
+            "en": "Miguel Angel Contreras Ferrut (project lead)",
+            "zh": "Miguel Angel Contreras Ferrut（项目负责人）"
+          },
+          "sites": [
+            "apo"
+          ],
+          "scope": {
+            "en": "Scheduled container status look-ups on the COSCO Shipping platform, synced to SharePoint.",
+            "zh": "定时在中远海运平台查询集装箱状态并同步至 SharePoint。"
+          },
+          "outcome": {
+            "en": "Pilot; daily look-up from 20 to 2 minutes.",
+            "zh": "试点中；每日查询从 20 分钟降至 2 分钟。"
+          },
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "p-2026-07",
+          "state": "published",
+          "order": 7,
+          "name": "RPA Audit Files",
+          "nameZh": "档案审计 RPA",
+          "solutionId": "rpa-audit",
+          "year": "2026 Q3",
+          "sponsor": {
+            "en": "Pablo David Gonzalez Barron (project lead)",
+            "zh": "Pablo David Gonzalez Barron（项目负责人）"
+          },
+          "sites": [
+            "apo"
+          ],
+          "scope": {
+            "en": "Monthly automated audit of legal-audit files, with an Excel inventory and missing-document summary.",
+            "zh": "每月自动审计法律审计档案，生成 Excel 清单与缺失文件汇总。"
+          },
+          "outcome": {
+            "en": "Pilot; 55,846 files covering eight months checked in testing.",
+            "zh": "试点中；测试阶段检查了覆盖八个月的 55,846 份文件。"
+          },
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         }
       ]
     },
@@ -1221,181 +1340,163 @@
           "id": "pl-01",
           "state": "published",
           "order": 1,
-          "name": "Control Tower",
-          "nameZh": "控制塔",
-          "stage": "pilot",
-          "area": "visibility",
-          "ownerId": "elena",
-          "target": "Q4 2026",
-          "note": {
-            "en": "Live map and exception list for Apodaca outbound lanes.",
-            "zh": "面向 Apodaca 出口线路的实时地图与例外清单。"
-          },
-          "solutionId": "control-tower",
-          "modifiedBy": "Elena Márquez",
-          "modifiedAt": "2026-09-18"
-        },
-        {
-          "id": "pl-02",
-          "state": "published",
-          "order": 2,
-          "name": "VOBOS Automáticos",
-          "nameZh": "单据自动放行",
-          "stage": "build",
-          "area": "customs",
-          "ownerId": "carlos",
-          "target": "Q1 2027",
-          "note": {
-            "en": "Rules engine releasing routine document approvals automatically.",
-            "zh": "规则引擎自动放行常规单据审批。"
-          },
-          "solutionId": "vobos",
-          "modifiedBy": "Carlos Rivera",
-          "modifiedAt": "2026-09-15"
-        },
-        {
-          "id": "pl-03",
-          "state": "published",
-          "order": 3,
-          "name": "Receiving Plan",
-          "nameZh": "收货计划",
-          "stage": "discovery",
-          "area": "inbound",
-          "ownerId": "miguel",
-          "target": "Q2 2027",
-          "note": {
-            "en": "Supplier slot booking against published dock capacity.",
-            "zh": "供应商按公布的月台运力预约时段。"
-          },
-          "solutionId": "receiving-plan",
-          "modifiedBy": "Miguel Torres",
-          "modifiedAt": "2026-09-19"
-        },
-        {
-          "id": "pl-04",
-          "state": "published",
-          "order": 4,
-          "name": "Export Document OCR",
-          "nameZh": "出口单据识别",
-          "stage": "build",
-          "area": "customs",
-          "ownerId": "carlos",
-          "target": "Q1 2027",
-          "note": {
-            "en": "Reads supplier invoices and packing lists into the trade file automatically.",
-            "zh": "自动将供应商发票与装箱单读入关务档案。"
-          },
-          "solutionId": "",
-          "modifiedBy": "Carlos Rivera",
-          "modifiedAt": "2026-08-28"
-        },
-        {
-          "id": "pl-05",
-          "state": "published",
-          "order": 5,
-          "name": "Yard & Trailer Tracking",
-          "nameZh": "堆场与挂车追踪",
-          "stage": "discovery",
-          "area": "visibility",
-          "ownerId": "miguel",
-          "target": "Q3 2027",
-          "note": {
-            "en": "Raised by two plants independently; scope being merged into one request.",
-            "zh": "由两个工厂分别提出，正在合并为同一需求。"
-          },
-          "solutionId": "",
-          "modifiedBy": "Miguel Torres",
-          "modifiedAt": "2026-09-02"
-        },
-        {
-          "id": "pl-06",
-          "state": "published",
-          "order": 6,
-          "name": "Freight Tender Auto-Award",
-          "nameZh": "运输招标自动派单",
-          "stage": "discovery",
-          "area": "cost",
-          "ownerId": "lina",
-          "target": "Q4 2027",
-          "note": {
-            "en": "Awards spot loads to the cheapest compliant carrier within the tender window.",
-            "zh": "在招标时限内将零散货量自动派给符合要求的最低价承运商。"
-          },
-          "solutionId": "",
-          "modifiedBy": "Li Na",
-          "modifiedAt": "2026-08-19"
-        },
-        {
-          "id": "pl-07",
-          "state": "published",
-          "order": 7,
-          "name": "Shipping Plan 2.0",
-          "nameZh": "发运计划 2.0",
-          "stage": "live",
-          "area": "outbound",
-          "ownerId": "zhang",
-          "target": "Live",
-          "note": {
-            "en": "In production at three sites; Wuhu and Xinchang next.",
-            "zh": "已在三个基地投产；下一步为芜湖与新昌。"
-          },
-          "solutionId": "shipping-plan",
-          "modifiedBy": "Zhang Wei",
-          "modifiedAt": "2026-09-12"
-        },
-        {
-          "id": "pl-08",
-          "state": "published",
-          "order": 8,
-          "name": "Carrier Invoice Validation",
-          "nameZh": "承运商发票校验",
-          "stage": "live",
-          "area": "cost",
-          "ownerId": "lina",
-          "target": "Live",
-          "note": {
-            "en": "Live at three sites, Monterrey in pilot.",
-            "zh": "三个基地已上线，Monterrey 试点中。"
-          },
-          "solutionId": "carrier-invoice",
-          "modifiedBy": "Li Na",
-          "modifiedAt": "2026-09-09"
-        },
-        {
-          "id": "pl-09",
-          "state": "published",
-          "order": 9,
-          "name": "KuaiBot",
-          "nameZh": "快机器人",
-          "stage": "live",
-          "area": "automation",
-          "ownerId": "chen",
-          "target": "Live",
-          "note": {
-            "en": "Bot library live in China; Apodaca joined as a pilot site.",
-            "zh": "机器人库已在中国上线；Apodaca 加入试点。"
-          },
-          "solutionId": "kuaibot",
-          "modifiedBy": "Chen Hao",
-          "modifiedAt": "2026-09-04"
-        },
-        {
-          "id": "pl-10",
-          "state": "draft",
-          "order": 10,
-          "name": "Returnable Packaging Tracking",
-          "nameZh": "循环包装追踪",
+          "name": "Receiving Plan AI",
+          "nameZh": "收货计划 AI",
           "stage": "discovery",
           "area": "inbound",
           "ownerId": "miguel",
           "target": "TBC",
           "note": {
-            "en": "Draft — not yet reviewed, so not visible to visitors.",
-            "zh": "草稿——尚未评审，访客不可见。"
+            "en": "Built on the consolidated Master Report and connected to KuaiBot and Control Tower: status for users outside Logistics with per-user filters, plus a wider view for analysis.",
+            "zh": "基于整合后的主报表，连接 KuaiBot 与 Control Tower：为物流以外的用户按权限提供状态信息，并为分析提供更全面的视图。"
           },
           "solutionId": "",
-          "modifiedBy": "Elena Márquez",
-          "modifiedAt": "2026-09-20"
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "pl-02",
+          "state": "published",
+          "order": 2,
+          "name": "Logistics Innovation Hub",
+          "nameZh": "物流创新中心",
+          "stage": "build",
+          "area": "automation",
+          "ownerId": "miguel",
+          "target": "TBC",
+          "note": {
+            "en": "This portal: project portfolio and team directory, with admin sign-in and Supabase storage, deployed through GitHub and Vercel.",
+            "zh": "本门户：项目组合与团队名录，含管理员登录与 Supabase 存储，通过 GitHub 与 Vercel 部署。"
+          },
+          "solutionId": "",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "pl-03",
+          "state": "published",
+          "order": 3,
+          "name": "RPA Status Container",
+          "nameZh": "集装箱状态 RPA",
+          "stage": "pilot",
+          "area": "visibility",
+          "ownerId": "miguel",
+          "target": "Pilot",
+          "note": {
+            "en": "Robot checking container status on the COSCO Shipping platform, synced to SharePoint.",
+            "zh": "机器人在中远海运平台查询集装箱状态并同步至 SharePoint。"
+          },
+          "solutionId": "rpa-status",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "pl-04",
+          "state": "published",
+          "order": 4,
+          "name": "RPA Audit Files",
+          "nameZh": "档案审计 RPA",
+          "stage": "pilot",
+          "area": "automation",
+          "ownerId": "miguel",
+          "target": "Pilot",
+          "note": {
+            "en": "Monthly audit of legal-audit files for missing documents.",
+            "zh": "每月审计法律审计档案中的缺失文件。"
+          },
+          "solutionId": "rpa-audit",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "pl-05",
+          "state": "published",
+          "order": 5,
+          "name": "Ocean Import Intelligence Hub",
+          "nameZh": "海运进口智能中心",
+          "stage": "live",
+          "area": "inbound",
+          "ownerId": "miguel",
+          "target": "Live",
+          "note": {
+            "en": "Master Report, KuaiBot and Ocean Control Tower in use across all plants.",
+            "zh": "主报表、KuaiBot 与 Ocean Control Tower 已在全部基地使用。"
+          },
+          "solutionId": "ocean-hub",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "pl-06",
+          "state": "published",
+          "order": 6,
+          "name": "Shipping Plan 2.0",
+          "nameZh": "发运计划 2.0",
+          "stage": "live",
+          "area": "outbound",
+          "ownerId": "miguel",
+          "target": "Live",
+          "note": {
+            "en": "In daily use across all plants.",
+            "zh": "已在全部基地日常使用。"
+          },
+          "solutionId": "shipping-plan",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "pl-07",
+          "state": "published",
+          "order": 7,
+          "name": "Carrier Invoice Validation",
+          "nameZh": "承运商发票校验",
+          "stage": "live",
+          "area": "cost",
+          "ownerId": "miguel",
+          "target": "Live",
+          "note": {
+            "en": "Stable operation at Plant B.",
+            "zh": "已在工厂 B 稳定运行。"
+          },
+          "solutionId": "carrier-invoice",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "pl-08",
+          "state": "published",
+          "order": 8,
+          "name": "CCP Import Automation",
+          "nameZh": "进口 Carta Porte 自动化",
+          "stage": "live",
+          "area": "inbound",
+          "ownerId": "miguel",
+          "target": "Live",
+          "note": {
+            "en": "Stable operation at Plant B.",
+            "zh": "已在工厂 B 稳定运行。"
+          },
+          "solutionId": "ccp-import",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
+        },
+        {
+          "id": "pl-09",
+          "state": "published",
+          "order": 9,
+          "name": "Automated VoBo",
+          "nameZh": "自动 VoBo 校验",
+          "stage": "live",
+          "area": "customs",
+          "ownerId": "miguel",
+          "target": "Live",
+          "note": {
+            "en": "Covers all export customers; now running on Python executables.",
+            "zh": "覆盖全部出口客户；现以 Python 可执行程序运行。"
+          },
+          "solutionId": "vobos",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         }
       ]
     },
@@ -1847,6 +1948,187 @@
           "teams": "@sofia.ramirez",
           "modifiedBy": "Elena Márquez",
           "modifiedAt": "2026-09-21"
+        },
+        {
+          "id": "pablo",
+          "state": "published",
+          "name": "Pablo David Gonzalez Barron",
+          "nameZh": "Pablo David Gonzalez Barron",
+          "initials": "PG",
+          "photo": {
+            "url": "",
+            "name": "",
+            "alt": {
+              "en": "",
+              "zh": ""
+            }
+          },
+          "position": {
+            "en": "Project lead — Shipping Plan 2.0, RPA Audit Files",
+            "zh": "项目负责人 — 发运计划 2.0、档案审计 RPA"
+          },
+          "functionId": "export",
+          "siteId": "apo",
+          "responsibilities": {
+            "en": [
+              "Shipping Plan 2.0 — project lead",
+              "RPA Audit Files — project lead",
+              "Ocean Import Intelligence Hub — team member"
+            ],
+            "zh": [
+              "发运计划 2.0 — 项目负责人",
+              "档案审计 RPA — 项目负责人",
+              "海运进口智能中心 — 团队成员"
+            ]
+          },
+          "email": "",
+          "phone": "",
+          "teams": "",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24",
+          "order": 12
+        },
+        {
+          "id": "adriana",
+          "state": "published",
+          "name": "Adriana Juarez",
+          "nameZh": "Adriana Juarez",
+          "initials": "AJ",
+          "photo": {
+            "url": "",
+            "name": "",
+            "alt": {
+              "en": "",
+              "zh": ""
+            }
+          },
+          "position": {
+            "en": "Business lead — Automated VoBo",
+            "zh": "业务负责人 — 自动 VoBo 校验"
+          },
+          "functionId": "export",
+          "siteId": "apo",
+          "responsibilities": {
+            "en": [
+              "Automated VoBo — business lead (import & export)"
+            ],
+            "zh": [
+              "自动 VoBo 校验 — 业务负责人（进出口）"
+            ]
+          },
+          "email": "",
+          "phone": "",
+          "teams": "",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24",
+          "order": 13
+        },
+        {
+          "id": "litzy",
+          "state": "published",
+          "name": "Litzy Sanchez",
+          "nameZh": "Litzy Sanchez",
+          "initials": "LS",
+          "photo": {
+            "url": "",
+            "name": "",
+            "alt": {
+              "en": "",
+              "zh": ""
+            }
+          },
+          "position": {
+            "en": "Project lead — Ocean Import Intelligence Hub",
+            "zh": "项目负责人 — 海运进口智能中心"
+          },
+          "functionId": "import",
+          "siteId": "apo",
+          "responsibilities": {
+            "en": [
+              "Ocean Import Intelligence Hub — project lead",
+              "Master Report, KuaiBot and Ocean Control Tower"
+            ],
+            "zh": [
+              "海运进口智能中心 — 项目负责人",
+              "主报表、KuaiBot 与 Ocean Control Tower"
+            ]
+          },
+          "email": "",
+          "phone": "",
+          "teams": "",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24",
+          "order": 14
+        },
+        {
+          "id": "juan",
+          "state": "published",
+          "name": "Juan Manuel Cardona Dominguez",
+          "nameZh": "Juan Manuel Cardona Dominguez",
+          "initials": "JC",
+          "photo": {
+            "url": "",
+            "name": "",
+            "alt": {
+              "en": "",
+              "zh": ""
+            }
+          },
+          "position": {
+            "en": "Project lead — CCP Import Automation",
+            "zh": "项目负责人 — 进口 Carta Porte 自动化"
+          },
+          "functionId": "import",
+          "siteId": "apo",
+          "responsibilities": {
+            "en": [
+              "CCP Import Automation — project lead"
+            ],
+            "zh": [
+              "进口 Carta Porte 自动化 — 项目负责人"
+            ]
+          },
+          "email": "",
+          "phone": "",
+          "teams": "",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24",
+          "order": 15
+        },
+        {
+          "id": "gualberto",
+          "state": "published",
+          "name": "Gualberto Carlos",
+          "nameZh": "Gualberto Carlos",
+          "initials": "GC",
+          "photo": {
+            "url": "",
+            "name": "",
+            "alt": {
+              "en": "",
+              "zh": ""
+            }
+          },
+          "position": {
+            "en": "Team member — Ocean Import Intelligence Hub",
+            "zh": "团队成员 — 海运进口智能中心"
+          },
+          "functionId": "import",
+          "siteId": "apo",
+          "responsibilities": {
+            "en": [
+              "Ocean Import Intelligence Hub — team member"
+            ],
+            "zh": [
+              "海运进口智能中心 — 团队成员"
+            ]
+          },
+          "email": "",
+          "phone": "",
+          "teams": "",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24",
+          "order": 16
         }
       ]
     },
@@ -2229,21 +2511,21 @@
             "zh": "本月重点"
           },
           "title": {
-            "en": "Control Tower",
-            "zh": "控制塔"
+            "en": "Ocean Import Intelligence Hub",
+            "zh": "海运进口智能中心"
           },
           "blurb": {
-            "en": "One screen for every shipment in motion, from plant gate to customer dock. Pilot running at Apodaca until December.",
-            "zh": "一个屏幕看清所有在途货物，从工厂大门到客户月台。Apodaca 试点运行至 12 月。"
+            "en": "23 tracking reports replaced by one Master Report, with KuaiBot and Ocean Control Tower answering from the same source. In use across all plants.",
+            "zh": "一份主报表取代 23 份跟踪报表，KuaiBot 与 Ocean Control Tower 基于同一数据源作答。已在全部基地使用。"
           },
           "imageCaption": {
-            "en": "featured solution screenshot — Control Tower map view",
-            "zh": "重点方案截图 — 控制塔地图视图"
+            "en": "featured solution screenshot — Ocean Import Master Report",
+            "zh": "重点方案截图 — 海运进口主报表"
           },
           "targetType": "solution",
-          "targetId": "control-tower",
-          "modifiedBy": "Elena Márquez",
-          "modifiedAt": "2026-09-18"
+          "targetId": "ocean-hub",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         },
         {
           "id": "hl-2",
@@ -2255,12 +2537,12 @@
             "zh": "近期交付"
           },
           "title": {
-            "en": "Freight Cost Assurance",
-            "zh": "运费成本保障"
+            "en": "Carrier Invoice Validation",
+            "zh": "承运商发票校验"
           },
           "blurb": {
-            "en": "Every freight invoice is now checked against the contract before Finance sees it.",
-            "zh": "所有运费发票在财务审批前均与合同比对。"
+            "en": "Stable operation since July: each invoice validated in 1.5 minutes, with the evidence filed and notified automatically.",
+            "zh": "自 7 月起稳定运行：每张发票 1.5 分钟完成校验，证据自动归档并通知。"
           },
           "imageCaption": {
             "en": "",
@@ -2268,8 +2550,8 @@
           },
           "targetType": "solution",
           "targetId": "carrier-invoice",
-          "modifiedBy": "Li Na",
-          "modifiedAt": "2026-09-09"
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         },
         {
           "id": "hl-3",
@@ -2277,25 +2559,25 @@
           "order": 3,
           "feature": false,
           "kicker": {
-            "en": "Open for input",
-            "zh": "开放征集"
+            "en": "In discovery",
+            "zh": "需求调研中"
           },
           "title": {
-            "en": "Receiving Plan discovery",
-            "zh": "收货计划调研"
+            "en": "Receiving Plan AI",
+            "zh": "收货计划 AI"
           },
           "blurb": {
-            "en": "Two plants describe the dock problem differently. Scope closes in December.",
-            "zh": "两个工厂对月台问题描述不同。范围将于 12 月锁定。"
+            "en": "Status for users outside Logistics, built on the Master Report and connected to KuaiBot and Control Tower.",
+            "zh": "基于主报表、连接 KuaiBot 与 Control Tower，为物流以外的用户提供状态信息。"
           },
           "imageCaption": {
             "en": "",
             "zh": ""
           },
-          "targetType": "solution",
-          "targetId": "receiving-plan",
-          "modifiedBy": "Miguel Torres",
-          "modifiedAt": "2026-09-19"
+          "targetType": "pipeline",
+          "targetId": "pl-01",
+          "modifiedBy": "Miguel Angel Contreras Ferrut",
+          "modifiedAt": "2026-09-24"
         },
         {
           "id": "hl-4",

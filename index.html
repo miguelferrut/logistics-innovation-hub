@@ -131,7 +131,7 @@
             <a href="#" onClick="{{ goSubmit }}" class="btn btn-secondary" style="text-decoration: none; padding: 11px 22px; font-size: 15px; white-space: nowrap;">{{ T.ctaSubmit }}</a>
           </div>
         </div>
-        <figure class="blueprint duotone" style="position: relative; aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center;">
+        <figure class="blueprint" style="position: relative; aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center;">
           <sc-if value="{{ hasHero }}" hint-placeholder-val="{{ false }}">
             <div style="position: absolute; inset: 0; overflow: hidden;">{{ heroImg }}</div>
           </sc-if>
@@ -191,7 +191,7 @@
           <div style="display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 36px; align-items: start;">
             <sc-if value="{{ feature }}">
               <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: center;">
-                <figure class="blueprint duotone" style="position: relative; aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(242,242,243,0.1) 8px 9px), rgba(242,242,243,0.06); border-color: rgba(242,242,243,0.3); display: grid; place-items: center;">
+                <figure class="blueprint" style="position: relative; aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(242,242,243,0.1) 8px 9px), rgba(242,242,243,0.06); border-color: rgba(242,242,243,0.3); display: grid; place-items: center;">
                   <figcaption style="font-family: ui-monospace, monospace; font-size: 10.5px; color: rgba(242,242,243,0.6); text-align: center; padding: 0 16px; margin: 0;">{{ feature.imageCaption }}</figcaption>
                 </figure>
                 <div>
@@ -602,7 +602,7 @@
           <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-bottom: 40px;">
             <sc-for list="{{ detail.shots }}" as="sh" hint-placeholder-count="2">
               <figure style="margin: 0;">
-                <div class="blueprint duotone" style="position: relative; aspect-ratio: 16 / 10; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center; overflow: hidden;">
+                <div class="blueprint" style="position: relative; aspect-ratio: 16 / 10; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center; overflow: hidden;">
                   {{ sh.img }}
                   <sc-if value="{{ sh.noImage }}">
                     <span style="font-family: ui-monospace, monospace; font-size: 11px; color: rgba(29,31,32,0.58); text-align: center; padding: 0 18px;">{{ sh.caption }}</span>
@@ -1482,7 +1482,7 @@
             </sc-if>
             <sc-if value="{{ f.isImage }}">
               <div style="display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: 18px; align-items: start;">
-                <div class="blueprint duotone" style="position: relative; aspect-ratio: 1 / 1; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center; overflow: hidden;">
+                <div class="blueprint" style="position: relative; aspect-ratio: 1 / 1; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center; overflow: hidden;">
                   {{ f.preview }}
                   <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
                 </div>
@@ -1520,7 +1520,7 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px;">
                   <sc-for list="{{ f.imgs }}" as="im" hint-placeholder-count="2">
                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                      <div class="blueprint duotone" style="position: relative; aspect-ratio: 16 / 10; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center; overflow: hidden;">
+                      <div class="blueprint" style="position: relative; aspect-ratio: 16 / 10; background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(29,31,32,0.08) 8px 9px), #e9e9ea; display: grid; place-items: center; overflow: hidden;">
                         {{ im.preview }}
                         <span style="position: absolute; top: 7px; left: 9px; font-family: ui-monospace, monospace; font-size: 10px; color: rgba(29,31,32,0.55);">{{ im.no }}</span>
                         <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
